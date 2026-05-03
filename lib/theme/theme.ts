@@ -16,10 +16,22 @@ const themeOptions: ThemeOptions = {
   // TYPOGRAPHY
   // ==========================================
   typography: {
-    fontFamily: 'Inter, system-ui, sans-serif',
-    h1: { fontWeight: 700 },
-    h2: { fontWeight: 600 },
-    h3: { fontWeight: 600 },
+    fontFamily: 'var(--font-sans), Inter, system-ui, sans-serif',
+    h1: {
+      fontFamily: 'var(--font-serif), Georgia, serif',
+      fontWeight: 700,
+      letterSpacing: '-0.02em',
+    },
+    h2: {
+      fontFamily: 'var(--font-serif), Georgia, serif',
+      fontWeight: 600,
+      letterSpacing: '-0.015em',
+    },
+    h3: {
+      fontFamily: 'var(--font-serif), Georgia, serif',
+      fontWeight: 600,
+      letterSpacing: '-0.01em',
+    },
     h4: { fontWeight: 600 },
     h5: { fontWeight: 500 },
     h6: { fontWeight: 500 },

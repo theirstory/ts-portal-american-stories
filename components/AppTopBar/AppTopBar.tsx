@@ -30,11 +30,11 @@ export const AppTopBar = () => {
   const searchParams = useSearchParams();
   const isEmbed = searchParams.get('embed') === 'true';
 
-  if (isEmbed) return null;
   const isStoryPage = pathname.startsWith('/story/');
   const isChatPage = pathname.startsWith('/discover');
   const isIndexPage = pathname.startsWith('/indexes');
   const isCollectionsPage = pathname.startsWith('/collections');
+  const isStoriesPage = pathname === '/stories' || pathname.startsWith('/stories/');
   const isHomePage = pathname === '/';
   const isFullScreenPage = isStoryPage || isChatPage;
   const isAutoCollapsePage = isStoryPage || isChatPage || isIndexPage;
@@ -65,7 +65,87 @@ export const AppTopBar = () => {
     }
   }, [collections.length, loadCollections]);
 
+  if (isEmbed) return null;
+
   const shouldShowCollectionsLink = collections.length > 1;
+
+  if (isHomePage) {
+    return (
+      <AppBar
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: (theme) => theme.zIndex.appBar,
+          boxShadow: 'none',
+          backgroundColor: 'rgba(251, 248, 242, 0.92)',
+          backdropFilter: 'blur(10px)',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+        }}
+        elevation={0}>
+        <Toolbar
+          disableGutters
+          sx={{
+            justifyContent: 'space-between',
+            px: { xs: 2, md: 4 },
+            py: { xs: 1, md: 1.5 },
+            minHeight: { xs: 56, md: 64 },
+          }}>
+          <Link href="/" style={{ textDecoration: 'none' }}>
+            <Typography
+              sx={{
+                fontFamily: 'var(--font-display), Helvetica, sans-serif',
+                fontSize: { xs: '0.875rem', md: '1rem' },
+                color: 'common.black',
+                letterSpacing: '0.04em',
+              }}>
+              AMERICAN STORIES
+            </Typography>
+          </Link>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: { xs: 2, md: 4 },
+              alignItems: 'center',
+              '& a': {
+                color: 'common.black',
+                textDecoration: 'none',
+                fontSize: { xs: '0.7rem', md: '0.8125rem' },
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                opacity: 0.85,
+                transition: 'opacity 0.15s, color 0.15s',
+                '&:hover': { opacity: 1, color: 'secondary.main' },
+              },
+            }}>
+            <Link href="/stories">STORIES</Link>
+            <Link href="/indexes">INDEXES</Link>
+            {shouldShowCollectionsLink && <Link href="/collections">COLLECTIONS</Link>}
+            {isChatEnabled && (
+              <Box
+                component={Link}
+                href="/discover"
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  border: '1.5px solid',
+                  borderColor: 'common.black',
+                  borderRadius: '6px',
+                  padding: '4px 12px',
+                  '&:hover': {
+                    borderColor: 'secondary.main',
+                  },
+                }}>
+                <AutoAwesomeIcon sx={{ fontSize: 16 }} />
+                DISCOVER
+              </Box>
+            )}
+          </Box>
+        </Toolbar>
+      </AppBar>
+    );
+  }
 
   return (
     <AppBar
@@ -129,7 +209,7 @@ export const AppTopBar = () => {
                     '&:hover': { opacity: 1 },
                   },
                 }}>
-                {!isHomePage && <Link href="/">RECORDINGS</Link>}
+                {!isStoriesPage && <Link href="/stories">STORIES</Link>}
                 {!isIndexPage && <Link href="/indexes">INDEXES</Link>}
                 {shouldShowCollectionsLink && !isCollectionsPage && <Link href="/collections">COLLECTIONS</Link>}
                 {!isFullScreenPage && (
@@ -178,7 +258,7 @@ export const AppTopBar = () => {
                     '&:hover': { opacity: 1 },
                   },
                 }}>
-                <Link href="/">RECORDINGS</Link>
+                <Link href="/stories">STORIES</Link>
                 <Link href="/indexes">INDEXES</Link>
                 {shouldShowCollectionsLink && <Link href="/collections">COLLECTIONS</Link>}
                 {isChatEnabled && (

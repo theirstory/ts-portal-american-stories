@@ -1,17 +1,12 @@
 /* globals.css */
 body {
-  font-family: 'Public Sans', sans-serif;
+  font-family: var(--font-sans), 'Public Sans', system-ui, sans-serif;
 
   margin: 0;
   padding: 0;
-  /* min-height: 100dvh;
-    min-width: 100dvw; */
   overflow: hidden;
-  color: white;
-  background:
-    linear-gradient(0deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%),
-    linear-gradient(111deg, #6481a2 0.34%, #7a8796 100%);
-  /* Mobile optimizations */
+  color: #111111;
+  background: #fbf8f2;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -47,7 +42,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #fff;
+  background: #c4b8a4;
   border-radius: 4px;
 }
 
@@ -118,7 +113,7 @@ mux-player::part(control-bar) {
 /* Mobile-friendly focus states */
 @media (max-width: 768px) {
   *:focus {
-    outline: 2px solid #1976d2;
+    outline: 2px solid #239b8b;
     outline-offset: 2px;
   }
 

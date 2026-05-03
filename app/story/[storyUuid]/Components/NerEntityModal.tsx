@@ -48,6 +48,8 @@ interface NerEntityModalProps {
   entityText: string;
   entityLabel: string;
   currentStoryUuid?: string;
+  /** Hide the "In the interview" tab (used on pages with no current story, e.g. the homepage word cloud). */
+  hideInterviewTab?: boolean;
 }
 
 interface EntityOccurrence {
@@ -260,10 +262,11 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
   entityText,
   entityLabel,
   currentStoryUuid,
+  hideInterviewTab = false,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(hideInterviewTab ? 1 : 0);
   const [loading, setLoading] = useState(false);
   const [collectionOccurrences, setCollectionOccurrences] = useState<WeaviateGenericObject<Chunks, any>[]>([]);
   const [projectMentionCount, setProjectMentionCount] = useState<number | null>(null);
@@ -550,22 +553,26 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
                 backgroundColor: colors.primary.main,
               },
             }}>
+            {!hideInterviewTab && (
+              <Tab
+                value={0}
+                label={interviewTabLabel}
+                sx={{
+                  textTransform: 'none',
+                  minHeight: { xs: 56, md: 52 },
+                  minWidth: 'max-content',
+                  px: { xs: 1, md: 1.5 },
+                  fontSize: { xs: '0.95rem', md: '0.82rem' },
+                  fontWeight: 600,
+                  color: colors.text.secondary,
+                  '&.Mui-selected': {
+                    color: colors.primary.main,
+                  },
+                }}
+              />
+            )}
             <Tab
-              label={interviewTabLabel}
-              sx={{
-                textTransform: 'none',
-                minHeight: { xs: 56, md: 52 },
-                minWidth: 'max-content',
-                px: { xs: 1, md: 1.5 },
-                fontSize: { xs: '0.95rem', md: '0.82rem' },
-                fontWeight: 600,
-                color: colors.text.secondary,
-                '&.Mui-selected': {
-                  color: colors.primary.main,
-                },
-              }}
-            />
-            <Tab
+              value={1}
               label={projectTabLabel}
               sx={{
                 textTransform: 'none',
@@ -583,7 +590,7 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
           </Tabs>
         </Box>
 
-        {tabValue === 0 && (
+        {tabValue === 0 && !hideInterviewTab && (
           <Box
             sx={{
               p: { xs: 1.25, md: 1.5 },

@@ -64,6 +64,56 @@ const NER_SEARCH_RETURN_PROPS: QueryProperty<Chunks>[] = [
   'theirstory_id',
 ];
 
+const NER_AGGREGATE_RETURN_PROPS: QueryProperty<Chunks>[] = ['ner_text', 'ner_labels'];
+
+// Common pronouns and stopwords excluded from word-cloud aggregation
+const NER_STOPWORDS = new Set([
+  'i',
+  'me',
+  'my',
+  'mine',
+  'myself',
+  'we',
+  'us',
+  'our',
+  'ours',
+  'ourselves',
+  'you',
+  'your',
+  'yours',
+  'yourself',
+  'yourselves',
+  'he',
+  'him',
+  'his',
+  'himself',
+  'she',
+  'her',
+  'hers',
+  'herself',
+  'it',
+  'its',
+  'itself',
+  'they',
+  'them',
+  'their',
+  'theirs',
+  'themselves',
+  'this',
+  'that',
+  'these',
+  'those',
+  'who',
+  'whom',
+  'which',
+  'one',
+  'two',
+  'three',
+  'today',
+  'yesterday',
+  'tomorrow',
+]);
+
 const STORY_ID_ONLY_RETURN_PROPS: QueryProperty<Chunks>[] = ['theirstory_id'];
 
 async function loadCollectionMetadataMap(): Promise<Map<string, CollectionJsonMetadata>> {
@@ -164,6 +214,29 @@ export async function getStoryByUuid(StoryUuid: string) {
   const myCollection = client.collections.get<Chunks>('Chunks');
   const response = await myCollection.query.fetchObjectById(StoryUuid);
   return response;
+}
+
+/** Find a single Testimonies story whose interview_title contains the given hint (case-insensitive). */
+export async function findStoryByTitleHint(
+  hint: string,
+): Promise<{ uuid: string; title: string; videoUrl: string } | null> {
+  if (!hint.trim()) return null;
+  const client = await initWeaviateClient();
+  const myCollection = client.collections.get<Testimonies>('Testimonies');
+  const response = await myCollection.query.fetchObjects({
+    limit: 200,
+    returnProperties: ['interview_title', 'video_url'] as QueryProperty<Testimonies>[],
+  });
+  const lowered = hint.toLowerCase();
+  for (const obj of response.objects) {
+    const props = obj.properties as Partial<Testimonies>;
+    const title = typeof props.interview_title === 'string' ? props.interview_title : '';
+    const videoUrl = typeof props.video_url === 'string' ? props.video_url : '';
+    if (title.toLowerCase().includes(lowered) && videoUrl) {
+      return { uuid: obj.uuid ?? '', title, videoUrl };
+    }
+  }
+  return null;
 }
 
 export async function getAllStoriesFromCollection<T extends SchemaTypes>(
@@ -681,4 +754,59 @@ export async function getNerEntityRecordingCounts(
   }
 
   return result;
+}
+
+export type TopNerEntity = {
+  text: string;
+  label: string;
+  count: number;
+};
+
+/**
+ * Aggregate NER entities across all chunks and return the top N by mention count.
+ * Excludes pronouns and short tokens. Uses ner_data (the per-chunk array of
+ * {text, label, start_time, end_time}) so we keep the text/label pairing intact.
+ */
+export async function getTopNerEntities(limit = 15, sampleSize = 4000): Promise<TopNerEntity[]> {
+  const client = await initWeaviateClient();
+  const myCollection = client.collections.get<Chunks>('Chunks');
+
+  const response = await myCollection.query.fetchObjects({
+    limit: sampleSize,
+    returnProperties: NER_AGGREGATE_RETURN_PROPS,
+  });
+
+  type Counter = { text: string; label: string; count: number };
+  const counts = new Map<string, Counter>();
+
+  for (const obj of response.objects) {
+    const props = obj.properties as Partial<Chunks>;
+    const texts = props?.ner_text;
+    const labels = props?.ner_labels;
+    if (!Array.isArray(texts) || !Array.isArray(labels)) continue;
+    const pairLength = Math.min(texts.length, labels.length);
+
+    for (let i = 0; i < pairLength; i += 1) {
+      const rawText = texts[i];
+      const rawLabel = labels[i];
+      if (typeof rawText !== 'string' || typeof rawLabel !== 'string') continue;
+
+      const text = rawText.trim();
+      if (text.length < 3) continue;
+      const lower = text.toLowerCase();
+      if (NER_STOPWORDS.has(lower)) continue;
+
+      const key = `${lower}|${rawLabel}`;
+      const existing = counts.get(key);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        counts.set(key, { text, label: rawLabel, count: 1 });
+      }
+    }
+  }
+
+  return Array.from(counts.values())
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit);
 }
