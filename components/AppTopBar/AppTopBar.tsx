@@ -1,10 +1,11 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Link from 'next/link';
-import { Box, Typography } from '@mui/material';
+import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import MenuIcon from '@mui/icons-material/Menu';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { isChatEnabled } from '@/config/organizationConfig';
 import { useSemanticSearchStore } from '@/app/stores/useSemanticSearchStore';
@@ -21,6 +22,7 @@ export const AppTopBar = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isEmbed = searchParams.get('embed') === 'true';
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     if (collections.length === 0) {
@@ -34,6 +36,15 @@ export const AppTopBar = () => {
   if (pathname === '/') return null;
 
   const shouldShowCollectionsLink = collections.length > 1;
+  const closeMenu = () => setMenuAnchor(null);
+
+  const navItems: Array<{ label: string; href: string; isDiscover?: boolean }> = [
+    { label: 'Stories', href: '/stories' },
+    { label: 'Indexes', href: '/indexes' },
+    { label: 'Map', href: '/map' },
+    ...(shouldShowCollectionsLink ? [{ label: 'Collections', href: '/collections' }] : []),
+    ...(isChatEnabled ? [{ label: 'Discover', href: '/discover', isDiscover: true }] : []),
+  ];
 
   return (
     <AppBar
@@ -67,15 +78,17 @@ export const AppTopBar = () => {
             AMERICAN STORIES
           </Typography>
         </Link>
+
+        {/* Desktop nav: inline links */}
         <Box
           sx={{
-            display: 'flex',
-            gap: { xs: 2, md: 4 },
+            display: { xs: 'none', md: 'flex' },
+            gap: 4,
             alignItems: 'center',
             '& a': {
               color: 'common.black',
               textDecoration: 'none',
-              fontSize: { xs: '0.7rem', md: '0.8125rem' },
+              fontSize: '0.8125rem',
               fontWeight: 700,
               letterSpacing: '0.08em',
               opacity: 0.85,
@@ -85,6 +98,7 @@ export const AppTopBar = () => {
           }}>
           <Link href="/stories">STORIES</Link>
           <Link href="/indexes">INDEXES</Link>
+          <Link href="/map">MAP</Link>
           {shouldShowCollectionsLink && <Link href="/collections">COLLECTIONS</Link>}
           {isChatEnabled && (
             <Box
@@ -107,6 +121,57 @@ export const AppTopBar = () => {
               DISCOVER
             </Box>
           )}
+        </Box>
+
+        {/* Mobile nav: hamburger → menu */}
+        <Box sx={{ display: { xs: 'inline-flex', md: 'none' }, alignItems: 'center' }}>
+          <IconButton
+            aria-label="open navigation"
+            onClick={(e) => setMenuAnchor(e.currentTarget)}
+            sx={{
+              border: '1px solid',
+              borderColor: 'rgba(0, 0, 0, 0.18)',
+              borderRadius: '8px',
+              p: 0.75,
+              color: 'common.black',
+            }}>
+            <MenuIcon fontSize="small" />
+          </IconButton>
+          <Menu
+            anchorEl={menuAnchor}
+            open={Boolean(menuAnchor)}
+            onClose={closeMenu}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            slotProps={{ list: { dense: true } }}
+            sx={{
+              mt: 0.5,
+              '& .MuiPaper-root': {
+                minWidth: 200,
+                borderRadius: 2,
+                bgcolor: 'background.paper',
+              },
+              '& a': {
+                color: 'common.black',
+                textDecoration: 'none',
+                width: '100%',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 1,
+                fontWeight: 600,
+                letterSpacing: '0.06em',
+                fontSize: '0.85rem',
+              },
+            }}>
+            {navItems.map((item) => (
+              <MenuItem key={item.href} onClick={closeMenu} sx={{ py: 1.25, px: 2 }}>
+                <Link href={item.href}>
+                  {item.isDiscover && <AutoAwesomeIcon sx={{ fontSize: 16 }} />}
+                  {item.label.toUpperCase()}
+                </Link>
+              </MenuItem>
+            ))}
+          </Menu>
         </Box>
       </Toolbar>
     </AppBar>

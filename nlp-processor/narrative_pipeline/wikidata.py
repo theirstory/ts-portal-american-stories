@@ -86,6 +86,25 @@ def _description_consistent(hint: Optional[str], wikidata_description: Optional[
     return ratio >= DESCRIPTION_MATCH_MIN_OVERLAP
 
 
+def _label_consistent(canonical_form: Optional[str], wikidata_label: Optional[str]) -> bool:
+    """Strong overlap check. The entity's canonical_form should share at
+    least one substantive token with Wikidata's label. "New Orleans" must
+    overlap with "New Orleans" (or "New Orleans, Louisiana") — and must NOT
+    pass when paired with "University of Cambridge".
+
+    Single-token canonical forms ("Mississippi") accept any tokenized
+    sub/super-string of the Wikidata label (so "Mississippi River" still
+    passes). Multi-token canonical forms require ≥1 token overlap.
+    """
+    canonical_tokens = _tokens(canonical_form)
+    label_tokens = _tokens(wikidata_label)
+    if not canonical_tokens or not label_tokens:
+        # Without one or both sides, fall back to the description signal —
+        # the caller still runs that check.
+        return True
+    return len(canonical_tokens & label_tokens) >= 1
+
+
 def fetch(qid: str, *, timeout: float = DEFAULT_TIMEOUT_SECONDS) -> Optional[WikidataResult]:
     """GET wbgetentities for one QID; return label + description + en.wiki URL.
 
@@ -129,13 +148,29 @@ def verify(
     qid: Optional[str],
     description_hint: Optional[str],
     *,
+    canonical_form: Optional[str] = None,
     timeout: float = DEFAULT_TIMEOUT_SECONDS,
 ) -> Optional[WikidataResult]:
-    """Verify a QID. Returns the WikidataResult if the description is consistent
-    with the LLM's hint, else None.
+    """Verify a QID. Returns the WikidataResult only if both checks pass:
+    1. canonical_form tokens overlap with Wikidata's label (the entity is
+       actually called this), AND
+    2. the LLM hint is plausibly describing the same Wikidata entity.
+
+    The label check is the load-bearing signal — without it, descriptions
+    can incidentally share generic tokens ("united", "city") and let
+    obviously-wrong QIDs through (e.g., the LLM saying New Orleans is
+    Q35794 = University of Cambridge).
     """
     result = fetch(qid or "", timeout=timeout)
     if result is None:
+        return None
+    if not _label_consistent(canonical_form, result.label):
+        logger.info(
+            "[wikidata] rejecting QID %s — canonical_form %r does not overlap Wikidata label %r",
+            qid,
+            canonical_form,
+            result.label,
+        )
         return None
     if not _description_consistent(description_hint, result.description):
         logger.info(

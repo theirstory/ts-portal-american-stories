@@ -114,10 +114,10 @@ export const StoryMetadataEntity = () => {
     return (ner_data as unknown[]) ?? [];
   }, [storyHubPage, ner_data]);
   const normalizedNerData = useMemo(() => mentionsSource.filter(isNerDataItem), [mentionsSource]);
-  const currentStoryUuid = useMemo(() => {
-    const props = (storyHubPage?.properties ?? {}) as Partial<{ theirstory_id: string }>;
-    return props.theirstory_id;
-  }, [storyHubPage?.properties]);
+  // chunks.theirstory_id is set to the Testimony's Weaviate UUID (storyHubPage.uuid).
+  // Testimonies.properties.theirstory_id is the source-system id and does NOT
+  // match the chunk filter, so don't read from there.
+  const currentStoryUuid = storyHubPage?.uuid;
 
   const groupedEntities = useMemo(() => {
     const grouped = groupBy(normalizedNerData, 'label');

@@ -8,7 +8,9 @@ import { StoryVideo } from './StoryVideo';
 import { StoryTranscriptPanel } from './StoryTranscriptPanel';
 import { StoryMetadata } from './StoryMetadata';
 import { StoryMetadataEntity } from './StoryMetadataEntity';
+import { StoryMetadataThroughlines } from './StoryMetadataThroughlines';
 import { StoryProgressBar } from './StoryProgressBar';
+import { StoryChapterList } from './StoryChapterList';
 import { colors } from '@/lib/theme';
 import { SearchType } from '@/types/searchType';
 import { useTranscriptNavigation } from '@/app/hooks/useTranscriptNavigation';
@@ -169,8 +171,10 @@ export const StoryContainer = ({ storyUuid }: { storyUuid: string }) => {
                   backgroundColor: 'primary.main',
                 },
               }}>
-              <Tab label="Transcription" />
+              <Tab label="Transcript" />
+              <Tab label="Chapters" />
               <Tab label="Metadata" />
+              <Tab label="Throughlines" />
               <Tab label="Entities" />
             </Tabs>
           </Box>
@@ -190,15 +194,29 @@ export const StoryContainer = ({ storyUuid }: { storyUuid: string }) => {
               </Box>
             )}
 
-            {/* Metadata Tab */}
+            {/* Chapters Tab */}
             {mobileTabValue === 1 && (
+              <Box sx={{ p: 1.5, height: '100%' }}>
+                <StoryChapterList />
+              </Box>
+            )}
+
+            {/* Metadata Tab */}
+            {mobileTabValue === 2 && (
               <Box sx={{ p: 2 }}>
                 <StoryMetadata isMobile />
               </Box>
             )}
 
+            {/* Throughlines Tab */}
+            {mobileTabValue === 3 && (
+              <Box sx={{ p: 2 }}>
+                <StoryMetadataThroughlines />
+              </Box>
+            )}
+
             {/* Entities Tab */}
-            {mobileTabValue === 2 && (
+            {mobileTabValue === 4 && (
               <Box sx={{ p: 2 }}>
                 <StoryMetadataEntity />
               </Box>
@@ -206,13 +224,12 @@ export const StoryContainer = ({ storyUuid }: { storyUuid: string }) => {
           </Box>
         </Box>
       ) : (
-        /* Desktop Layout */
+        /* Desktop Layout — three columns: video+metadata · chapters · transcript */
         <Box
           id="container"
           sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
+            display: 'grid',
+            gridTemplateColumns: 'minmax(360px, 480px) minmax(240px, 300px) minmax(0, 1fr)',
             gap: 2,
             height: `calc(100dvh - 100px - 54px)`,
             paddingTop: '6px',
@@ -220,20 +237,19 @@ export const StoryContainer = ({ storyUuid }: { storyUuid: string }) => {
             paddingX: 2,
             position: 'relative',
             overflow: 'hidden',
+            maxWidth: 1600,
+            mx: 'auto',
+            width: '100%',
           }}>
           <Box
             id="left-side-container"
             sx={{
-              flex: 1,
-              maxWidth: '600px',
-              minWidth: '600px',
               display: 'flex',
               flexDirection: 'column',
               gap: 1,
               height: '100%',
               minHeight: 0,
-              order: 1,
-              transition: 'min-width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              minWidth: 0,
             }}>
             <Box
               id="video-container"
@@ -253,16 +269,25 @@ export const StoryContainer = ({ storyUuid }: { storyUuid: string }) => {
               <StoryMetadata />
             </Box>
           </Box>
+
+          <Box
+            id="chapters-rail"
+            sx={{
+              height: '100%',
+              minHeight: 0,
+              minWidth: 0,
+              display: 'flex',
+            }}>
+            <StoryChapterList />
+          </Box>
+
           <Box
             id="right-side-container"
             sx={{
-              flex: 'none',
-              width: '50%',
               height: '100%',
               minHeight: 0,
+              minWidth: 0,
               display: 'flex',
-              order: 2,
-              transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
             }}>
             <StoryTranscriptPanel />
           </Box>

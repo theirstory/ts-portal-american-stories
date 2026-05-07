@@ -63,7 +63,8 @@ export const StoryTranscriptWord = memo(
         data-word-end={word.end}
         data-word-index={wordIndex}
         sx={{
-          fontSize: '12px',
+          fontSize: '17px',
+          lineHeight: 1.7,
           cursor: 'pointer',
           userSelect: 'text',
           backgroundColor: isCurrent

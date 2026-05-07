@@ -3,6 +3,7 @@
 import { Box, Typography, Divider, Tabs, Tab } from '@mui/material';
 import { useSemanticSearchStore } from '@/app/stores/useSemanticSearchStore';
 import { StoryMetadataEntity } from './StoryMetadataEntity';
+import { StoryMetadataThroughlines } from './StoryMetadataThroughlines';
 import { useState } from 'react';
 import { colors } from '@/lib/theme';
 import { formatStoryDate } from '@/app/utils/util';
@@ -110,6 +111,7 @@ export const StoryMetadata = ({ isMobile = false }: StoryMetadataProps) => {
             },
           }}>
           <Tab label="Metadata" sx={{ textTransform: 'none' }} />
+          <Tab label="Throughlines" sx={{ textTransform: 'none' }} />
           <Tab label="Entities" sx={{ textTransform: 'none' }} />
         </Tabs>
       </Box>
@@ -162,8 +164,15 @@ export const StoryMetadata = ({ isMobile = false }: StoryMetadataProps) => {
           </Box>
         )}
 
-        {/* Entities Tab */}
+        {/* Throughlines Tab */}
         {tabValue === 1 && (
+          <Box sx={{ px: 3, pb: 3, pt: 1, height: '100%' }}>
+            <StoryMetadataThroughlines />
+          </Box>
+        )}
+
+        {/* Entities Tab */}
+        {tabValue === 2 && (
           <Box sx={{ px: 3, pb: 3, pt: 1, height: '100%' }}>
             <StoryMetadataEntity />
           </Box>

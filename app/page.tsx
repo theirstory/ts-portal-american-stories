@@ -24,7 +24,7 @@ export default function Home() {
         <Banner />
       </Box>
 
-      {/* Row 2 — celeb video (left) + explore (right) */}
+      {/* Row 2 — celeb video (left) + explore (right, desktop only) */}
       <Box
         sx={{
           display: 'grid',
@@ -39,13 +39,16 @@ export default function Home() {
           sx={{
             minHeight: 0,
             borderRight: { xs: 'none', md: '1px solid' },
-            borderBottom: { xs: '1px solid', md: 'none' },
+            borderBottom: { xs: 'none', md: 'none' },
             borderColor: 'divider !important',
             py: { xs: 3, md: 0 },
           }}>
           <CelebVideo />
         </Box>
-        <Box sx={{ minHeight: 0 }}>
+        {/* Explore lives in this row on desktop; on mobile it moves to the
+            bottom of the page so the celeb video flows directly into Featured
+            Stories + Threads. */}
+        <Box sx={{ minHeight: 0, display: { xs: 'none', md: 'block' } }}>
           <ExploreLinks />
         </Box>
       </Box>
@@ -71,6 +74,20 @@ export default function Home() {
         <Box sx={{ minHeight: 0, py: { xs: 3, md: 0 } }}>
           <WordCloudAndSearch />
         </Box>
+      </Box>
+
+      {/* Row 4 — Explore links (mobile only). On desktop Explore lives next to
+          the celeb video; on mobile we drop it to the bottom of the page so
+          the user reaches the featured content first. */}
+      <Box
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          borderTop: '1px solid',
+          borderColor: 'divider',
+          bgcolor: 'background.subtle',
+          py: 3,
+        }}>
+        <ExploreLinks />
       </Box>
     </Box>
   );

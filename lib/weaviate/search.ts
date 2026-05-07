@@ -62,6 +62,9 @@ const NER_SEARCH_RETURN_PROPS: QueryProperty<Chunks>[] = [
   'transcription',
   'ner_labels',
   'theirstory_id',
+  'video_url',
+  'isAudioFile',
+  'interview_duration',
 ];
 
 const NER_AGGREGATE_RETURN_PROPS: QueryProperty<Chunks>[] = ['ner_text', 'ner_labels'];

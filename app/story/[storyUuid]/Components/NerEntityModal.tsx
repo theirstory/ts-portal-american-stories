@@ -8,8 +8,6 @@ import {
   IconButton,
   Box,
   Typography,
-  Tabs,
-  Tab,
   List,
   ListItem,
   Collapse,
@@ -21,25 +19,18 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { useSemanticSearchStore } from '@/app/stores/useSemanticSearchStore';
+import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import { getNerColor, getNerDisplayName } from '@/config/organizationConfig';
 import { searchNerEntitiesAcrossCollection } from '@/lib/weaviate/search';
 import { fetchEntityByUuid, searchChunksByEntityUuid, type EntityRecord } from '@/lib/weaviate/entities';
 import { WeaviateGenericObject } from 'weaviate-client';
-import { Chunks, EntityMention } from '@/types/weaviate';
+import { Chunks } from '@/types/weaviate';
 import { colors } from '@/lib/theme';
-import { Word } from '@/types/transcription';
 import { useTranscriptNavigation } from '@/app/hooks/useTranscriptNavigation';
 import { formatTime } from '@/app/utils/util';
+import { getMuxPlaybackId, getThumbnailTimeForTitle } from '@/app/utils/converters';
 
 type HighlightPart = string | { highlight: true; text: string };
-
-interface NerDataItem {
-  text: string;
-  label: string;
-  start_time: number;
-  end_time: number;
-}
 
 type ChunkProps = Partial<Chunks>;
 
@@ -52,21 +43,9 @@ interface NerEntityModalProps {
    * are looked up by exact entity reference (no text-overlap matching) and the
    * canonical entity card (Wikidata, description, relationships) is shown. */
   entityUuid?: string;
+  /** Optional — the recording the user is currently inside. When set, that
+   * recording is pinned to the top of the cross-source list. */
   currentStoryUuid?: string;
-  /** Hide the "In the interview" tab (used on pages with no current story, e.g. the homepage word cloud). */
-  hideInterviewTab?: boolean;
-}
-
-interface EntityOccurrence {
-  text: string;
-  start_time: number;
-  end_time: number;
-  context: string;
-  expandedContext: string;
-  highlightedContext: HighlightPart[];
-  expandedHighlightedContext: HighlightPart[];
-  interview_title?: string;
-  story_uuid?: string;
 }
 
 interface ExpandableHighlightedTextProps {
@@ -77,22 +56,8 @@ interface ExpandableHighlightedTextProps {
   collapsedLines?: number;
 }
 
-const COLLAPSED_WORD_WINDOW = 10;
-const EXPANDED_WORD_WINDOW = 50;
 const COLLAPSED_CHAR_WINDOW = 40;
 const EXPANDED_CHAR_WINDOW = 200;
-const DUPLICATE_TIME_EPSILON = 0.001;
-
-const normalizeNerData = (nerData: unknown[]): NerDataItem[] =>
-  nerData.filter(
-    (item): item is NerDataItem =>
-      typeof item === 'object' &&
-      item !== null &&
-      typeof (item as NerDataItem).text === 'string' &&
-      typeof (item as NerDataItem).label === 'string' &&
-      typeof (item as NerDataItem).start_time === 'number' &&
-      typeof (item as NerDataItem).end_time === 'number',
-  );
 
 const ExpandableHighlightedText: React.FC<ExpandableHighlightedTextProps> = ({
   collapsedText = '',
@@ -201,66 +166,6 @@ const createHighlightedParts = (text: string, entityText: string): HighlightPart
   }, [] as HighlightPart[]);
 };
 
-const buildContextWindow = (words: Word[], centerIndex: number, window: number) => {
-  const startIndex = Math.max(0, centerIndex - window);
-  const endIndex = Math.min(words.length - 1, centerIndex + window);
-  const hasLeadingText = startIndex > 0;
-  const hasTrailingText = endIndex < words.length - 1;
-  return `${hasLeadingText ? '... ' : ''}${words
-    .slice(startIndex, endIndex + 1)
-    .map((word) => word.text)
-    .join(' ')}${hasTrailingText ? ' ...' : ''}`;
-};
-
-const getTargetWordIndex = (words: Word[], targetStartTime: number, targetEndTime: number) => {
-  const overlappingWords = words.filter(
-    (word) =>
-      (word.start >= targetStartTime && word.start <= targetEndTime) ||
-      (word.end >= targetStartTime && word.end <= targetEndTime) ||
-      (word.start <= targetStartTime && word.end >= targetEndTime),
-  );
-
-  if (overlappingWords.length > 0) {
-    return words.indexOf(overlappingWords[0]);
-  }
-
-  const targetMidpoint = (targetStartTime + targetEndTime) / 2;
-  const closestWord = words.reduce((closest, word) => {
-    const wordMidpoint = (word.start + word.end) / 2;
-    const closestMidpoint = (closest.start + closest.end) / 2;
-    return Math.abs(wordMidpoint - targetMidpoint) < Math.abs(closestMidpoint - targetMidpoint) ? word : closest;
-  });
-
-  return words.indexOf(closestWord);
-};
-
-const getContextAroundTime = (
-  words: Word[],
-  targetStartTime: number,
-  targetEndTime: number,
-  entityText: string,
-): Pick<EntityOccurrence, 'context' | 'expandedContext' | 'highlightedContext' | 'expandedHighlightedContext'> => {
-  if (!words || words.length === 0) {
-    return {
-      context: '',
-      expandedContext: '',
-      highlightedContext: [],
-      expandedHighlightedContext: [],
-    };
-  }
-
-  const targetWordIndex = getTargetWordIndex(words, targetStartTime, targetEndTime);
-  const collapsed = buildContextWindow(words, targetWordIndex, COLLAPSED_WORD_WINDOW);
-  const expanded = buildContextWindow(words, targetWordIndex, EXPANDED_WORD_WINDOW);
-
-  return {
-    context: collapsed,
-    expandedContext: expanded,
-    highlightedContext: createHighlightedParts(collapsed, entityText),
-    expandedHighlightedContext: createHighlightedParts(expanded, entityText),
-  };
-};
-
 export const NerEntityModal: React.FC<NerEntityModalProps> = ({
   open,
   onClose,
@@ -268,60 +173,18 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
   entityLabel,
   entityUuid,
   currentStoryUuid,
-  hideInterviewTab = false,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [tabValue, setTabValue] = useState(hideInterviewTab ? 1 : 0);
   const [loading, setLoading] = useState(false);
   const [collectionOccurrences, setCollectionOccurrences] = useState<WeaviateGenericObject<Chunks, any>[]>([]);
   const [projectMentionCount, setProjectMentionCount] = useState<number | null>(null);
   const [projectRecordingCount, setProjectRecordingCount] = useState<number | null>(null);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
   const [canonicalEntity, setCanonicalEntity] = useState<EntityRecord | null>(null);
-  const { storyHubPage, setUpdateSelectedNerLabel, selected_ner_labels, allWords } = useSemanticSearchStore();
-  const { seekAndScroll } = useTranscriptNavigation();
-  const nerLabel = entityLabel as (typeof selected_ner_labels)[number];
 
   const labelColor = useMemo(() => getNerColor(entityLabel), [entityLabel]);
   const labelDisplayName = useMemo(() => getNerDisplayName(entityLabel), [entityLabel]);
-
-  // Pull the precise entity_mentions list from the testimony when available;
-  // fall back to the legacy ner_data shape for un-backfilled stories.
-  const testimonyMentions = useMemo<EntityMention[]>(() => {
-    const props = storyHubPage?.properties;
-    const mentions = (props as { entity_mentions?: EntityMention[] } | undefined)?.entity_mentions;
-    if (Array.isArray(mentions) && mentions.length > 0) return mentions;
-    return normalizeNerData((props?.ner_data as unknown[]) ?? []) as unknown as EntityMention[];
-  }, [storyHubPage]);
-
-  // Get occurrences in current interview
-  const currentInterviewOccurrences = useMemo<EntityOccurrence[]>(() => {
-    if (!testimonyMentions.length || !allWords) return [];
-
-    // Prefer exact entity_uuid match; fall back to text+label for legacy data.
-    const filtered = testimonyMentions
-      .filter((m: any) => {
-        if (entityUuid && m.entity_uuid) return m.entity_uuid === entityUuid;
-        const mentionText = (m.canonical_form ?? m.text ?? '').toLowerCase();
-        return mentionText === entityText.toLowerCase() && m.label === entityLabel;
-      })
-      .sort((a: any, b: any) => a.start_time - b.start_time);
-
-    const unique = filtered.filter(
-      (m: any, index, arr) =>
-        index === 0 || Math.abs(m.start_time - arr[index - 1].start_time) > DUPLICATE_TIME_EPSILON,
-    );
-
-    return unique.map(
-      (m: any): EntityOccurrence => ({
-        text: m.text || m.canonical_form || entityText,
-        start_time: m.start_time,
-        end_time: m.end_time,
-        ...getContextAroundTime(allWords, m.start_time, m.end_time, m.text || m.canonical_form || entityText),
-      }),
-    );
-  }, [allWords, entityLabel, entityText, entityUuid, testimonyMentions]);
 
   // Load canonical entity record (Wikidata, relationships, description) when
   // we have an entity_uuid. Cached per-uuid implicitly by React's effect deps.
@@ -352,13 +215,11 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
     setProjectMentionCount(null);
     setLoading(true);
 
+    // Cross-source list now includes the current recording (pinned to top of
+    // the grouped result below). Drop the previous excludeTestimonyId.
     const loader = entityUuid
-      ? searchChunksByEntityUuid(entityUuid, { excludeTestimonyId: currentStoryUuid, limit: 10_000 }).then(
-          (objects) => ({
-            objects,
-          }),
-        )
-      : searchNerEntitiesAcrossCollection(entityText, entityLabel, currentStoryUuid, 10_000);
+      ? searchChunksByEntityUuid(entityUuid, { limit: 10_000 }).then((objects) => ({ objects }))
+      : searchNerEntitiesAcrossCollection(entityText, entityLabel, undefined, 10_000);
 
     loader
       .then((searchResult) => {
@@ -413,46 +274,63 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
     return { text, highlightedParts };
   };
 
-  const handleCurrentInterviewClick = (occurrence: EntityOccurrence) => {
-    // Ensure the NER filter is enabled (don't toggle if already on)
-    if (!selected_ner_labels.includes(nerLabel)) {
-      setUpdateSelectedNerLabel(nerLabel);
+  const { seekAndScroll } = useTranscriptNavigation();
+
+  const handleRecordingExcerptClick = (occurrence: WeaviateGenericObject<Chunks, any>) => {
+    const props = occurrence.properties as ChunkProps;
+    const start = Number(props?.start_time ?? 0);
+    const theirstoryId = String(props?.theirstory_id ?? '');
+    if (!theirstoryId) return;
+    if (currentStoryUuid && theirstoryId === currentStoryUuid) {
+      // Same recording — seek inside the player instead of opening a new tab.
+      seekAndScroll(start);
+      onClose();
+      return;
     }
-
-    seekAndScroll(occurrence.start_time);
-
+    const end = Number(props?.end_time ?? 0);
+    const url = `/story/${theirstoryId}?start=${start}&end=${end}&nerLabel=${entityLabel}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
     onClose();
   };
 
-  const handleCollectionClick = (occurrence: WeaviateGenericObject<Chunks, any>) => {
-    if (occurrence.uuid) {
-      const url = `/story/${occurrence.properties.theirstory_id}?start=${occurrence.properties.start_time}&end=${occurrence.properties.end_time}&nerLabel=${entityLabel}`;
-      window.open(url, '_blank');
-      onClose();
-    }
+  // Group project occurrences by recording. Carry video_url + isAudioFile
+  // through so the row can render a thumbnail. Pin the current recording to
+  // the top of the list so the reader can jump back to where they were.
+  type RecordingGroup = {
+    interview_title: string;
+    theirstory_id: string;
+    video_url?: string;
+    isAudioFile?: boolean;
+    occurrences: WeaviateGenericObject<Chunks, any>[];
   };
-
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
-
-  // Group project occurrences by recording (theirstory_id) for clearer display
-  const occurrencesByRecording = useMemo(() => {
-    const byId = new Map<
-      string,
-      { interview_title: string; theirstory_id: string; occurrences: WeaviateGenericObject<Chunks, any>[] }
-    >();
+  const occurrencesByRecording = useMemo<RecordingGroup[]>(() => {
+    const byId = new Map<string, RecordingGroup>();
     for (const obj of collectionOccurrences) {
       const props = obj.properties as ChunkProps;
-      const id = props?.theirstory_id ?? '';
-      const title = props?.interview_title ?? 'Unknown recording';
+      const id = (props?.theirstory_id as string) ?? '';
+      const title = (props?.interview_title as string) ?? 'Unknown recording';
       if (!byId.has(id)) {
-        byId.set(id, { interview_title: title, theirstory_id: id, occurrences: [] });
+        byId.set(id, {
+          interview_title: title,
+          theirstory_id: id,
+          video_url: (props?.video_url as string) || undefined,
+          isAudioFile: Boolean(props?.isAudioFile),
+          occurrences: [],
+        });
       }
       byId.get(id)!.occurrences.push(obj);
     }
-    return Array.from(byId.values());
-  }, [collectionOccurrences]);
+    const list = Array.from(byId.values());
+    // Pin the current recording first; the rest sort by mention count desc
+    // so the most-resonant cross-source recordings come next.
+    list.sort((a, b) => {
+      const aCurrent = currentStoryUuid && a.theirstory_id === currentStoryUuid ? 1 : 0;
+      const bCurrent = currentStoryUuid && b.theirstory_id === currentStoryUuid ? 1 : 0;
+      if (aCurrent !== bCurrent) return bCurrent - aCurrent;
+      return b.occurrences.length - a.occurrences.length;
+    });
+    return list;
+  }, [collectionOccurrences, currentStoryUuid]);
 
   // When modal opens or entity/data changes, expand all recording sections by default
   useEffect(() => {
@@ -473,17 +351,10 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
   const recordingCount = projectRecordingCount ?? occurrencesByRecording.length;
   const mentionCount = projectMentionCount ?? collectionOccurrences.length;
   const mentionCountDisplay = mentionCount >= 10_000 ? '10,000+' : String(mentionCount);
-  const interviewTabLabel = isMobile
-    ? `Interview (${currentInterviewOccurrences.length})`
-    : `In the interview (${currentInterviewOccurrences.length})`;
-  const projectTabLabel =
-    mentionCount > 0 || collectionOccurrences.length > 0
-      ? isMobile
-        ? `Project (${mentionCountDisplay})`
-        : `In the project (${mentionCountDisplay} mention${mentionCount !== 1 ? 's' : ''} in ${recordingCount} recording${recordingCount !== 1 ? 's' : ''})`
-      : isMobile
-        ? 'Project'
-        : 'In the project';
+  const summaryLine =
+    mentionCount > 0
+      ? `${mentionCountDisplay} mention${mentionCount !== 1 ? 's' : ''} across ${recordingCount} recording${recordingCount !== 1 ? 's' : ''}`
+      : '';
 
   return (
     <Dialog
@@ -626,220 +497,116 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
         )}
         <Box
           sx={{
-            borderBottom: '1px solid',
-            borderColor: colors.grey[200],
-            bgcolor: colors.common.white,
-            position: 'sticky',
-            top: 0,
-            zIndex: 2,
+            p: { xs: 1.25, md: 1.5 },
+            overflowY: 'auto',
+            flex: 1,
           }}>
-          <Tabs
-            value={tabValue}
-            onChange={handleTabChange}
-            aria-label="entity occurrences tabs"
-            variant={isMobile ? 'scrollable' : 'standard'}
-            scrollButtons={isMobile ? 'auto' : false}
-            allowScrollButtonsMobile
-            sx={{
-              px: { xs: 1, md: 2 },
-              minHeight: { xs: 56, md: 52 },
-              '& .MuiTabs-scroller': {
-                overflowX: isMobile ? 'auto !important' : 'hidden',
-              },
-              '& .MuiTabs-flexContainer': {
-                gap: { xs: 1, md: 2 },
-              },
-              '& .MuiTabs-scrollButtons': {
-                color: colors.primary.main,
-              },
-              '& .MuiTabs-indicator': {
-                height: 3,
-                borderRadius: '999px 999px 0 0',
-                backgroundColor: colors.primary.main,
-              },
-            }}>
-            {!hideInterviewTab && (
-              <Tab
-                value={0}
-                label={interviewTabLabel}
-                sx={{
-                  textTransform: 'none',
-                  minHeight: { xs: 56, md: 52 },
-                  minWidth: 'max-content',
-                  px: { xs: 1, md: 1.5 },
-                  fontSize: { xs: '0.95rem', md: '0.82rem' },
-                  fontWeight: 600,
-                  color: colors.text.secondary,
-                  '&.Mui-selected': {
-                    color: colors.primary.main,
-                  },
-                }}
-              />
-            )}
-            <Tab
-              value={1}
-              label={projectTabLabel}
+          {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : collectionOccurrences.length === 0 ? (
+            <Typography
+              color="text.secondary"
               sx={{
-                textTransform: 'none',
-                minHeight: { xs: 56, md: 52 },
-                minWidth: 'max-content',
-                px: { xs: 1, md: 1.5 },
-                fontSize: { xs: '0.95rem', md: '0.82rem' },
-                fontWeight: 600,
-                color: colors.text.secondary,
-                '&.Mui-selected': {
-                  color: colors.primary.main,
-                },
-              }}
-            />
-          </Tabs>
-        </Box>
-
-        {tabValue === 0 && !hideInterviewTab && (
-          <Box
-            sx={{
-              p: { xs: 1.25, md: 1.5 },
-              overflowY: 'auto',
-              flex: 1,
-            }}>
-            {currentInterviewOccurrences.length === 0 ? (
-              <Typography
-                color="text.secondary"
-                sx={{
-                  textAlign: 'center',
-                  py: 6,
-                  px: 2,
-                  border: '1px dashed',
-                  borderColor: colors.grey[300],
-                  borderRadius: 3,
-                  bgcolor: colors.common.white,
-                }}>
-                No occurrences found in this interview
-              </Typography>
-            ) : (
-              <List sx={{ p: 0 }}>
-                {currentInterviewOccurrences.map((occurrence: EntityOccurrence, index: number) => (
-                  <ListItem
-                    key={`${occurrence.start_time}-${occurrence.end_time}-${occurrence.text}-${index}`}
-                    onClick={() => handleCurrentInterviewClick(occurrence)}
-                    sx={{
-                      cursor: 'pointer',
-                      alignItems: 'stretch',
-                      borderRadius: 3,
-                      mb: 1,
-                      px: { xs: 1.25, md: 1.5 },
-                      py: { xs: 1.25, md: 1.25 },
-                      bgcolor: colors.common.white,
-                      boxShadow: '0 2px 10px rgba(15, 23, 42, 0.04)',
-                      '&:hover': {
-                        backgroundColor: colors.common.white,
-                        borderColor: colors.primary.main,
-                        boxShadow: '0 8px 24px rgba(15, 23, 42, 0.08)',
-                      },
-                      border: '1px solid',
-                      borderColor: colors.grey[200],
-                    }}>
-                    <Box sx={{ width: '100%' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ fontSize: { xs: '0.95rem', md: '0.84rem' }, fontWeight: 500 }}>
-                          {formatTime(occurrence.start_time)}
-                        </Typography>
-                      </Box>
-
-                      <ExpandableHighlightedText
-                        collapsedText={occurrence.context}
-                        expandedText={occurrence.expandedContext}
-                        collapsedHighlightedParts={occurrence.highlightedContext}
-                        expandedHighlightedParts={occurrence.expandedHighlightedContext}
-                        collapsedLines={3}
-                      />
-                    </Box>
-                  </ListItem>
-                ))}
-              </List>
-            )}
-          </Box>
-        )}
-
-        {tabValue === 1 && (
-          <Box
-            sx={{
-              p: { xs: 1.25, md: 1.5 },
-              overflowY: 'auto',
-              flex: 1,
-            }}>
-            {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-                <CircularProgress />
-              </Box>
-            ) : collectionOccurrences.length === 0 ? (
-              <Typography
-                color="text.secondary"
-                sx={{
-                  textAlign: 'center',
-                  py: 6,
-                  px: 2,
-                  border: '1px dashed',
-                  borderColor: colors.grey[300],
-                  borderRadius: 3,
-                  bgcolor: colors.common.white,
-                }}>
-                No occurrences found in other interviews
-              </Typography>
-            ) : (
-              <>
+                textAlign: 'center',
+                py: 6,
+                px: 2,
+                border: '1px dashed',
+                borderColor: colors.grey[300],
+                borderRadius: 3,
+                bgcolor: colors.common.white,
+              }}>
+              No occurrences found across recordings.
+            </Typography>
+          ) : (
+            <>
+              {summaryLine && (
                 <Typography
                   variant="body2"
                   color="text.secondary"
                   sx={{ mb: 1.5, px: { xs: 0.5, md: 0.25 }, fontSize: { xs: '1rem', md: '0.86rem' } }}>
-                  {mentionCountDisplay} mention{mentionCount !== 1 ? 's' : ''} across {recordingCount} recording
-                  {recordingCount !== 1 ? 's' : ''}
+                  {summaryLine}
                 </Typography>
-                <List sx={{ p: 0 }}>
-                  {occurrencesByRecording.map((group) => {
-                    const isExpanded = expandedSections.has(group.theirstory_id);
-                    return (
-                      <Box key={group.theirstory_id} sx={{ mb: 2 }}>
-                        <Box
-                          component="button"
-                          onClick={() => toggleSection(group.theirstory_id)}
-                          sx={{
-                            width: '100%',
-                            lineHeight: 1.5,
-                            py: { xs: 1.25, md: 1 },
-                            px: { xs: 1.25, md: 1.25 },
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            flexWrap: 'wrap',
-                            gap: 1,
+              )}
+              <List sx={{ p: 0 }}>
+                {occurrencesByRecording.map((group) => {
+                  const isExpanded = expandedSections.has(group.theirstory_id);
+                  const isCurrent = currentStoryUuid && group.theirstory_id === currentStoryUuid;
+                  const playbackId = group.video_url ? getMuxPlaybackId(group.video_url) : null;
+                  const thumbTime = getThumbnailTimeForTitle(group.interview_title);
+                  return (
+                    <Box key={group.theirstory_id} sx={{ mb: 2 }}>
+                      <Box
+                        component="button"
+                        onClick={() => toggleSection(group.theirstory_id)}
+                        sx={{
+                          width: '100%',
+                          lineHeight: 1.5,
+                          py: { xs: 1.25, md: 1 },
+                          px: { xs: 1.25, md: 1.25 },
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          flexWrap: 'wrap',
+                          gap: 1,
+                          backgroundColor: colors.common.white,
+                          border: '1px solid',
+                          borderColor: isCurrent ? colors.primary.main : colors.grey[200],
+                          borderRadius: isExpanded ? '14px 14px 0 0' : '14px',
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                          boxShadow: '0 4px 14px rgba(15, 23, 42, 0.05)',
+                          '&:hover': {
                             backgroundColor: colors.common.white,
-                            border: '1px solid',
-                            borderColor: colors.grey[200],
-                            borderRadius: isExpanded ? '14px 14px 0 0' : '14px',
-                            cursor: 'pointer',
-                            textAlign: 'left',
-                            boxShadow: '0 4px 14px rgba(15, 23, 42, 0.05)',
-                            '&:hover': {
-                              backgroundColor: colors.common.white,
-                              borderColor: colors.grey[300],
-                            },
-                          }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: 1, minWidth: 0 }}>
+                            borderColor: isCurrent ? colors.primary.main : colors.grey[300],
+                          },
+                        }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1, minWidth: 0 }}>
+                          <Box
+                            component="span"
+                            sx={{
+                              p: 0.25,
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              color: colors.text.primary,
+                              flexShrink: 0,
+                            }}
+                            aria-hidden="true">
+                            {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                          </Box>
+                          {group.isAudioFile || !playbackId ? (
                             <Box
-                              component="span"
                               sx={{
-                                p: 0.25,
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                color: colors.text.primary,
+                                width: { xs: 64, md: 72 },
+                                aspectRatio: '16 / 9',
+                                borderRadius: 1,
+                                bgcolor: colors.grey[200],
+                                display: 'grid',
+                                placeItems: 'center',
+                                flexShrink: 0,
                               }}
                               aria-hidden="true">
-                              {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                              <GraphicEqIcon sx={{ fontSize: 18, color: colors.grey[500] }} />
                             </Box>
+                          ) : (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={`https://image.mux.com/${playbackId}/thumbnail.jpg?time=${thumbTime}&width=180&height=101&fit_mode=crop`}
+                              alt=""
+                              loading="lazy"
+                              style={{
+                                width: 'min(72px, 18vw)',
+                                aspectRatio: '16 / 9',
+                                objectFit: 'cover',
+                                borderRadius: 4,
+                                flexShrink: 0,
+                                display: 'block',
+                                background: colors.grey[200],
+                              }}
+                            />
+                          )}
+                          <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                             <Typography
                               variant="subtitle1"
                               fontWeight="700"
@@ -848,96 +615,108 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
                               sx={{ fontSize: { xs: '1rem', md: '0.88rem' } }}>
                               {group.interview_title}
                             </Typography>
+                            {isCurrent && (
+                              <Typography
+                                sx={{
+                                  fontSize: '0.7rem',
+                                  fontWeight: 700,
+                                  letterSpacing: '0.06em',
+                                  color: colors.primary.main,
+                                  textTransform: 'uppercase',
+                                }}>
+                                You are here
+                              </Typography>
+                            )}
                           </Box>
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ fontSize: { xs: '0.95rem', md: '0.82rem' } }}>
-                            {group.occurrences.length} mention{group.occurrences.length !== 1 ? 's' : ''}
-                          </Typography>
                         </Box>
-                        <Collapse in={isExpanded} timeout="auto">
-                          <Box
-                            sx={{
-                              mt: 0.25,
-                              p: { xs: 0.75, md: 0.75 },
-                              border: '1px solid',
-                              borderTop: 'none',
-                              borderColor: colors.grey[200],
-                              borderRadius: '0 0 14px 14px',
-                              bgcolor: '#F8FAFC',
-                            }}>
-                            {group.occurrences.map((occurrence, index) => {
-                              const transcription = occurrence.properties.transcription || '';
-                              const collapsedContext = createSimpleContext(
-                                transcription,
-                                entityText,
-                                COLLAPSED_CHAR_WINDOW,
-                              );
-                              const expandedContext = createSimpleContext(
-                                transcription,
-                                entityText,
-                                EXPANDED_CHAR_WINDOW,
-                              );
-
-                              return (
-                                <ListItem
-                                  key={`${occurrence.uuid ?? occurrence.properties.theirstory_id}-${occurrence.properties.start_time}-${index}`}
-                                  onClick={() => handleCollectionClick(occurrence)}
-                                  sx={{
-                                    cursor: 'pointer',
-                                    alignItems: 'stretch',
-                                    borderRadius: 3,
-                                    mb: index === group.occurrences.length - 1 ? 0 : 1,
-                                    px: { xs: 1.25, md: 1.25 },
-                                    py: { xs: 1.25, md: 1.1 },
-                                    bgcolor: colors.common.white,
-                                    '&:hover': {
-                                      backgroundColor: colors.common.white,
-                                      borderColor: colors.primary.main,
-                                      boxShadow: '0 8px 24px rgba(15, 23, 42, 0.08)',
-                                    },
-                                    border: '1px solid',
-                                    borderColor: colors.grey[200],
-                                    boxShadow: '0 2px 10px rgba(15, 23, 42, 0.04)',
-                                  }}>
-                                  <Box sx={{ width: '100%' }}>
-                                    <Box
-                                      sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'flex-end',
-                                        mb: 1,
-                                      }}>
-                                      <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                        sx={{ fontSize: { xs: '0.95rem', md: '0.84rem' }, fontWeight: 500 }}>
-                                        {formatTime(occurrence.properties.start_time)}
-                                      </Typography>
-                                    </Box>
-
-                                    <ExpandableHighlightedText
-                                      collapsedText={collapsedContext?.text || transcription}
-                                      expandedText={expandedContext?.text || transcription}
-                                      collapsedHighlightedParts={collapsedContext?.highlightedParts || null}
-                                      expandedHighlightedParts={expandedContext?.highlightedParts || null}
-                                      collapsedLines={3}
-                                    />
-                                  </Box>
-                                </ListItem>
-                              );
-                            })}
-                          </Box>
-                        </Collapse>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ fontSize: { xs: '0.95rem', md: '0.82rem' } }}>
+                          {group.occurrences.length} mention{group.occurrences.length !== 1 ? 's' : ''}
+                        </Typography>
                       </Box>
-                    );
-                  })}
-                </List>
-              </>
-            )}
-          </Box>
-        )}
+                      <Collapse in={isExpanded} timeout="auto">
+                        <Box
+                          sx={{
+                            mt: 0.25,
+                            p: { xs: 0.75, md: 0.75 },
+                            border: '1px solid',
+                            borderTop: 'none',
+                            borderColor: colors.grey[200],
+                            borderRadius: '0 0 14px 14px',
+                            bgcolor: '#F8FAFC',
+                          }}>
+                          {group.occurrences.map((occurrence, index) => {
+                            const transcription = occurrence.properties.transcription || '';
+                            const collapsedContext = createSimpleContext(
+                              transcription,
+                              entityText,
+                              COLLAPSED_CHAR_WINDOW,
+                            );
+                            const expandedContext = createSimpleContext(
+                              transcription,
+                              entityText,
+                              EXPANDED_CHAR_WINDOW,
+                            );
+
+                            return (
+                              <ListItem
+                                key={`${occurrence.uuid ?? occurrence.properties.theirstory_id}-${occurrence.properties.start_time}-${index}`}
+                                onClick={() => handleRecordingExcerptClick(occurrence)}
+                                sx={{
+                                  cursor: 'pointer',
+                                  alignItems: 'stretch',
+                                  borderRadius: 3,
+                                  mb: index === group.occurrences.length - 1 ? 0 : 1,
+                                  px: { xs: 1.25, md: 1.25 },
+                                  py: { xs: 1.25, md: 1.1 },
+                                  bgcolor: colors.common.white,
+                                  '&:hover': {
+                                    backgroundColor: colors.common.white,
+                                    borderColor: colors.primary.main,
+                                    boxShadow: '0 8px 24px rgba(15, 23, 42, 0.08)',
+                                  },
+                                  border: '1px solid',
+                                  borderColor: colors.grey[200],
+                                  boxShadow: '0 2px 10px rgba(15, 23, 42, 0.04)',
+                                }}>
+                                <Box sx={{ width: '100%' }}>
+                                  <Box
+                                    sx={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'flex-end',
+                                      mb: 1,
+                                    }}>
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                      sx={{ fontSize: { xs: '0.95rem', md: '0.84rem' }, fontWeight: 500 }}>
+                                      {formatTime(occurrence.properties.start_time)}
+                                    </Typography>
+                                  </Box>
+
+                                  <ExpandableHighlightedText
+                                    collapsedText={collapsedContext?.text || transcription}
+                                    expandedText={expandedContext?.text || transcription}
+                                    collapsedHighlightedParts={collapsedContext?.highlightedParts || null}
+                                    expandedHighlightedParts={expandedContext?.highlightedParts || null}
+                                    collapsedLines={3}
+                                  />
+                                </Box>
+                              </ListItem>
+                            );
+                          })}
+                        </Box>
+                      </Collapse>
+                    </Box>
+                  );
+                })}
+              </List>
+            </>
+          )}
+        </Box>
       </DialogContent>
     </Dialog>
   );

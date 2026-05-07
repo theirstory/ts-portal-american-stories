@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
-import React, { memo, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useSemanticSearchStore } from '@/app/stores/useSemanticSearchStore';
 import { useSearchStore } from '@/app/stores/useSearchStore';
 import usePlayerStore from '@/app/stores/usePlayerStore';
@@ -9,12 +9,14 @@ import { scrollElementIntoContainer } from '@/app/utils/scrollElementIntoContain
 import { useTranscriptPanelStore } from '@/app/stores/useTranscriptPanelStore';
 import { StoryTranscriptWord } from './StoryTranscriptWord';
 import { StoryTranscriptNERGroupWords } from './StoryTranscriptNERGroupWords';
+import { NerEntityModal } from './NerEntityModal';
 import { WeaviateGenericObject } from 'weaviate-client';
 import { Chunks } from '@/types/weaviate';
 import { Paragraph, Word } from '@/types/transcription';
 import { colors } from '@/lib/theme';
 import { formatTime, isMobile } from '@/app/utils/util';
 import { useTranscriptNavigation } from '@/app/hooks/useTranscriptNavigation';
+import { getNerColor } from '@/config/organizationConfig';
 
 type Props = {
   paragraph: Paragraph;
@@ -115,6 +117,38 @@ export const StoryTranscriptParagraph = memo(
 
       return matches;
     }, [hasSelectedNerLabels, mentionsForHighlights, selectedNerLabelSet, wordsInParagraph]);
+
+    // Always-on subtle entity matches — used to render thin colored underlines
+    // on entity spans regardless of the label-filter toggle. The toggle then
+    // becomes a "highlight by category" focused-research mode on top of this.
+    const allEntityMatchByWordIndex = useMemo(() => {
+      if (mentionsForHighlights.length === 0 || wordsInParagraph.length === 0) {
+        return new Map<number, any>();
+      }
+      const sorted = [...mentionsForHighlights].sort((a: any, b: any) => a.start_time - b.start_time);
+      const matches = new Map<number, any>();
+      let cursor = 0;
+      for (const ner of sorted) {
+        while (cursor < wordsInParagraph.length && wordsInParagraph[cursor].end < ner.start_time) {
+          cursor += 1;
+        }
+        for (let i = cursor; i < wordsInParagraph.length; i += 1) {
+          const word = wordsInParagraph[i];
+          if (word.start > ner.end_time) break;
+          if (word.start >= ner.start_time && word.end <= ner.end_time && !matches.has(i)) {
+            matches.set(i, ner);
+          }
+        }
+      }
+      return matches;
+    }, [mentionsForHighlights, wordsInParagraph]);
+
+    const [activeEntity, setActiveEntity] = useState<{
+      text: string;
+      label: string;
+      entity_uuid?: string;
+    } | null>(null);
+    const currentStoryUuid = (storyHubPage?.properties as { theirstory_id?: string } | undefined)?.theirstory_id;
 
     const traditionalMatchSet = useMemo(
       () => new Set(traditionalSearchMatches.map((match) => getWordKey(match))),
@@ -300,8 +334,13 @@ export const StoryTranscriptParagraph = memo(
           wordBreak: 'break-word',
           transition: 'all 0.3s ease',
         }}>
-        <Typography color="primary" fontSize="12px" fontWeight="bold" gutterBottom>
-          {formatTime(paragraph.start)} {paragraph.speaker}
+        <Typography
+          color="primary"
+          fontSize="13px"
+          fontWeight="bold"
+          gutterBottom
+          sx={{ letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+          {formatTime(paragraph.start)} · {paragraph.speaker}
         </Typography>
 
         <Box>
@@ -321,10 +360,10 @@ export const StoryTranscriptParagraph = memo(
               word.end <= currentSemanticEnd + MATCH_EPSILON;
 
             const nerMatch = nerMatchByWordIndex.get(wordIndex);
-
             const isNerSelected = Boolean(nerMatch);
 
-            // Render NER label with grouped words
+            // FILTERED MODE: when the user has toggled label filters on, render
+            // the selected entities as the existing beige pills.
             if (isNerSelected && nerMatch) {
               const nerWords: Word[] = [];
               const nerEnd = nerMatch.end_time;
@@ -358,6 +397,69 @@ export const StoryTranscriptParagraph = memo(
                   onClick={() => seekOnly(nerMatch.start_time)}
                   paragraph={paragraph}
                 />
+              );
+            }
+
+            // SUBTLE MODE (default): when no label filter is on, render the
+            // entity span as a clickable inline group with a thin colored
+            // bottom-border. Reads like prose; the underline is a quiet
+            // affordance rather than a chip.
+            const subtleEntity = !hasSelectedNerLabels ? allEntityMatchByWordIndex.get(wordIndex) : undefined;
+            if (subtleEntity) {
+              const groupWords: Word[] = [];
+              for (let i = wordIndex; i < wordsInParagraph.length; i++) {
+                const w = wordsInParagraph[i];
+                if (w.start >= subtleEntity.start_time && w.end <= subtleEntity.end_time) {
+                  groupWords.push(w);
+                  renderedWordIndexes.add(i);
+                } else {
+                  break;
+                }
+              }
+              const underlineColor = getNerColor(subtleEntity.label);
+              const onClick = () =>
+                setActiveEntity({
+                  text: subtleEntity.canonical_form || subtleEntity.text || groupWords.map((w) => w.text).join(' '),
+                  label: subtleEntity.label,
+                  entity_uuid: subtleEntity.entity_uuid,
+                });
+              return (
+                <Box
+                  key={`entity-${wordIndex}`}
+                  component="span"
+                  onClick={onClick}
+                  title={subtleEntity.canonical_form || subtleEntity.text}
+                  sx={{
+                    display: 'inline',
+                    cursor: 'pointer',
+                    borderBottom: `2px solid ${underlineColor}`,
+                    paddingBottom: '1px',
+                    transition: 'background-color 0.15s ease',
+                    '&:hover': { backgroundColor: `${underlineColor}1F` },
+                  }}>
+                  {groupWords.map((w, i) => {
+                    const nw = wordsInParagraph[wordsInParagraph.indexOf(w) + 1];
+                    return (
+                      <StoryTranscriptWord
+                        key={`entity-word-${w.word_idx}-${i}`}
+                        word={w}
+                        nextWordStart={nw?.start}
+                        hasTraditionalHighlight={hasTraditionalHighlight}
+                        isTraditionalMatch={traditionalMatchSet.has(getWordKey(w))}
+                        isCurrentTraditionalMatch={
+                          traditionalMatchSet.has(getWordKey(w)) && currentTraditionalMatchKey === getWordKey(w)
+                        }
+                        isInCurrentSemanticMatch={
+                          currentSemanticStart !== undefined &&
+                          currentSemanticEnd !== undefined &&
+                          w.start >= currentSemanticStart - MATCH_EPSILON &&
+                          w.end <= currentSemanticEnd + MATCH_EPSILON
+                        }
+                        urlHighlightRange={urlHighlightRange}
+                      />
+                    );
+                  })}
+                </Box>
               );
             }
 
@@ -402,6 +504,16 @@ export const StoryTranscriptParagraph = memo(
             );
           })}
         </Box>
+        {activeEntity && (
+          <NerEntityModal
+            open
+            onClose={() => setActiveEntity(null)}
+            entityText={activeEntity.text}
+            entityLabel={activeEntity.label}
+            entityUuid={activeEntity.entity_uuid}
+            currentStoryUuid={currentStoryUuid}
+          />
+        )}
       </Box>
     );
   },

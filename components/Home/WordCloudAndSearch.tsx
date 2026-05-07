@@ -4,6 +4,9 @@ import { useEffect, useMemo, useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, InputBase, IconButton, Typography, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import Link from 'next/link';
+import MapIcon from '@mui/icons-material/Map';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
   getNerColor,
   getNerDisplayName,
@@ -208,16 +211,33 @@ export const WordCloudAndSearch = () => {
             fontWeight: 700,
             fontSize: { xs: '0.7rem', md: '0.75rem' },
           }}>
-          Threads
+          Throughlines
         </Typography>
-        <Typography
+        <Box
+          component={Link}
+          href="/map"
           sx={{
-            color: 'text.secondary',
-            fontSize: { xs: '0.7rem', md: '0.7rem' },
-            fontStyle: 'italic',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 0.5,
+            color: 'common.black',
+            textDecoration: 'none',
+            fontSize: { xs: '0.72rem', md: '0.75rem' },
+            fontWeight: 700,
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            opacity: 0.8,
+            transition: 'opacity 0.15s, color 0.15s',
+            '&:hover': {
+              opacity: 1,
+              color: 'secondary.main',
+              '& .arrow': { transform: 'translateX(3px)' },
+            },
           }}>
-          questions and people across recordings
-        </Typography>
+          <MapIcon sx={{ fontSize: 16 }} />
+          View in Map
+          <ArrowForwardIcon className="arrow" sx={{ fontSize: 14, transition: 'transform 0.15s ease' }} />
+        </Box>
       </Box>
 
       <Box
@@ -235,7 +255,7 @@ export const WordCloudAndSearch = () => {
           </Box>
         ) : isEmpty ? (
           <Typography sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
-            Threads appear once at least three recordings answer the same question.
+            Throughlines appear once at least three recordings answer the same question.
           </Typography>
         ) : (
           <Box
@@ -260,7 +280,7 @@ export const WordCloudAndSearch = () => {
                     key={item.id}
                     component="button"
                     onClick={() => setActiveThreadUuid(item.id.slice(2))}
-                    title={`${getQuestionLevelDisplayName(item.level)} thread · answered in ${item.weight} recordings — ${item.question}`}
+                    title={`${getQuestionLevelDisplayName(item.level)} throughline · answered in ${item.weight} recordings — ${item.question}`}
                     sx={{
                       cursor: 'pointer',
                       padding: '4px 12px',
@@ -377,7 +397,6 @@ export const WordCloudAndSearch = () => {
           entityText={activeEntity.text}
           entityLabel={activeEntity.label}
           entityUuid={activeEntity.entity_uuid}
-          hideInterviewTab
         />
       )}
     </Box>

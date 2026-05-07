@@ -26,11 +26,18 @@ import {
 import { getThreadModalData, type ThreadModalData } from '@/lib/weaviate/threads';
 import { colors } from '@/lib/theme';
 import { formatTime } from '@/app/utils/util';
+import { getMuxPlaybackId, getThumbnailTimeForTitle } from '@/app/utils/converters';
+import GraphicEqIcon from '@mui/icons-material/GraphicEq';
+import { useTranscriptNavigation } from '@/app/hooks/useTranscriptNavigation';
 
 type Props = {
   open: boolean;
   onClose: () => void;
   threadUuid: string;
+  /** Optional — the recording the user is currently inside. When set, that
+   * recording is pinned to the top of the list and clicking an excerpt seeks
+   * the local player instead of opening a new tab. */
+  currentStoryUuid?: string;
 };
 
 const buildExcerptSnippet = (text: string, maxChars = 320): string => {
@@ -39,7 +46,7 @@ const buildExcerptSnippet = (text: string, maxChars = 320): string => {
   return `${text.slice(0, maxChars).trimEnd()}…`;
 };
 
-export const ThreadModal = ({ open, onClose, threadUuid }: Props) => {
+export const ThreadModal = ({ open, onClose, threadUuid, currentStoryUuid }: Props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [loading, setLoading] = useState(false);
@@ -51,7 +58,7 @@ export const ThreadModal = ({ open, onClose, threadUuid }: Props) => {
     let cancelled = false;
     setLoading(true);
     setData(null);
-    getThreadModalData(threadUuid)
+    getThreadModalData(threadUuid, currentStoryUuid)
       .then((result) => {
         if (cancelled) return;
         setData(result);
@@ -67,7 +74,7 @@ export const ThreadModal = ({ open, onClose, threadUuid }: Props) => {
     return () => {
       cancelled = true;
     };
-  }, [open, threadUuid]);
+  }, [open, threadUuid, currentStoryUuid]);
 
   const props = data?.thread.properties;
   const themeLabel = (props?.theme_label as string) || '';
@@ -88,7 +95,16 @@ export const ThreadModal = ({ open, onClose, threadUuid }: Props) => {
     });
   };
 
+  const { seekAndScroll } = useTranscriptNavigation();
+
   const handleExcerptClick = (theirstoryId: string, startTime: number) => {
+    if (currentStoryUuid && theirstoryId === currentStoryUuid) {
+      // Same recording — seek the local player and close the modal instead
+      // of opening a new tab (the testimony page is already mounted).
+      seekAndScroll(startTime);
+      onClose();
+      return;
+    }
     const url = `/story/${theirstoryId}?start=${startTime}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -229,12 +245,13 @@ export const ThreadModal = ({ open, onClose, threadUuid }: Props) => {
                 bgcolor: colors.common.white,
                 color: colors.text.secondary,
               }}>
-              No recordings linked to this thread yet.
+              No recordings linked to this throughline yet.
             </Typography>
           ) : (
             <List sx={{ p: 0 }}>
               {data.recordings.map((rec) => {
                 const isOpen = expanded.has(rec.theirstory_id);
+                const isCurrent = currentStoryUuid && rec.theirstory_id === currentStoryUuid;
                 return (
                   <Box key={rec.theirstory_id} sx={{ mb: 2 }}>
                     <Box
@@ -250,28 +267,80 @@ export const ThreadModal = ({ open, onClose, threadUuid }: Props) => {
                         gap: 1,
                         backgroundColor: colors.common.white,
                         border: '1px solid',
-                        borderColor: colors.grey[200],
+                        borderColor: isCurrent ? colors.primary.main : colors.grey[200],
                         borderRadius: isOpen ? '14px 14px 0 0' : '14px',
                         cursor: 'pointer',
                         textAlign: 'left',
                         boxShadow: '0 4px 14px rgba(15, 23, 42, 0.05)',
-                        '&:hover': { borderColor: colors.grey[300] },
+                        '&:hover': { borderColor: isCurrent ? colors.primary.main : colors.grey[300] },
                       }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, minWidth: 0, flex: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0, flex: 1 }}>
                         <Box
                           component="span"
-                          sx={{ display: 'inline-flex', color: colors.text.primary }}
+                          sx={{ display: 'inline-flex', color: colors.text.primary, flexShrink: 0 }}
                           aria-hidden="true">
                           {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                         </Box>
-                        <Typography
-                          variant="subtitle1"
-                          fontWeight={700}
-                          color="primary"
-                          noWrap
-                          sx={{ fontSize: { xs: '1rem', md: '0.92rem' } }}>
-                          {rec.interview_title}
-                        </Typography>
+                        {(() => {
+                          const playbackId = rec.video_url ? getMuxPlaybackId(rec.video_url) : null;
+                          if (rec.isAudioFile || !playbackId) {
+                            return (
+                              <Box
+                                sx={{
+                                  width: { xs: 64, md: 72 },
+                                  aspectRatio: '16 / 9',
+                                  borderRadius: 1,
+                                  bgcolor: colors.grey[200],
+                                  display: 'grid',
+                                  placeItems: 'center',
+                                  flexShrink: 0,
+                                }}
+                                aria-hidden="true">
+                                <GraphicEqIcon sx={{ fontSize: 18, color: colors.grey[500] }} />
+                              </Box>
+                            );
+                          }
+                          const t = getThumbnailTimeForTitle(rec.interview_title);
+                          return (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={`https://image.mux.com/${playbackId}/thumbnail.jpg?time=${t}&width=180&height=101&fit_mode=crop`}
+                              alt=""
+                              loading="lazy"
+                              style={{
+                                width: 'min(72px, 18vw)',
+                                aspectRatio: '16 / 9',
+                                objectFit: 'cover',
+                                borderRadius: 4,
+                                flexShrink: 0,
+                                display: 'block',
+                                background: colors.grey[200],
+                              }}
+                            />
+                          );
+                        })()}
+                        <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={700}
+                            color="primary"
+                            noWrap
+                            sx={{ fontSize: { xs: '1rem', md: '0.92rem' } }}>
+                            {rec.interview_title}
+                          </Typography>
+                          {isCurrent && (
+                            <Typography
+                              sx={{
+                                fontSize: '0.7rem',
+                                fontWeight: 700,
+                                letterSpacing: '0.06em',
+                                color: 'primary.main',
+                                textTransform: 'uppercase',
+                              }}>
+                              You are here
+                            </Typography>
+                          )}
+                        </Box>
                       </Box>
                       <Typography
                         variant="body2"

@@ -409,7 +409,11 @@ def _parse_reconciliation_response(
         wikidata_description: Optional[str] = None
         verified_qid: Optional[str] = None
         if wikidata_qid:
-            verification = wikidata_verify(wikidata_qid, wikidata_hint or ent.get("context_summary"))
+            verification = wikidata_verify(
+                wikidata_qid,
+                wikidata_hint or ent.get("context_summary"),
+                canonical_form=canonical,
+            )
             if verification is not None:
                 verified_qid = verification.qid
                 wikidata_url = verification.url

@@ -94,6 +94,24 @@
       "tokenization": "word"
     },
     {
+      "dataType": ["number"],
+      "description": "Latitude (decimal degrees, WGS84) for PLACE entities, sourced from Wikidata P625 at enrichment time. Persisted so the map can render without live Wikidata calls.",
+      "indexFilterable": true,
+      "indexRangeFilters": true,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "latitude"
+    },
+    {
+      "dataType": ["number"],
+      "description": "Longitude (decimal degrees, WGS84) for PLACE entities, sourced from Wikidata P625 at enrichment time.",
+      "indexFilterable": true,
+      "indexRangeFilters": true,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "longitude"
+    },
+    {
       "dataType": ["text"],
       "description": "Internal authority record id for entities with no linked-data match.",
       "indexFilterable": true,

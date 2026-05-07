@@ -135,6 +135,9 @@ export type Entities = {
   linked_data_qid: string | null;
   linked_data_url: string | null;
   linked_data_description: string | null;
+  /** Decimal-degree coordinates (WGS84) for PLACE entities, sourced from Wikidata P625. */
+  latitude: number | null;
+  longitude: number | null;
   /** Internal authority record id for entities with no linked-data match. */
   internal_id: string | null;
   /** One-sentence description of this entity's role across the source(s). */
