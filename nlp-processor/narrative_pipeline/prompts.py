@@ -174,6 +174,8 @@ Important:
 - Capture CULTURAL_ITEM only when the item carries cultural significance in
   context (a specific song, a tradition, a law, a court case, a film title).
   Don't capture generic nouns like "music" or "books".
+- Editorial exclusions — DO NOT extract these as entities (skip every
+  mention regardless of type or confidence): Gestapo.
 
 Return strict JSON of the shape:
 {

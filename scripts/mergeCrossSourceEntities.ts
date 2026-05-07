@@ -61,10 +61,16 @@ const DEFAULT_SAFE_TYPES = ['EVENT', 'PLACE', 'INSTITUTION', 'CULTURAL_ITEM', 'D
 
 const NON_PROPER_PREFIXES = ['my ', 'a ', 'an ', 'the ', 'our ', 'their ', 'his ', 'her ', 'its '];
 
-function isCanonicalEnoughToMerge(canonical: string): boolean {
+function isCanonicalEnoughToMerge(canonical: string, entityType?: string): boolean {
   if (!canonical) return false;
   const trimmed = canonical.trim();
   if (trimmed.length < 3) return false;
+  // Allow whitelisted proper-noun synonyms even when they trip the prefix /
+  // case rules (e.g. "the Mississippi River" or all-lowercase "internment").
+  if (entityType) {
+    const synonymHit = PROPER_NOUN_SYNONYM_MAP.get(`${entityType}|${trimmed.toLowerCase()}`);
+    if (synonymHit) return true;
+  }
   // Skip lowercase first letter — likely a generic noun phrase ("the war").
   const first = trimmed.charAt(0);
   if (first !== first.toUpperCase()) return false;
@@ -85,8 +91,11 @@ const KINSHIP_SYNONYM_GROUPS: string[][] = [
   ['grandmother', 'grandma', 'grandmom', 'nana', 'grandmothers'],
   ['mother', 'mom', 'mama', 'mommy', 'mum', 'momma', 'mothers'],
   ['father', 'dad', 'papa', 'daddy', 'pop', 'pa', 'fathers'],
-  ['brother', 'bro', 'brothers'],
-  ['sister', 'sis', 'sisters'],
+  // Modifier-prefixed forms ("little brother", "older sister") still refer to
+  // the same kinship role for cross-source aggregation; collapse them into the
+  // base term so the entity modal shows everyone's brother/sister stories.
+  ['brother', 'bro', 'brothers', 'little brother', 'older brother', 'baby brother', 'younger brother', 'big brother'],
+  ['sister', 'sis', 'sisters', 'little sister', 'older sister', 'baby sister', 'younger sister', 'big sister'],
   ['son', 'sons'],
   ['daughter', 'daughters'],
   ['uncle', 'uncles'],
@@ -116,6 +125,40 @@ const SYNONYM_TO_CANONICAL = ((): Map<string, string> => {
 function commonPersonGroupKey(canonical: string): string {
   const lower = canonical.trim().toLowerCase();
   return SYNONYM_TO_CANONICAL.get(lower) ?? lower;
+}
+
+/** Cross-spelling and short-form aliases for proper-noun entities. Like
+ * KINSHIP_SYNONYM_GROUPS, the first entry is the survivor's preferred label.
+ * Keep entries here narrow — same real-world referent, different surface form
+ * — not "related concepts". Group key is (entity_type, lowered first entry).
+ */
+const PROPER_NOUN_SYNONYM_GROUPS: Record<string, string[][]> = {
+  EVENT: [
+    ['World War II', 'World War Two', 'World War 2', 'WWII', 'WW2'],
+    ['Vietnam War', 'Vietnam conflict'],
+    ['internment', 'internment experience'],
+  ],
+  PLACE: [
+    ['Mississippi River', 'the Mississippi River'],
+    ['Santa Anita', 'Santa Anita racetrack'],
+  ],
+};
+
+/** type|lowered-variant → preferred canonical_form. Built once. */
+const PROPER_NOUN_SYNONYM_MAP = ((): Map<string, string> => {
+  const m = new Map<string, string>();
+  for (const [type, groups] of Object.entries(PROPER_NOUN_SYNONYM_GROUPS)) {
+    for (const group of groups) {
+      const canonical = group[0];
+      for (const variant of group) m.set(`${type}|${variant.toLowerCase()}`, canonical);
+    }
+  }
+  return m;
+})();
+
+function properNounGroupKey(type: string, canonical: string): string {
+  const preferred = PROPER_NOUN_SYNONYM_MAP.get(`${type}|${canonical.trim().toLowerCase()}`);
+  return preferred ? preferred.toLowerCase() : canonical.trim().toLowerCase();
 }
 
 /** Inverse rule for common-noun PERSON entities (kinship roles like
@@ -365,16 +408,18 @@ async function main(): Promise<void> {
     // Group by (type, lower(canonical_form)). The eligibility rule depends
     // on the mode: common-person mode requires lowercase canonical_form,
     // the default proper-noun mode requires uppercase first letter.
-    const eligible = (canonical: string) =>
-      commonPersonMode ? isCommonPersonCanonical(canonical) : isCanonicalEnoughToMerge(canonical);
+    const eligible = (e: EntityRow) =>
+      commonPersonMode
+        ? isCommonPersonCanonical(e.canonical_form)
+        : isCanonicalEnoughToMerge(e.canonical_form, e.entity_type);
     const groupKeyFor = (e: EntityRow) =>
       commonPersonMode
         ? `${e.entity_type}|${commonPersonGroupKey(e.canonical_form)}`
-        : `${e.entity_type}|${e.canonical_form.toLowerCase()}`;
+        : `${e.entity_type}|${properNounGroupKey(e.entity_type, e.canonical_form)}`;
     const groups = new Map<string, EntityRow[]>();
     for (const e of entities) {
       if (!safeTypes.includes(e.entity_type)) continue;
-      if (!eligible(e.canonical_form)) continue;
+      if (!eligible(e)) continue;
       const key = groupKeyFor(e);
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key)!.push(e);
@@ -406,6 +451,17 @@ async function main(): Promise<void> {
         }
         const finalForm = preferredCanonical ?? survivor.canonical_form;
         preferredCanonicalByUuid.set(survivor.uuid, finalForm);
+      } else {
+        // Proper-noun synonym hit ("World War Two" → "World War II",
+        // "the Mississippi River" → "Mississippi River"). Rename the
+        // survivor so the entity card shows the preferred spelling.
+        const candidate = PROPER_NOUN_SYNONYM_MAP.get(
+          `${survivor.entity_type}|${survivor.canonical_form.trim().toLowerCase()}`,
+        );
+        if (candidate && candidate !== survivor.canonical_form) {
+          preferredCanonical = candidate;
+          preferredCanonicalByUuid.set(survivor.uuid, candidate);
+        }
       }
       plans.push({ survivor, duplicates, preferredCanonical });
       for (const d of duplicates) remap.set(d.uuid, survivor.uuid);

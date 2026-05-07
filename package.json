@@ -18,6 +18,7 @@
     "weaviate:generate-schemas": "tsx scripts/init-schema.ts",
     "backfill:entity-mentions": "dotenv -e .env.local -- tsx scripts/backfillEntityMentions.ts",
     "merge:entities": "dotenv -e .env.local -- tsx scripts/mergeCrossSourceEntities.ts",
+    "delete:entities": "dotenv -e .env.local -- tsx scripts/deleteEntities.ts",
     "cleanup:bad-qids": "dotenv -e .env.local -- tsx scripts/cleanupBadWikidataQids.ts",
     "normalize:person": "dotenv -e .env.local -- tsx scripts/normalizePersonEntities.ts",
     "enrich:place-wikidata": "dotenv -e .env.local -- tsx scripts/enrichPlaceWikidata.ts",

@@ -147,11 +147,19 @@ const ExpandableHighlightedText: React.FC<ExpandableHighlightedTextProps> = ({
 
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-const buildEntityRegex = (entityText: string) =>
-  new RegExp(`(?<![\\p{L}\\p{N}'’])${escapeRegExp(entityText)}(?![\\p{L}\\p{N}'’])`, 'giu');
+/** Build a single regex that matches any of the provided terms as whole words.
+ * Longest-first ordering ensures "great grandmother" wins over "grandmother"
+ * when both appear in the term list. */
+const buildEntityRegex = (terms: string[]) => {
+  const cleaned = Array.from(new Set(terms.map((t) => t.trim()).filter(Boolean))).sort((a, b) => b.length - a.length);
+  if (cleaned.length === 0) return null;
+  const alt = cleaned.map(escapeRegExp).join('|');
+  return new RegExp(`(?<![\\p{L}\\p{N}'’])(?:${alt})(?![\\p{L}\\p{N}'’])`, 'giu');
+};
 
-const createHighlightedParts = (text: string, entityText: string): HighlightPart[] => {
-  const entityRegex = buildEntityRegex(entityText);
+const createHighlightedParts = (text: string, terms: string[]): HighlightPart[] => {
+  const entityRegex = buildEntityRegex(terms);
+  if (!entityRegex) return [text] as HighlightPart[];
   const matches = text.match(entityRegex);
   if (!matches?.length) return [text] as HighlightPart[];
 
@@ -160,7 +168,7 @@ const createHighlightedParts = (text: string, entityText: string): HighlightPart
     if (index === array.length - 1) {
       return [...acc, part];
     }
-    const matchText = matches[matchIndex] || entityText;
+    const matchText = matches[matchIndex] || terms[0] || '';
     matchIndex += 1;
     return [...acc, part, { highlight: true, text: matchText }];
   }, [] as HighlightPart[]);
@@ -185,6 +193,31 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
 
   const labelColor = useMemo(() => getNerColor(entityLabel), [entityLabel]);
   const labelDisplayName = useMemo(() => getNerDisplayName(entityLabel), [entityLabel]);
+
+  // Match terms = canonical_form + every recorded surface variant. This is how
+  // a click on the "mother" entity gets snippets containing "mom"/"mama" to
+  // highlight: each variant becomes an alternation in one regex. Falls back to
+  // the chip's display text when the canonical row hasn't loaded yet.
+  const matchTerms = useMemo<string[]>(() => {
+    const seen = new Set<string>();
+    const terms: string[] = [];
+    const push = (v: unknown) => {
+      if (typeof v !== 'string') return;
+      const t = v.trim();
+      if (!t) return;
+      const key = t.toLowerCase();
+      if (seen.has(key)) return;
+      seen.add(key);
+      terms.push(t);
+    };
+    if (canonicalEntity) {
+      push(canonicalEntity.properties.canonical_form);
+      const variants = canonicalEntity.properties.variants;
+      if (Array.isArray(variants)) for (const v of variants) push(v);
+    }
+    push(entityText);
+    return terms;
+  }, [canonicalEntity, entityText]);
 
   // Load canonical entity record (Wikidata, relationships, description) when
   // we have an entity_uuid. Cached per-uuid implicitly by React's effect deps.
@@ -243,17 +276,18 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
 
   const createSimpleContext = (
     transcription: string,
-    entityText: string,
+    terms: string[],
     window: number = COLLAPSED_CHAR_WINDOW,
   ): { text: string; highlightedParts: HighlightPart[] } | null => {
     const source = transcription;
-    const entityRegex = buildEntityRegex(entityText);
+    const entityRegex = buildEntityRegex(terms);
+    if (!entityRegex) return null;
     const match = entityRegex.exec(source);
     const matchStart = match?.index ?? -1;
 
     if (matchStart === -1) return null;
 
-    const matchText = match?.[0] ?? entityText;
+    const matchText = match?.[0] ?? terms[0] ?? '';
     const matchEnd = matchStart + matchText.length;
     const start = Math.max(0, matchStart - window);
     const end = Math.min(source.length, matchEnd + window);
@@ -651,12 +685,12 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
                             const transcription = occurrence.properties.transcription || '';
                             const collapsedContext = createSimpleContext(
                               transcription,
-                              entityText,
+                              matchTerms,
                               COLLAPSED_CHAR_WINDOW,
                             );
                             const expandedContext = createSimpleContext(
                               transcription,
-                              entityText,
+                              matchTerms,
                               EXPANDED_CHAR_WINDOW,
                             );
 
