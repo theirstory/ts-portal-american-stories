@@ -7,6 +7,10 @@ export const metadata = {
   description: 'Places mentioned across the American Stories archive.',
 };
 
+// Page depends on Weaviate at request time. Skip static prerender during `next build`,
+// which has no Weaviate available and would fail the Docker image build.
+export const dynamic = 'force-dynamic';
+
 export default async function MapPage() {
   const markers = await getPlaceEntitiesForMap();
 
