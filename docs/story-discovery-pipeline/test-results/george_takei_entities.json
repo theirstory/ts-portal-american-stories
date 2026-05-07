@@ -1,0 +1,1373 @@
+{
+  "source_id": "george_takei",
+  "entities": [
+    {
+      "canonical_form": "George Takei",
+      "entity_type": "PERSON",
+      "variants": ["George Takei", "George"],
+      "linked_data": {
+        "wikidata_qid": "Q189330",
+        "description": "American actor and activist, known for role as Hikaru Sulu in Star Trek"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_001",
+          "entity_text": "George Takei",
+          "context_role": "narrator, introduces himself"
+        },
+        {
+          "segment_id": "george_takei__seg_006",
+          "entity_text": "George Takei",
+          "context_role": "narrator, child during forced removal"
+        },
+        {
+          "segment_id": "george_takei__seg_013",
+          "entity_text": "George Takei",
+          "context_role": "narrator, auditioning actor for Star Trek"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Henry Takei",
+      "entity_type": "PERSON",
+      "variants": ["Henry", "him"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_person_001",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_006",
+          "entity_text": "Henry",
+          "context_role": "narrator's younger brother, present during forced removal from home"
+        },
+        {
+          "segment_id": "george_takei__seg_011",
+          "entity_text": "Henry",
+          "context_role": "narrator's brother, participant in taco eating contest"
+        }
+      ]
+    },
+    {
+      "canonical_form": "George Takei's father",
+      "entity_type": "PERSON",
+      "variants": ["my father", "daddy", "he"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_person_002",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_003",
+          "entity_text": "my father",
+          "context_role": "narrator's father, told story of watching sons play near barbed wire"
+        },
+        {
+          "segment_id": "george_takei__seg_005",
+          "entity_text": "my father",
+          "context_role": "narrator's father, denied naturalization due to Japanese birth"
+        },
+        {
+          "segment_id": "george_takei__seg_006",
+          "entity_text": "my father",
+          "context_role": "narrator's father, confronted soldiers during forced removal"
+        },
+        {
+          "segment_id": "george_takei__seg_007",
+          "entity_text": "my father",
+          "context_role": "narrator's father, taught sons about democracy and Lincoln"
+        },
+        {
+          "segment_id": "george_takei__seg_008",
+          "entity_text": "my father",
+          "context_role": "narrator's father, bilingual bridge-builder in camp"
+        },
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "my father",
+          "context_role": "narrator's father, scouted Los Angeles ahead of family return"
+        },
+        {
+          "segment_id": "george_takei__seg_011",
+          "entity_text": "my father",
+          "context_role": "narrator's father, ran dry cleaning store in East LA"
+        },
+        {
+          "segment_id": "george_takei__seg_012",
+          "entity_text": "my father",
+          "context_role": "narrator's father, connected internment to civil rights movement in after-dinner talks"
+        }
+      ]
+    },
+    {
+      "canonical_form": "George Takei's mother",
+      "entity_type": "PERSON",
+      "variants": ["my mother", "she"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_person_003",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_006",
+          "entity_text": "my mother",
+          "context_role": "narrator's mother, emerged from home carrying baby and duffel bag with tears streaming"
+        },
+        {
+          "segment_id": "george_takei__seg_008",
+          "entity_text": "my mother",
+          "context_role": "narrator's mother, pressured into renouncing citizenship at Tule Lake"
+        },
+        {
+          "segment_id": "george_takei__seg_009",
+          "entity_text": "my mother",
+          "context_role": "narrator's mother, saved from deportation by Wayne Collins"
+        },
+        {
+          "segment_id": "george_takei__seg_011",
+          "entity_text": "my mother",
+          "context_role": "narrator's mother, exchanged recipes with Mrs. Gonzalez"
+        }
+      ]
+    },
+    {
+      "canonical_form": "George Takei's baby sister",
+      "entity_type": "PERSON",
+      "variants": ["our baby sister", "my baby sister"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_person_004",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_006",
+          "entity_text": "our baby sister",
+          "context_role": "narrator's infant sister, carried by mother during forced removal"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Wayne Collins",
+      "entity_type": "PERSON",
+      "variants": ["Wayne Collins", "Elaine Collins"],
+      "linked_data": {
+        "wikidata_qid": "Q7975234",
+        "description": "American civil liberties attorney who defended Japanese Americans"
+      },
+      "internal_id": null,
+      "transcription_note": "Takei says 'Elaine Collins' at 00:15:54 but corrects to 'Wayne Collins' at 00:16:29. The initial utterance is a transcription error — the attorney's name is Wayne Collins.",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_009",
+          "entity_text": "Elaine Collins",
+          "context_role": "transcription error for Wayne Collins, attorney who rescued narrator's mother"
+        },
+        {
+          "segment_id": "george_takei__seg_009",
+          "entity_text": "Wayne Collins",
+          "context_role": "civil liberties attorney who prevented narrator's mother's deportation and represented Korematsu, Hirabayashi, and Yasui"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Fred Korematsu",
+      "entity_type": "PERSON",
+      "variants": ["Fred Korematsu"],
+      "linked_data": {
+        "wikidata_qid": "Q1452022",
+        "description": "American civil rights activist who challenged Japanese internment in the Supreme Court"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_009",
+          "entity_text": "Fred Korematsu",
+          "context_role": "Japanese American represented by Wayne Collins before the Supreme Court"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Gordon Hirabayashi",
+      "entity_type": "PERSON",
+      "variants": ["Gordon Hirabayashi"],
+      "linked_data": {
+        "wikidata_qid": "Q1537034",
+        "description": "American sociologist who challenged Japanese American internment"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_009",
+          "entity_text": "Gordon Hirabayashi",
+          "context_role": "Japanese American represented by Wayne Collins"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Minoru Yasui",
+      "entity_type": "PERSON",
+      "variants": ["Min Yasui"],
+      "linked_data": {
+        "wikidata_qid": "Q6868850",
+        "description": "American attorney and civil rights activist who challenged internment curfew orders"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_009",
+          "entity_text": "Min Yasui",
+          "context_role": "Japanese American represented by Wayne Collins"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Gene Roddenberry",
+      "entity_type": "PERSON",
+      "variants": ["Gene Roddenberry"],
+      "linked_data": {
+        "wikidata_qid": "Q310849",
+        "description": "American television screenwriter, producer, and creator of Star Trek"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_013",
+          "entity_text": "Gene Roddenberry",
+          "context_role": "creator of Star Trek who interviewed and cast Takei as Sulu"
+        },
+        {
+          "segment_id": "george_takei__seg_018",
+          "entity_text": "Gene Roddenberry",
+          "context_role": "credited with IDIC philosophy invoked in closing message"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Franklin D. Roosevelt",
+      "entity_type": "PERSON",
+      "variants": ["Roosevelt"],
+      "linked_data": {
+        "wikidata_qid": "Q8007",
+        "description": "32nd President of the United States who signed Executive Order 9066"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_017",
+          "entity_text": "Roosevelt",
+          "context_role": "president admired by narrator's father who nonetheless imprisoned Japanese Americans"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Eleanor Roosevelt",
+      "entity_type": "PERSON",
+      "variants": ["Eleanor Roosevelt"],
+      "linked_data": {
+        "wikidata_qid": "Q33866",
+        "description": "First Lady of the United States, diplomat, and activist"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_017",
+          "entity_text": "Eleanor Roosevelt",
+          "context_role": "described as knowing better than FDR about the injustice of internment"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Abraham Lincoln",
+      "entity_type": "PERSON",
+      "variants": ["Abraham Lincoln"],
+      "linked_data": {
+        "wikidata_qid": "Q91",
+        "description": "16th President of the United States"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_007",
+          "entity_text": "Abraham Lincoln",
+          "context_role": "referenced by narrator's father who often cited Lincoln's Gettysburg Address"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Martin Luther King Jr.",
+      "entity_type": "PERSON",
+      "variants": ["Doctor Martin Luther King", "Doctor Martin, Martin Luther King", "Martin"],
+      "linked_data": {
+        "wikidata_qid": "Q8027",
+        "description": "American Baptist minister and civil rights activist"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_012",
+          "entity_text": "Doctor Martin Luther King",
+          "context_role": "civil rights leader whose speeches inspired narrator through newspaper coverage"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Arnold Schwarzenegger",
+      "entity_type": "PERSON",
+      "variants": ["Arnold Schwarzenegger"],
+      "linked_data": {
+        "wikidata_qid": "Q2685",
+        "description": "Austrian-American actor and 38th Governor of California"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_016",
+          "entity_text": "Arnold Schwarzenegger",
+          "context_role": "Governor of California who vetoed the marriage equality bill"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Rock Hudson",
+      "entity_type": "PERSON",
+      "variants": ["Rock Hudson"],
+      "linked_data": {
+        "wikidata_qid": "Q95026",
+        "description": "American actor, closeted gay man during Hollywood's golden age"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_014",
+          "entity_text": "Rock Hudson",
+          "context_role": "example of a major star who could not be openly gay in 1960s Hollywood"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Tab Hunter",
+      "entity_type": "PERSON",
+      "variants": ["Tab Hunter"],
+      "linked_data": {
+        "wikidata_qid": "Q356536",
+        "description": "American actor, teenage heartthrob, closeted gay man"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_014",
+          "entity_text": "Tab Hunter",
+          "context_role": "narrator's teenage heartthrob, cited as closeted gay actor"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Walter Koenig",
+      "entity_type": "PERSON",
+      "variants": ["Walter Koenig", "Walter"],
+      "linked_data": {
+        "wikidata_qid": "Q313tried",
+        "description": "American actor who played Pavel Chekhov on Star Trek"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_015",
+          "entity_text": "Walter Koenig",
+          "context_role": "Star Trek castmate who subtly acknowledged Takei's sexuality by pointing out an attractive extra"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Brad Altman",
+      "entity_type": "PERSON",
+      "variants": ["Brad"],
+      "linked_data": {
+        "wikidata_qid": "Q4953688",
+        "description": "American journalist and actor, husband of George Takei"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_016",
+          "entity_text": "Brad",
+          "context_role": "narrator's partner who accompanied him to Star Trek conventions and supported his coming out"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Ron Giles",
+      "entity_type": "PERSON",
+      "variants": ["Ron Giles"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_person_005",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_012",
+          "entity_text": "Ron Giles",
+          "context_role": "African American friend of narrator at Mount Vernon Junior High School"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Mrs. Gonzalez",
+      "entity_type": "PERSON",
+      "variants": ["Mrs. Gonzalez"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_person_006",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_011",
+          "entity_text": "Mrs. Gonzalez",
+          "context_role": "next-door neighbor in East LA who exchanged recipes with narrator's mother"
+        }
+      ]
+    },
+    {
+      "canonical_form": "George Takei's father's older brother",
+      "entity_type": "PERSON",
+      "variants": ["my father's older brother"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_person_007",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "my father's older brother",
+          "context_role": "narrator's uncle who relocated to Salt Lake City after the war"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Los Angeles, California",
+      "entity_type": "PLACE",
+      "variants": ["Los Angeles", "LA", "downtown LA", "East L.A.", "East LA"],
+      "linked_data": {
+        "wikidata_qid": "Q65",
+        "description": "City in California, USA"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_001",
+          "entity_text": "Los Angeles",
+          "context_role": "narrator's home city"
+        },
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "Los Angeles",
+          "context_role": "city family returned to after internment"
+        },
+        {
+          "segment_id": "george_takei__seg_011",
+          "entity_text": "East L.A.",
+          "context_role": "Mexican American neighborhood where father opened dry cleaning store"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Tule Lake",
+      "entity_type": "PLACE",
+      "variants": ["Tule Lake", "Toovey Lake", "Willie Lake"],
+      "linked_data": {
+        "wikidata_qid": "Q2466547",
+        "description": "Tule Lake War Relocation Center, segregation center in Northern California"
+      },
+      "internal_id": null,
+      "transcription_note": "'Toovey Lake' at 00:15:13 and 'Willie Lake' at 00:17:51 are transcription variants of 'Tule Lake'.",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_007",
+          "entity_text": "Tule Lake",
+          "context_role": "internment camp in Northern California where family was transferred from Arkansas"
+        },
+        {
+          "segment_id": "george_takei__seg_008",
+          "entity_text": "Tule Lake",
+          "context_role": "segregation center where mother renounced citizenship"
+        },
+        {
+          "segment_id": "george_takei__seg_008",
+          "entity_text": "Toovey Lake",
+          "context_role": "transcription variant of Tule Lake"
+        },
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "Tule Lake",
+          "context_role": "camp where family spent Christmas 1945 before returning to LA"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Rohwer War Relocation Center (Arkansas camp)",
+      "entity_type": "PLACE",
+      "variants": ["the swamps of Arkansas", "southeastern Arkansas"],
+      "linked_data": {
+        "wikidata_qid": "Q7360067",
+        "description": "Japanese American internment camp in southeastern Arkansas near the Mississippi River"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_003",
+          "entity_text": "the swamps of Arkansas",
+          "context_role": "internment camp location where father watched sons play near barbed wire"
+        },
+        {
+          "segment_id": "george_takei__seg_006",
+          "entity_text": "southeastern Arkansas",
+          "context_role": "location of internment camp near Mississippi River, farthest east of ten camps"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Santa Anita Assembly Center",
+      "entity_type": "PLACE",
+      "variants": ["Santa Anita racetrack", "Santa Anita"],
+      "linked_data": {
+        "wikidata_qid": "Q7419369",
+        "description": "Temporary assembly center at Santa Anita Park racetrack for Japanese Americans during WWII"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_006",
+          "entity_text": "Santa Anita racetrack",
+          "context_role": "temporary assembly center where family slept in horse stalls before transfer to Arkansas"
+        }
+      ]
+    },
+    {
+      "canonical_form": "New York City",
+      "entity_type": "PLACE",
+      "variants": ["New York"],
+      "linked_data": {
+        "wikidata_qid": "Q60",
+        "description": "City in New York State, USA"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_001",
+          "entity_text": "New York",
+          "context_role": "one of narrator's home cities"
+        },
+        {
+          "segment_id": "george_takei__seg_002",
+          "entity_text": "New York",
+          "context_role": "city where interviewer first met Takei in a theater"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Skid Row, Los Angeles",
+      "entity_type": "PLACE",
+      "variants": ["Skid Row"],
+      "linked_data": {
+        "wikidata_qid": "Q2571512",
+        "description": "Neighborhood in downtown Los Angeles"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "Skid Row",
+          "context_role": "neighborhood in downtown LA where family lived in a flophouse after returning from internment"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Union Station, Los Angeles",
+      "entity_type": "PLACE",
+      "variants": ["Union Station"],
+      "linked_data": {
+        "wikidata_qid": "Q800451",
+        "description": "Main railway station in Los Angeles"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "Union Station",
+          "context_role": "train station where father reunited with family returning from Tule Lake"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Boyle Heights, Los Angeles",
+      "entity_type": "PLACE",
+      "variants": ["Boyle Heights"],
+      "linked_data": {
+        "wikidata_qid": "Q2656886",
+        "description": "Neighborhood in East Los Angeles"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_011",
+          "entity_text": "Boyle Heights",
+          "context_role": "neighborhood where other Japanese Americans settled in Mexican American community"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Hazard Park",
+      "entity_type": "PLACE",
+      "variants": ["Hazard Park"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_place_001",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_011",
+          "entity_text": "Hazard Park",
+          "context_role": "park across from father's dry cleaning store in East LA"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Salt Lake City, Utah",
+      "entity_type": "PLACE",
+      "variants": ["Salt Lake City"],
+      "linked_data": {
+        "wikidata_qid": "Q23337",
+        "description": "Capital city of Utah"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "Salt Lake City",
+          "context_role": "city where narrator's uncle relocated after the war"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Chicago, Illinois",
+      "entity_type": "PLACE",
+      "variants": ["Chicago"],
+      "linked_data": {
+        "wikidata_qid": "Q1297",
+        "description": "City in Illinois, USA"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "Chicago",
+          "context_role": "city where a friend of narrator's parents relocated after the war"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Mount Vernon Junior High School",
+      "entity_type": "INSTITUTION",
+      "variants": ["Mount Vernon Junior High School"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_institution_001",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_012",
+          "entity_text": "Mount Vernon Junior High School",
+          "context_role": "school where narrator volunteered for Red Cross and had African American friends"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Sulu Sea",
+      "entity_type": "PLACE",
+      "variants": ["the Sulu Sea"],
+      "linked_data": {
+        "wikidata_qid": "Q163408",
+        "description": "Sea in the southwestern part of the Philippines"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_013",
+          "entity_text": "the Sulu Sea",
+          "context_role": "body of water off the Philippines that inspired the character name Sulu"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Chinatown, Los Angeles",
+      "entity_type": "PLACE",
+      "variants": ["Chinatown"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_place_002",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "Chinatown",
+          "context_role": "location of restaurant where narrator's father washed dishes after returning to LA"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Massachusetts",
+      "entity_type": "PLACE",
+      "variants": ["Massachusetts"],
+      "linked_data": {
+        "wikidata_qid": "Q771",
+        "description": "State in the northeastern United States"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_016",
+          "entity_text": "Massachusetts",
+          "context_role": "first US state to achieve marriage equality in 2003"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Pearl Harbor attack",
+      "entity_type": "EVENT",
+      "variants": ["Pearl Harbor"],
+      "linked_data": {
+        "wikidata_qid": "Q52418",
+        "description": "1941 Japanese attack on US naval base in Hawaii"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_005",
+          "entity_text": "Pearl Harbor",
+          "context_role": "event that precipitated family's forced removal and internment"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Japanese American internment",
+      "entity_type": "EVENT",
+      "variants": ["American internment camps", "the internment experience", "internment", "childhood imprisonment"],
+      "linked_data": {
+        "wikidata_qid": "Q179856",
+        "description": "Forced relocation and incarceration of Japanese Americans during WWII"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_003",
+          "entity_text": "American internment camps",
+          "context_role": "the incarceration experience that the entire testimony centers on"
+        },
+        {
+          "segment_id": "george_takei__seg_017",
+          "entity_text": "the internment of Japanese Americans",
+          "context_role": "subject of narrator's speaking engagements connecting to LGBTQ equality"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Stonewall riots",
+      "entity_type": "EVENT",
+      "variants": ["Stonewall"],
+      "linked_data": {
+        "wikidata_qid": "Q51404",
+        "description": "1969 demonstrations by LGBTQ people in New York City"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_016",
+          "entity_text": "Stonewall",
+          "context_role": "watershed event that catalyzed LGBTQ activism"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Little Rock school desegregation crisis",
+      "entity_type": "EVENT",
+      "variants": ["what's happening in little Rock, Arkansas", "Little Rock"],
+      "linked_data": {
+        "wikidata_qid": "Q467285",
+        "description": "1957 crisis over school integration in Little Rock, Arkansas"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_012",
+          "entity_text": "little Rock, Arkansas",
+          "context_role": "civil rights crisis that resonated with narrator because Arkansas was where he was interned"
+        }
+      ]
+    },
+    {
+      "canonical_form": "California marriage equality veto (2005)",
+      "entity_type": "EVENT",
+      "variants": ["he vetoed it", "the equality bill"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_event_001",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_016",
+          "entity_text": "he vetoed it",
+          "context_role": "Schwarzenegger's veto of California marriage equality bill that catalyzed Takei's coming out"
+        }
+      ]
+    },
+    {
+      "canonical_form": "April 20, 1937",
+      "entity_type": "DATE",
+      "variants": ["5th April 20th"],
+      "linked_data": null,
+      "internal_id": null,
+      "resolution_note": "Takei says 'I became 5th April 20th' meaning he turned 5 on April 20. Given context of May 1942 removal, birth year is 1937.",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_006",
+          "entity_text": "5th April 20th",
+          "context_role": "narrator's 5th birthday shortly before forced removal"
+        }
+      ]
+    },
+    {
+      "canonical_form": "May 1942",
+      "entity_type": "DATE",
+      "variants": ["in May"],
+      "linked_data": null,
+      "internal_id": null,
+      "resolution_note": "Forced removal occurred in May 1942, shortly after narrator's 5th birthday on April 20.",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_006",
+          "entity_text": "in May",
+          "context_role": "month of forced removal from family home"
+        }
+      ]
+    },
+    {
+      "canonical_form": "December 22, 1945",
+      "entity_type": "DATE",
+      "variants": ["December 22nd, 1945"],
+      "linked_data": null,
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "December 22nd, 1945",
+          "context_role": "date narrator's father left Tule Lake for Los Angeles to scout housing and jobs"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Christmas 1945",
+      "entity_type": "DATE",
+      "variants": ["the Christmas of 1945"],
+      "linked_data": null,
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "the Christmas of 1945",
+          "context_role": "Christmas spent at Tule Lake with tumbleweed tree while father was in LA"
+        }
+      ]
+    },
+    {
+      "canonical_form": "2003",
+      "entity_type": "DATE",
+      "variants": ["2003"],
+      "linked_data": null,
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_016",
+          "entity_text": "2003",
+          "context_role": "year Massachusetts legalized same-sex marriage"
+        }
+      ]
+    },
+    {
+      "canonical_form": "2005",
+      "entity_type": "DATE",
+      "variants": ["2005", "around 2005"],
+      "linked_data": null,
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_016",
+          "entity_text": "2005",
+          "context_role": "approximate year of Takei's public coming out"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Star Trek",
+      "entity_type": "CULTURAL_ITEM",
+      "variants": ["Star Trek"],
+      "linked_data": {
+        "wikidata_qid": "Q1092",
+        "description": "American science fiction media franchise created by Gene Roddenberry"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_013",
+          "entity_text": "Star Trek",
+          "context_role": "television series narrator was cast in as Hikaru Sulu"
+        },
+        {
+          "segment_id": "george_takei__seg_018",
+          "entity_text": "Star Trek",
+          "context_role": "cultural touchstone invoked in closing message about diversity"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Hikaru Sulu",
+      "entity_type": "CULTURAL_ITEM",
+      "variants": ["Sulu", "that Asian character"],
+      "linked_data": {
+        "wikidata_qid": "Q236445",
+        "description": "Fictional character in Star Trek, helmsman of the USS Enterprise"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_013",
+          "entity_text": "Sulu",
+          "context_role": "character Takei was cast as, named after the Sulu Sea to represent pan-Asian identity"
+        }
+      ]
+    },
+    {
+      "canonical_form": "USS Enterprise",
+      "entity_type": "CULTURAL_ITEM",
+      "variants": ["the Starship Enterprise", "Starship enterprise"],
+      "linked_data": {
+        "wikidata_qid": "Q839046",
+        "description": "Fictional starship in the Star Trek franchise"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_013",
+          "entity_text": "the Starship Enterprise",
+          "context_role": "fictional starship whose diverse crew embodied Roddenberry's IDIC vision"
+        }
+      ]
+    },
+    {
+      "canonical_form": "In the Heights",
+      "entity_type": "CULTURAL_ITEM",
+      "variants": ["in the heights"],
+      "linked_data": {
+        "wikidata_qid": "Q1143589",
+        "description": "Musical by Lin-Manuel Miranda set in Washington Heights"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_002",
+          "entity_text": "in the heights",
+          "context_role": "Broadway musical where interviewer and narrator met for a second night"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Inutil (song from In the Heights)",
+      "entity_type": "CULTURAL_ITEM",
+      "variants": ["Inutil"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_cultural_001",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_002",
+          "entity_text": "Inutil",
+          "context_role": "song meaning 'useless' in Spanish that made Takei weep, reminding him of his father's feelings of helplessness in camp"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Pledge of Allegiance",
+      "entity_type": "CULTURAL_ITEM",
+      "variants": ["the Pledge of Allegiance", "our pledge of Allegiance"],
+      "linked_data": {
+        "wikidata_qid": "Q194260",
+        "description": "Oath of loyalty to the flag and republic of the United States"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_004",
+          "entity_text": "the Pledge of Allegiance",
+          "context_role": "recited by narrator as a child in internment camp schoolroom"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Gettysburg Address",
+      "entity_type": "CULTURAL_ITEM",
+      "variants": ["Abraham Lincoln's Gettysburg Address", "Gettysburg Address"],
+      "linked_data": {
+        "wikidata_qid": "Q173990",
+        "description": "Speech by Abraham Lincoln delivered during the American Civil War"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_007",
+          "entity_text": "Abraham Lincoln's Gettysburg Address",
+          "context_role": "speech narrator's father often cited to teach democratic ideals"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Fly Blackbird (musical)",
+      "entity_type": "CULTURAL_ITEM",
+      "variants": ["Fly Blackbird"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_cultural_002",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_012",
+          "entity_text": "Fly Blackbird",
+          "context_role": "civil rights musical narrator auditioned for during his early activism"
+        }
+      ]
+    },
+    {
+      "canonical_form": "IDIC (Infinite Diversity in Infinite Combinations)",
+      "entity_type": "CULTURAL_ITEM",
+      "variants": ["IDEC ID", "infinite diversity in infinite combinations", "IDIC"],
+      "linked_data": {
+        "wikidata_qid": "Q6023701",
+        "description": "Fictional philosophy in Star Trek representing celebration of diversity"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_013",
+          "entity_text": "infinite diversity in infinite combinations",
+          "context_role": "Roddenberry's Star Trek philosophy that the cast was meant to embody"
+        },
+        {
+          "segment_id": "george_takei__seg_018",
+          "entity_text": "infinite diversity and infinite combinations",
+          "context_role": "philosophy invoked in closing statement as model for democracy"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Cinco de Mayo",
+      "entity_type": "CULTURAL_ITEM",
+      "variants": ["the Cinco de Mayo Festival"],
+      "linked_data": {
+        "wikidata_qid": "Q193546",
+        "description": "Annual Mexican-American celebration on May 5"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_011",
+          "entity_text": "the Cinco de Mayo Festival",
+          "context_role": "festival narrator participated in as part of Mexican American community life"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Human Rights Campaign",
+      "entity_type": "INSTITUTION",
+      "variants": ["the Human Rights Campaign"],
+      "linked_data": {
+        "wikidata_qid": "Q1476228",
+        "description": "American LGBTQ civil rights advocacy group"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_017",
+          "entity_text": "the Human Rights Campaign",
+          "context_role": "LGBTQ advocacy organization Takei worked with after coming out"
+        }
+      ]
+    },
+    {
+      "canonical_form": "American Red Cross",
+      "entity_type": "INSTITUTION",
+      "variants": ["the Red cross"],
+      "linked_data": {
+        "wikidata_qid": "Q191600",
+        "description": "American humanitarian organization"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_012",
+          "entity_text": "the Red cross",
+          "context_role": "organization narrator volunteered for in junior high school"
+        }
+      ]
+    },
+    {
+      "canonical_form": "California State Legislature",
+      "entity_type": "INSTITUTION",
+      "variants": ["both houses of the California legislature", "the Assembly and the Senate"],
+      "linked_data": {
+        "wikidata_qid": "Q1410314",
+        "description": "Bicameral state legislature of California"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_016",
+          "entity_text": "both houses of the California legislature",
+          "context_role": "legislature that passed the marriage equality bill later vetoed by Schwarzenegger"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Los Angeles Times",
+      "entity_type": "INSTITUTION",
+      "variants": ["the Los Angeles Times"],
+      "linked_data": {
+        "wikidata_qid": "Q165818",
+        "description": "Daily newspaper in Los Angeles, California"
+      },
+      "internal_id": null,
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_012",
+          "entity_text": "the Los Angeles Times",
+          "context_role": "newspaper father subscribed to, read during after-dinner conversations about civil rights"
+        }
+      ]
+    },
+    {
+      "canonical_form": "Blackie (family dog)",
+      "entity_type": "PERSON",
+      "variants": ["Blackie"],
+      "linked_data": null,
+      "internal_id": "internal_george_takei_person_008",
+      "mentions": [
+        {
+          "segment_id": "george_takei__seg_010",
+          "entity_text": "Blackie",
+          "context_role": "family's beloved pet dog left behind at Tule Lake"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject": "George Takei",
+      "relationship": "FAMILY_OF",
+      "object": "Henry Takei",
+      "qualifier": "brothers",
+      "grounding_quote": "I was in the bedroom with my brother that we shared a bedroom together",
+      "segment_id": "george_takei__seg_006"
+    },
+    {
+      "subject": "George Takei",
+      "relationship": "FAMILY_OF",
+      "object": "George Takei's father",
+      "qualifier": "son",
+      "grounding_quote": "my father came in, woke us up and dressed us hurriedly",
+      "segment_id": "george_takei__seg_006"
+    },
+    {
+      "subject": "George Takei",
+      "relationship": "FAMILY_OF",
+      "object": "George Takei's mother",
+      "qualifier": "son",
+      "grounding_quote": "when she came out, she had our baby sister in one arm and a huge, heavy looking duffel bag",
+      "segment_id": "george_takei__seg_006"
+    },
+    {
+      "subject": "George Takei's family",
+      "relationship": "INTERNED_AT",
+      "object": "Santa Anita Assembly Center",
+      "qualifier": "temporary assembly center",
+      "grounding_quote": "the horse stalls that we had to sleep in at at Santa Anita racetrack",
+      "segment_id": "george_takei__seg_006"
+    },
+    {
+      "subject": "George Takei's family",
+      "relationship": "INTERNED_AT",
+      "object": "Rohwer War Relocation Center (Arkansas camp)",
+      "qualifier": "primary internment camp",
+      "grounding_quote": "the long three days and two night train trip to the swamps of Arkansas to the farthest east",
+      "segment_id": "george_takei__seg_006"
+    },
+    {
+      "subject": "George Takei's family",
+      "relationship": "INTERNED_AT",
+      "object": "Tule Lake",
+      "qualifier": "segregation center, transferred from Arkansas",
+      "grounding_quote": "from Arkansas to later to Tule Lake in Northern California",
+      "segment_id": "george_takei__seg_007"
+    },
+    {
+      "subject": "George Takei's mother",
+      "relationship": "INTERNED_AT",
+      "object": "Tule Lake",
+      "qualifier": "renounced citizenship there under duress",
+      "grounding_quote": "My mother's decision ultimately was to renounce her citizenship, to force the government to keep Tule Lake operating as protection for our family",
+      "segment_id": "george_takei__seg_008"
+    },
+    {
+      "subject": "Wayne Collins",
+      "relationship": "SAVED",
+      "object": "George Takei's mother",
+      "qualifier": "prevented deportation to Japan",
+      "grounding_quote": "He was the one that came to the rescue of my mother",
+      "segment_id": "george_takei__seg_009"
+    },
+    {
+      "subject": "Wayne Collins",
+      "relationship": "REPRESENTED",
+      "object": "Fred Korematsu",
+      "qualifier": "before the Supreme Court",
+      "grounding_quote": "He also represented Fred Korematsu in in the Supreme Court",
+      "segment_id": "george_takei__seg_009"
+    },
+    {
+      "subject": "Wayne Collins",
+      "relationship": "REPRESENTED",
+      "object": "Gordon Hirabayashi",
+      "qualifier": "legal representation",
+      "grounding_quote": "Gordon Hirabayashi. And Min Yasui. He was a courageous attorney.",
+      "segment_id": "george_takei__seg_009"
+    },
+    {
+      "subject": "Wayne Collins",
+      "relationship": "REPRESENTED",
+      "object": "Minoru Yasui",
+      "qualifier": "legal representation",
+      "grounding_quote": "Gordon Hirabayashi. And Min Yasui. He was a courageous attorney.",
+      "segment_id": "george_takei__seg_009"
+    },
+    {
+      "subject": "Wayne Collins",
+      "relationship": "INFLUENCED",
+      "object": "George Takei",
+      "qualifier": "enabled narrator to remain American",
+      "grounding_quote": "I am an American because of Wayne Collins passion for the Constitution",
+      "segment_id": "george_takei__seg_009"
+    },
+    {
+      "subject": "George Takei's father",
+      "relationship": "LIVED_IN",
+      "object": "Skid Row, Los Angeles",
+      "qualifier": "post-internment residence",
+      "grounding_quote": "Our home was on Skid Row in downtown LA",
+      "segment_id": "george_takei__seg_010"
+    },
+    {
+      "subject": "George Takei's father",
+      "relationship": "WORKED_AT",
+      "object": "Chinatown, Los Angeles",
+      "qualifier": "washing dishes at a restaurant",
+      "grounding_quote": "Getting a job was very difficult, but it was washing dishes at a Chinatown restaurant",
+      "segment_id": "george_takei__seg_010"
+    },
+    {
+      "subject": "George Takei's mother",
+      "relationship": "COLLABORATED_WITH",
+      "object": "Mrs. Gonzalez",
+      "qualifier": "cultural and culinary exchange between neighbors",
+      "grounding_quote": "she and Mrs. Gonzalez became friends, and they practically lived in each other's kitchen",
+      "segment_id": "george_takei__seg_011"
+    },
+    {
+      "subject": "George Takei's father",
+      "relationship": "TAUGHT",
+      "object": "George Takei",
+      "qualifier": "democratic ideals and civic participation",
+      "grounding_quote": "he explained to me about the ideals of America. He often talked about Abraham Lincoln's Gettysburg Address",
+      "segment_id": "george_takei__seg_007"
+    },
+    {
+      "subject": "George Takei's father",
+      "relationship": "TAUGHT",
+      "object": "George Takei",
+      "qualifier": "connection between internment and civil rights",
+      "grounding_quote": "my father said, it's just like what happened to us because we look like this",
+      "segment_id": "george_takei__seg_012"
+    },
+    {
+      "subject": "Gene Roddenberry",
+      "relationship": "CREATED",
+      "object": "Star Trek",
+      "qualifier": "creator and producer",
+      "grounding_quote": "I was called in for an interview with this man named Gene Roddenberry",
+      "segment_id": "george_takei__seg_013"
+    },
+    {
+      "subject": "Gene Roddenberry",
+      "relationship": "CREATED",
+      "object": "Hikaru Sulu",
+      "qualifier": "named character after the Sulu Sea",
+      "grounding_quote": "he saw off the coast of the Philippines, the Sulu Sea. And he thought the waters of a sea touch all shores",
+      "segment_id": "george_takei__seg_013"
+    },
+    {
+      "subject": "George Takei",
+      "relationship": "COLLABORATED_WITH",
+      "object": "Walter Koenig",
+      "qualifier": "Star Trek castmates and friends",
+      "grounding_quote": "Walter Koenig and I would be there sipping",
+      "segment_id": "george_takei__seg_015"
+    },
+    {
+      "subject": "Arnold Schwarzenegger",
+      "relationship": "OPPOSED",
+      "object": "California marriage equality veto (2005)",
+      "qualifier": "vetoed the marriage equality bill",
+      "grounding_quote": "when the bill landed on his desk, he vetoed it",
+      "segment_id": "george_takei__seg_016"
+    },
+    {
+      "subject": "George Takei",
+      "relationship": "COLLABORATED_WITH",
+      "object": "Human Rights Campaign",
+      "qualifier": "speaking engagements on internment and LGBTQ equality",
+      "grounding_quote": "they arranged a series of speaking engagements, uh, all over America",
+      "segment_id": "george_takei__seg_017"
+    },
+    {
+      "subject": "Franklin D. Roosevelt",
+      "relationship": "LED",
+      "object": "Japanese American internment",
+      "qualifier": "ordered internment despite being otherwise admired",
+      "grounding_quote": "he was a great leader, but even he was a fallible human being. And he put innocent people in prison camps",
+      "segment_id": "george_takei__seg_017"
+    },
+    {
+      "subject": "Eleanor Roosevelt",
+      "relationship": "OPPOSED",
+      "object": "Japanese American internment",
+      "qualifier": "morally opposed to internment",
+      "grounding_quote": "his wife, Eleanor Roosevelt, knew better",
+      "segment_id": "george_takei__seg_017"
+    }
+  ],
+  "transcription_errors": [
+    {
+      "error_text": "Elaine Collins",
+      "corrected_text": "Wayne Collins",
+      "segment_id": "george_takei__seg_009",
+      "timestamp": "00:15:54",
+      "confidence": "HIGH",
+      "note": "Takei initially says what is transcribed as 'Elaine Collins' but within seconds refers to the same person as 'Wayne Collins' — the well-known civil liberties attorney (Wikidata Q7975234). The 'Elaine' form is either a speech artifact or transcription error."
+    },
+    {
+      "error_text": "Toovey Lake",
+      "corrected_text": "Tule Lake",
+      "segment_id": "george_takei__seg_008",
+      "timestamp": "00:15:13",
+      "confidence": "HIGH",
+      "note": "Phonetic transcription variant of 'Tule Lake' (Tule Lake War Relocation Center)."
+    },
+    {
+      "error_text": "Willie Lake",
+      "corrected_text": "Tule Lake",
+      "segment_id": "george_takei__seg_010",
+      "timestamp": "00:17:51",
+      "confidence": "HIGH",
+      "note": "Transcription error for 'Tule Lake' — interviewer says 'Willie Lake' but context makes clear this is Tule Lake."
+    },
+    {
+      "error_text": "IDEC ID",
+      "corrected_text": "IDIC",
+      "segment_id": "george_takei__seg_013",
+      "timestamp": "00:33:54",
+      "confidence": "HIGH",
+      "note": "Transcription garble of the Star Trek acronym IDIC (Infinite Diversity in Infinite Combinations)."
+    }
+  ]
+}

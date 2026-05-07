@@ -1,0 +1,146 @@
+{
+  "class": "QuestionThreads",
+  "description": "Cross-source question threads. A thread is a question that 3+ sources independently answer. Produced by Pass 2 Stage 1. Editorial gate via published flag.",
+  "invertedIndexConfig": {
+    "bm25": { "b": 0.75, "k1": 1.2 },
+    "cleanupIntervalSeconds": 60,
+    "stopwords": { "additions": null, "preset": "en", "removals": null },
+    "usingBlockMaxWAND": true
+  },
+  "moduleConfig": {},
+  "multiTenancyConfig": {
+    "autoTenantActivation": false,
+    "autoTenantCreation": false,
+    "enabled": false
+  },
+  "properties": [
+    {
+      "dataType": ["text"],
+      "description": "Stable thread id.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "thread_id",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "The shared question, written as a human would ask it.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "thread_question",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "1-3 word browseable label powering the homepage word cloud.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "theme_label",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "FACTS | FEELINGS | IDENTITY",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "question_level",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["int"],
+      "description": "Number of distinct sources that answer this question. Powers the word-cloud sizing.",
+      "indexFilterable": true,
+      "indexRangeFilters": true,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "source_count"
+    },
+    {
+      "dataType": ["text"],
+      "description": "AGREE | DIVERGE | CONTRADICT",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "convergence",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["boolean"],
+      "description": "Editorial publish flag. Threads are draft until reviewed.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "published"
+    },
+    {
+      "dataType": ["text[]"],
+      "description": "IDs of related Conflicts that surface inside this thread.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "conflict_ids",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Collection id (e.g. American Stories).",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "collection_id",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["Chunks"],
+      "description": "Chunks that answer this thread's question.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "answeredByChunks"
+    }
+  ],
+  "vectorConfig": {
+    "question_vector": {
+      "vectorIndexConfig": {
+        "bq": { "enabled": false },
+        "cleanupIntervalSeconds": 300,
+        "distance": "cosine",
+        "dynamicEfFactor": 8,
+        "dynamicEfMax": 500,
+        "dynamicEfMin": 100,
+        "ef": -1,
+        "efConstruction": 128,
+        "filterStrategy": "sweeping",
+        "flatSearchCutoff": 40000,
+        "maxConnections": 32,
+        "multivector": { "aggregation": "maxSim", "enabled": false },
+        "pq": {
+          "bitCompression": false,
+          "centroids": 256,
+          "enabled": false,
+          "encoder": { "distribution": "log-normal", "type": "kmeans" },
+          "segments": 0,
+          "trainingLimit": 100000
+        },
+        "skip": false,
+        "sq": { "enabled": false, "rescoreLimit": 20, "trainingLimit": 100000 },
+        "vectorCacheMaxObjects": 1000000000000
+      },
+      "vectorIndexType": "hnsw",
+      "vectorizer": { "none": {} }
+    }
+  }
+}

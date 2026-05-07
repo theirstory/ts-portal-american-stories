@@ -8,11 +8,15 @@ httpx
 # Validation / models
 pydantic
 
-# NLP
-gliner-spacy
+# NLP — spaCy is still used by pipeline.py for transcript parsing.
+# (GLiNER was dropped in Phase 1C; NER now runs through narrative_pipeline.)
+spacy>=3.8.0
 
 # Local Embeddings
 sentence-transformers>=2.2.0
 torch>=2.0.0
+
+# Narrative pipeline LLM client (Gemini via OpenAI-compatible endpoint, also OpenAI native)
+openai>=1.40.0
 
 python-dotenv==1.0.1

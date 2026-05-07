@@ -1,0 +1,626 @@
+{
+  "pass": "1",
+  "description": "Segment-level narrative extractions for 6 key segments across the American Stories collection",
+  "extraction_date": "2026-05-03",
+  "segments": [
+    {
+      "segment_id": "george_takei__seg_005",
+      "source": "george_takei",
+      "source_title": "George Takei Interview",
+      "segment_description": "Forced removal from home — soldiers with bayonets",
+      "segment_text_excerpt": "I was in the bedroom with my brother that we shared a bedroom together and my father came in, woke us up and dressed us hurriedly... we saw two soldiers marching up our driveway. They carried rifles with shiny bayonets on them. They stamped, stomped up the front porch, and went to the front door and began pounding with their fists on the door. Henry and I were terrorized... one soldier raised his rifle and aimed it at my father... when she came out, she had our baby sister in one arm and a huge, heavy looking duffel bag and the other, and tears were streaming down her cheeks. I'll never forget that morning. It's seared into my memory.",
+      "values": [
+        {
+          "value": "safety",
+          "charge": "THREATENED",
+          "alternative_charge": null,
+          "evidence": "two soldiers marching up our driveway... They carried rifles with shiny bayonets on them... Henry and I were terrorized",
+          "confidence": "HIGH",
+          "note": "A five-year-old child's sense of home safety is shattered by armed soldiers at the door"
+        },
+        {
+          "value": "dignity",
+          "charge": "THREATENED",
+          "alternative_charge": null,
+          "evidence": "Only what we could carry... tears were streaming down her cheeks",
+          "confidence": "HIGH",
+          "note": "The family is reduced to what they can carry; the mother's tears mark the indignity of dispossession"
+        },
+        {
+          "value": "family",
+          "charge": "AFFIRMED",
+          "alternative_charge": "THREATENED",
+          "evidence": "my father came in, woke us up and dressed us hurriedly... He gave those little boxes, one to me and one to him",
+          "confidence": "MEDIUM",
+          "note": "Family cohesion is affirmed through the father's protective actions even as the family unit is under existential threat from the state"
+        },
+        {
+          "value": "belonging",
+          "charge": "THREATENED",
+          "alternative_charge": null,
+          "evidence": "We are of Japanese ancestry, but we're Americans. We're supposed to be part of this country, but we were not because we were [the way we looked]",
+          "confidence": "HIGH",
+          "note": "National belonging is revoked based on appearance"
+        }
+      ],
+      "emotional_trajectory": {
+        "start_charge": "negative",
+        "end_charge": "negative",
+        "arc_description": "Begins with confusion and dread (father's stress, hurried dressing), escalates through terror (soldiers, bayonets, rifle aimed at father), and lands in grief (mother's tears). The charge never lifts; it deepens steadily.",
+        "turns": [
+          {
+            "at": "we saw two soldiers marching up our driveway. They carried rifles with shiny bayonets on them",
+            "from": "negative (anxiety, confusion — father is stressed, children displaced from routine)",
+            "to": "deeply negative (terror — state violence arrives at the family doorstep)"
+          },
+          {
+            "at": "one soldier raised his rifle and aimed it at my father",
+            "from": "negative (fear of soldiers)",
+            "to": "deeply negative (mortal threat — a child watches a gun aimed at his father)"
+          },
+          {
+            "at": "tears were streaming down her cheeks. I'll never forget that morning.",
+            "from": "negative (loss of home, possessions)",
+            "to": "grief (the image that becomes the permanent emotional anchor of the entire internment experience)"
+          }
+        ]
+      },
+      "temporal_markers": [
+        {
+          "text": "I became 5th April 20th, But in May",
+          "resolved_date": "May 1942",
+          "note": "Shortly after his fifth birthday"
+        },
+        {
+          "text": "After the war and I was a teenager",
+          "resolved_date": "~1947-1950",
+          "note": "Retrospective frame — teenager looking back at childhood event"
+        },
+        {
+          "text": "horse stalls that we had to sleep in at Santa Anita racetrack",
+          "resolved_date": "mid-1942",
+          "note": "Assembly center phase before permanent camps"
+        }
+      ],
+      "stance": {
+        "primary": "IMMERSIVE",
+        "secondary": "REFLECTIVE",
+        "evidence": "The narration toggles between child's-eye immersion ('Henry and I were terrorized', 'we didn't know what was happening') and adult reflection ('It's seared into my memory'). The immersive stance dominates — Takei re-enters the five-year-old's perspective rather than analyzing from distance.",
+        "transformation_marker": true,
+        "transformation_note": "The phrase 'I'll never forget that morning. It's seared into my memory' marks the narrator stepping outside the child's experience to acknowledge its permanent imprint. The shift from present-tense-feeling child to reflective adult is itself the transformation: a child who didn't understand what was happening became an adult who understands it was state violence."
+      },
+      "tensions": [
+        {
+          "text": "We are of Japanese ancestry, but we're Americans. We're supposed to be part of this country, but we were not because we were [the way we looked]",
+          "between": "claimed citizenship vs. racialized exclusion",
+          "note": "This tension spans the entire interview but is rooted in this founding scene"
+        },
+        {
+          "text": "Only what we could carry",
+          "between": "the fullness of a family's life vs. what fits in a suitcase",
+          "note": "Echoed almost identically in Karen Matsuoka's account of Terminal Island — a shared material reality of dispossession"
+        }
+      ],
+      "metaphors": [
+        {
+          "metaphor": "memory as BRANDING / SEARING",
+          "evidence": "seared into my memory",
+          "frame": "Trauma as a burn mark — involuntary, permanent, physical. The metaphor suggests memory is not chosen but inflicted."
+        },
+        {
+          "metaphor": "home as FORTRESS (breached)",
+          "evidence": "soldiers marching up our driveway... pounding with their fists on the door",
+          "frame": "The home is implicitly a place of safety that is violated by state force. The soldiers do not knock — they pound. The driveway is a path of invasion."
+        },
+        {
+          "metaphor": "family as CARGO",
+          "evidence": "Only what we could carry... He gave those little boxes, one to me and one to him",
+          "frame": "The family is reduced to what it can physically transport. Human lives become logistics. The little boxes of underwear are the children's entire material world."
+        }
+      ],
+      "bookend": null
+    },
+    {
+      "segment_id": "karen_matsuoka__seg_008",
+      "source": "karen_matsuoka",
+      "source_title": "Karen Matsuoka Interview",
+      "segment_description": "Grandfather refuses the draft — No-No boy story and Judge Goodman",
+      "segment_text_excerpt": "My grandfather's response to injustice was to stand up for his rights. It's very intuitive to me that if your rights are being violated, the patriotic thing is to call it out and to resist it... my grandfather said no... the resistance took the form of him not showing up for his pre-induction physical... Judge Louis Goodman, who understood the situation, could not bear the injustice that he was seeing, and basically staged this whole intervention... He dismissed the case and basically said what I understand to be one of the earliest examples of substantive due process... it was a shock to the conscience that an American citizen can be treated this way.",
+      "values": [
+        {
+          "value": "loyalty",
+          "charge": "THREATENED",
+          "alternative_charge": "AFFIRMED",
+          "evidence": "This country doesn't believe that we're American. We need to prove that we are. And the best way to prove that loyalty is to sacrifice ourselves on the battlefield.",
+          "confidence": "MEDIUM",
+          "note": "Loyalty is threatened in the eyes of the community who equated compliance with patriotism; affirmed in the narrator's reframing where resistance IS the patriotic act. Both readings are valid — the storyline context determines which is primary."
+        },
+        {
+          "value": "dignity",
+          "charge": "AFFIRMED",
+          "evidence": "the patriotic thing is to call it out and to resist it",
+          "confidence": "HIGH",
+          "note": "The grandfather's refusal is framed as dignity preservation — refusing to serve the country that imprisoned him"
+        },
+        {
+          "value": "justice",
+          "charge": "AFFIRMED",
+          "alternative_charge": "THREATENED",
+          "evidence": "Judge Louis Goodman... could not bear the injustice... shock to the conscience that an American citizen can be treated this way",
+          "confidence": "HIGH",
+          "note": "Justice is affirmed through Judge Goodman's ruling but only after being systematically threatened. The affirmation is precarious — it depended on one judge in one courtroom."
+        },
+        {
+          "value": "belonging",
+          "charge": "THREATENED",
+          "evidence": "he was being presented with a country that clearly did not want him back",
+          "confidence": "HIGH",
+          "note": "Even after winning the draft case, the grandfather still faced denaturalization — belonging was not secured by legal victory"
+        }
+      ],
+      "emotional_trajectory": {
+        "start_charge": "negative",
+        "end_charge": "positive",
+        "arc_description": "Begins in oppression and coercion (forced questionnaire behind barbed wire), moves through defiance (grandfather says no), escalates through legal jeopardy (trial in an anti-Asian county), and turns sharply positive with Judge Goodman's ruling. But the positivity is complicated by the aftermath — the grandfather still lost citizenship and spent 11 years fighting to get it back.",
+        "turns": [
+          {
+            "at": "my grandfather said no",
+            "from": "negative (oppression, coercion behind barbed wire)",
+            "to": "mixed (defiance as self-determination, but at enormous cost)"
+          },
+          {
+            "at": "Judge Louis Goodman... dismissed the case",
+            "from": "negative (legal jeopardy in a hostile jurisdiction)",
+            "to": "positive (justice delivered — one of the earliest substantive due process rulings)"
+          },
+          {
+            "at": "that's not the welcome that he got",
+            "from": "positive (legal victory, heroism)",
+            "to": "negative (community rejection — the No-No boys were treated as traitors by their own community)"
+          }
+        ]
+      },
+      "temporal_markers": [
+        { "text": "during World War Two", "resolved_date": "1942-1945" },
+        { "text": "the draft was instituted", "resolved_date": "~1944" },
+        { "text": "February 2nd... FBI raid on Terminal Island", "resolved_date": "February 2, 1942" },
+        { "text": "FDR issued Executive Order 966 [sic, 9066]... February 19th", "resolved_date": "February 19, 1942" },
+        { "text": "it was a process that took him 11 years", "resolved_date": "~1945-1956" },
+        { "text": "they came back to America in the 50s", "resolved_date": "~1950s" }
+      ],
+      "stance": {
+        "primary": "REFLECTIVE",
+        "secondary": "ADVOCACY",
+        "evidence": "Narrator is telling grandfather's story from decades of distance, explicitly reframing his actions as heroic: 'If we could transplant my grandfather to today, I think many people would say that his actions were heroic.' The reflective stance is combined with active advocacy — Matsuoka is arguing for a reinterpretation of history.",
+        "transformation_marker": true,
+        "transformation_note": "The transformation is generational rather than personal: the grandfather's community saw his resistance as treasonous; the granddaughter reframes it as the highest patriotism. The narrator herself is the evidence of the transformation — she carries the revised reading of her grandfather's story."
+      },
+      "tensions": [
+        {
+          "text": "This country doesn't believe that we're American. We need to prove that we are.",
+          "between": "institutional belonging vs. self-evident identity",
+          "note": "The demand to 'prove' citizenship through sacrifice vs. the principle that citizenship should not require proof"
+        },
+        {
+          "text": "Both are equally stories of valor, and yet one was pushed as American and his actions were presented as being the most un-American thing that he could have done",
+          "between": "compliance-as-patriotism vs. resistance-as-patriotism",
+          "note": "This is the central unresolved tension of the Japanese American internment narrative"
+        },
+        {
+          "text": "Patriotism, and you know how you respond to injustice might look different to different people",
+          "between": "singular vs. plural definitions of patriotism",
+          "note": "Matsuoka explicitly names the tension and leaves it unresolved — she does not claim her grandfather was more patriotic than the 442nd soldiers"
+        }
+      ],
+      "metaphors": [
+        {
+          "metaphor": "patriotism as PROOF",
+          "evidence": "We need to prove that we are [American]",
+          "frame": "Identity as something that must be demonstrated to an external judge — citizenship as a credential you can lose"
+        },
+        {
+          "metaphor": "resistance as STANDING",
+          "evidence": "to stand up for his rights",
+          "frame": "Justice as physical posture — you rise against what pushes you down"
+        },
+        {
+          "metaphor": "belonging as NEGOTIATION",
+          "evidence": "becoming American is almost this constant negotiation",
+          "frame": "Identity not as a state but as a continuous process of assertion and pushback"
+        }
+      ],
+      "bookend": null
+    },
+    {
+      "segment_id": "sarah_adams__seg_008",
+      "source": "sarah_adams",
+      "source_title": "Sarah Adams Interview",
+      "segment_description": "Boarding schools, cultural loss, and the wound of assimilation",
+      "segment_text_excerpt": "he made some choices to really assimilate, right? Like he, he really wanted his kids to not feel persecuted in America... there were signs, you know, here in Oklahoma and across the country that said no dogs or Indians... I carried a lot of anger, like when I was young about not having our culture and our language and all of those things. And then I became a mom and I understood more about like, the sacrifices that you make... It feels like a deep wound... God, we could just almost reach out and grab it... there was a first language speaker in the house while she was growing up.",
+      "values": [
+        {
+          "value": "identity",
+          "charge": "THREATENED",
+          "alternative_charge": "AFFIRMED",
+          "evidence": "he made some very conscious decisions for us to assimilate, to make it easier on us... we are in a time now that we can bring it back",
+          "confidence": "HIGH",
+          "note": "Cultural identity was deliberately surrendered as survival strategy; now being reclaimed. Both the threat and the affirmation are active in this segment — the wound and the healing coexist."
+        },
+        {
+          "value": "family",
+          "charge": "AFFIRMED",
+          "alternative_charge": "THREATENED",
+          "evidence": "I became a mom and I understood more about like, the sacrifices that you make or the things that you will do to try to make your children's lives easier",
+          "confidence": "HIGH",
+          "note": "Family love motivated the assimilation choice, but that same choice damaged the family's cultural inheritance"
+        },
+        {
+          "value": "legacy",
+          "charge": "THREATENED",
+          "evidence": "It feels like a deep wound... God, we could just almost reach out and grab it",
+          "confidence": "HIGH",
+          "note": "The Choctaw language was one generation away — the loss is felt as physically proximate"
+        },
+        {
+          "value": "freedom",
+          "charge": "THREATENED",
+          "evidence": "1978, which was the year I was born, was the very first time we could practice being indigenous people in all of our fullness. Language song without going to jail.",
+          "confidence": "HIGH",
+          "note": "Religious and cultural freedom was legally denied until 1978 — within living memory"
+        }
+      ],
+      "emotional_trajectory": {
+        "start_charge": "negative",
+        "end_charge": "mixed",
+        "arc_description": "Begins in anger (young Sarah angry at Grandpa Pop for assimilating), moves through understanding (becoming a mother, seeing the survival logic), deepens into grief ('deep wound', 'almost reach out and grab it'), and arrives at cautious hope (Blue learning Choctaw, reclamation). The trajectory is not a clean arc — it oscillates between wound and healing.",
+        "turns": [
+          {
+            "at": "And then I became a mom and I understood more about like, the sacrifices that you make",
+            "from": "negative (anger at grandfather's choice to assimilate)",
+            "to": "mixed (understanding the survival logic, forgiving without forgetting)"
+          },
+          {
+            "at": "It feels like a deep wound",
+            "from": "mixed (intellectual understanding)",
+            "to": "negative (visceral grief — the wound metaphor signals something that hasn't healed)"
+          },
+          {
+            "at": "we are in a time now that we can bring it back",
+            "from": "negative (grief over loss)",
+            "to": "positive (hope — the reclamation generation)"
+          }
+        ]
+      },
+      "temporal_markers": [
+        { "text": "boarding school time", "resolved_date": "early-to-mid 20th century" },
+        {
+          "text": "1978, which was the year I was born",
+          "resolved_date": "1978",
+          "note": "American Indian Religious Freedom Act"
+        },
+        {
+          "text": "signs... that said no dogs or Indians",
+          "resolved_date": "pre-statehood Oklahoma, early 20th century"
+        },
+        { "text": "just happened in 1978", "resolved_date": "1978", "note": "Emphasized as shockingly recent" },
+        {
+          "text": "20 something years later, we're still... celebrating this",
+          "resolved_date": "~2000s",
+          "note": "Land run reenactments still happening"
+        }
+      ],
+      "stance": {
+        "primary": "REFLECTIVE",
+        "secondary": "IMMERSIVE",
+        "evidence": "Adams moves between reflective framing ('I carried a lot of anger, like when I was young') and present-tense grief ('It feels like a deep wound'). The reflective stance dominates — she explicitly narrates her own transformation from anger to understanding. But the wound is still live.",
+        "transformation_marker": true,
+        "transformation_note": "Clear before/after: 'I carried a lot of anger when I was young... And then I became a mom and I understood more.' The transformation is from anger at the grandfather to understanding his survival calculus — but critically, the understanding does not erase the wound. Adams holds both."
+      },
+      "tensions": [
+        {
+          "text": "we have family members too that will say, well, the boarding schools weren't that bad, you know, and it's like, but at the cost of what? At the cost of our culture.",
+          "between": "individual experience of boarding schools vs. collective cultural cost",
+          "note": "NARRATIVE FRACTURE — the family does not agree on the meaning of its own history"
+        },
+        {
+          "text": "God, we could just almost reach out and grab it",
+          "between": "proximity of lost culture vs. impossibility of full recovery",
+          "note": "The 'almost' is the cruelest word — one generation away from a first-language speaker, but the chain was broken"
+        },
+        {
+          "text": "in this place of assimilation, and yet they fell in love",
+          "between": "boarding school as site of destruction vs. boarding school as site of life",
+          "note": "Adams's grandparents met and fell in love at Goodland Boarding School — love persisted inside an institution designed to erase identity"
+        }
+      ],
+      "metaphors": [
+        {
+          "metaphor": "cultural loss as WOUND",
+          "evidence": "It feels like a deep wound",
+          "frame": "Loss is not abstract — it is a physical injury that can heal but will always scar. The body metaphor implies the culture is part of the body, not external to it."
+        },
+        {
+          "metaphor": "culture as something WITHIN REACH but NOT GRASPED",
+          "evidence": "God, we could just almost reach out and grab it",
+          "frame": "The lost language/culture is physically proximate but just beyond the fingertips. This is a distance metaphor — the gap is tantalizingly small, which makes the loss worse."
+        },
+        {
+          "metaphor": "reclamation as BRINGING BACK",
+          "evidence": "we brought it back, like we bring it back",
+          "frame": "Culture as something that left and can return — a journey metaphor. But 'bringing back' implies labor and intention; it doesn't come back on its own."
+        },
+        {
+          "metaphor": "identity as something you SET DOWN",
+          "evidence": "anytime we have to give up a piece of who we are to just exist... If you have to set down who you are innately",
+          "frame": "Identity as a physical object you carry — assimilation means putting it down, which means it can be picked back up. But some things break when you set them down."
+        }
+      ],
+      "bookend": {
+        "question_repeated": "How did your family become American?",
+        "first_answer_summary": "Adams answers historically — 1924 citizenship, Choctaw sovereignty predates America, dual citizenship. Tone is informational.",
+        "final_answer_summary": "'Kicking and screaming... America landed on us... we were Choctaw citizens and Choctaw people before America was America. It was definitely a difficult story of assimilation, of rematriation of revival and of resistance.'",
+        "what_changed": "The final answer is raw and emotional where the first was factual. The phrase 'America landed on us' inverts the immigration frame entirely — Adams's family didn't come to America; America came to them, uninvited. The full interview has transformed the question from a neutral prompt into a loaded one."
+      }
+    },
+    {
+      "segment_id": "sheryl_sutton_smith__seg_006",
+      "source": "sheryl_sutton_smith",
+      "source_title": "Sheryl Sutton Smith Interview",
+      "segment_description": "Claiming American identity — 'you got the wrong one'",
+      "segment_text_excerpt": "I would not say there was any time that I didn't feel American. I felt very disappointed in some of my American brethren... I felt as if I was being trying to be excluded or, or made to feel less than, which I completely buck up against... oh, no. You got the wrong one. You got the wrong one. Like, I'm just, you're just really not going to make me feel that way. So I would say, no. I don't feel un-American. I feel like you think I'm un-American. That I feel like I'm not. But you're wrong. I'm American. This is my country, and it's imperfect. And that's what we need to be working toward is a more perfect union.",
+      "values": [
+        {
+          "value": "belonging",
+          "charge": "AFFIRMED",
+          "alternative_charge": null,
+          "evidence": "I'm American. This is my country, and it's imperfect.",
+          "confidence": "HIGH",
+          "note": "Unlike other narrators who describe feeling un-American, Sutton Smith refuses the premise. Belonging is affirmed not by the country accepting her but by her claiming it."
+        },
+        {
+          "value": "dignity",
+          "charge": "AFFIRMED",
+          "evidence": "You got the wrong one. You got the wrong one.",
+          "confidence": "HIGH",
+          "note": "Dignity is maintained through defiant self-assertion. The repetition ('you got the wrong one') is a refusal to be diminished."
+        },
+        {
+          "value": "agency",
+          "charge": "AFFIRMED",
+          "evidence": "I completely buck up against [being made to feel less than]",
+          "confidence": "HIGH",
+          "note": "Agency is the animating value — Sutton Smith defines herself rather than accepting external definitions"
+        }
+      ],
+      "emotional_trajectory": {
+        "start_charge": "negative",
+        "end_charge": "positive",
+        "arc_description": "Begins with acknowledgment of exclusion and disappointment, but the emotional energy quickly turns to defiance and pride. The negative charge is not internalized — it is deflected and transformed into assertive belonging.",
+        "turns": [
+          {
+            "at": "You got the wrong one",
+            "from": "negative (being made to feel less than, excluded)",
+            "to": "positive (defiant self-assertion, unshakeable identity)"
+          }
+        ]
+      },
+      "temporal_markers": [
+        {
+          "text": "as a woman in the operating room",
+          "resolved_date": "professional career period, ~1980s-present",
+          "note": "References her career as a physician/surgeon"
+        },
+        { "text": "Spelman and Morehouse", "resolved_date": "~late 1970s-early 1980s" },
+        { "text": "Shirley Chisholm... 1980", "resolved_date": "1980" }
+      ],
+      "stance": {
+        "primary": "REFLECTIVE",
+        "secondary": "DECLARATIVE",
+        "evidence": "Sutton Smith reflects on the pattern of exclusion across her life but refuses to narrate from a position of vulnerability. The stance is declarative — she is making a statement about who she is, not processing a wound.",
+        "transformation_marker": false,
+        "transformation_note": "No transformation is visible — Sutton Smith presents as someone who has always held this stance. If there was a transformation from uncertainty to confidence, it predates this interview."
+      },
+      "tensions": [
+        {
+          "text": "I don't feel un-American. I feel like you think I'm un-American.",
+          "between": "self-defined identity vs. externally imposed identity",
+          "note": "This is the cleanest articulation of the identity tension in the entire corpus. The move is sophisticated — she refuses to internalize the exclusion while acknowledging it exists."
+        },
+        {
+          "text": "This is my country, and it's imperfect. And that's what we need to be working toward is a more perfect union.",
+          "between": "America as it is vs. America as it should be",
+          "note": "Sutton Smith claims both the imperfect country and the aspirational one. She does not reject America; she insists on improving it from within."
+        }
+      ],
+      "metaphors": [
+        {
+          "metaphor": "identity as COMBAT / BUCKING",
+          "evidence": "I completely buck up against that concept",
+          "frame": "Identity maintenance as physical resistance — bucking like an animal that refuses to be broken. The metaphor implies external force being applied and the self refusing to yield."
+        },
+        {
+          "metaphor": "America as UNION (imperfect, perfectible)",
+          "evidence": "a more perfect union",
+          "frame": "Constitutional language used deliberately — America is a project under construction, not a finished product. Claiming it means committing to building it."
+        }
+      ],
+      "bookend": null
+    },
+    {
+      "segment_id": "akir_gutierrez__seg_003",
+      "source": "akir_gutierrez",
+      "source_title": "Akir Gutierrez Interview",
+      "segment_description": "Hiding indigenous identity to prove American credentials",
+      "segment_text_excerpt": "I always had to prove that I was American... where are you really from? And that sort of like constant denial of who I am... I felt it really sort of like deemphasize or minimize hid, like who I was in terms of my own family heritage, which is part of the American story. Here I am trying to feature this American credential of who I am. But in doing that, I have to deny who I am... it wasn't until like six years ago that I really came to grips with the fact that I am part of this indigenous diaspora... Even my birth certificate says that I'm white, but I don't have to deny one to be the other.",
+      "values": [
+        {
+          "value": "identity",
+          "charge": "THREATENED",
+          "alternative_charge": "AFFIRMED",
+          "evidence": "Here I am trying to feature this American credential of who I am. But in doing that, I have to deny who I am... I don't have to deny one to be the other. And I'm squarely both.",
+          "confidence": "HIGH",
+          "note": "Identity is threatened across most of the segment (forced to choose between American and indigenous) and affirmed only at the end through reclamation. The arc IS the transformation."
+        },
+        {
+          "value": "belonging",
+          "charge": "THREATENED",
+          "evidence": "where are you really from? And that sort of like constant denial of who I am",
+          "confidence": "HIGH",
+          "note": "The question 'where are you really from?' is a denial of belonging — it implies 'you can't really be from here'"
+        },
+        {
+          "value": "truth",
+          "charge": "AFFIRMED",
+          "evidence": "finally seeing that, owning that... I can own the mistakes and perhaps my naivete from the past as well. And that's okay.",
+          "confidence": "HIGH",
+          "note": "Self-honesty is the value that enables the transformation — Gutierrez stops performing and starts owning"
+        }
+      ],
+      "emotional_trajectory": {
+        "start_charge": "negative",
+        "end_charge": "positive",
+        "arc_description": "Begins with the chronic pain of having to prove belonging, moves through the cost of suppressing identity ('minimize hid who I was'), and arrives at liberation through owning the full self. The turn is the most explicit transformation in the corpus.",
+        "turns": [
+          {
+            "at": "it wasn't until like six years ago that I really came to grips with the fact that I am part of this indigenous diaspora",
+            "from": "negative (lifelong suppression of indigenous identity to perform Americanness)",
+            "to": "positive (owning both identities as one, releasing the need to prove)"
+          }
+        ]
+      },
+      "temporal_markers": [
+        { "text": "I must have been like six years old", "resolved_date": "~1979" },
+        {
+          "text": "six years ago",
+          "resolved_date": "~2020",
+          "note": "The reclamation is very recent — decades of suppression"
+        },
+        { "text": "1971, when they came here", "resolved_date": "1971" },
+        { "text": "I was born two years later", "resolved_date": "1973" }
+      ],
+      "stance": {
+        "primary": "REFLECTIVE",
+        "evidence": "Gutierrez narrates from a post-transformation position, looking back at his former self with compassion ('I can own the mistakes and perhaps my naivete from the past'). This is classic reflective stance with clear before/after articulation.",
+        "transformation_marker": true,
+        "transformation_note": "Explicit before/after: BEFORE — 'I always had to prove that I was American... I felt it really sort of like deemphasize or minimize hid who I was.' AFTER — 'I don't have to deny one to be the other. And I'm squarely both.' The transformation is from identity-as-performance to identity-as-integration."
+      },
+      "tensions": [
+        {
+          "text": "Here I am trying to feature this American credential of who I am. But in doing that, I have to deny who I am.",
+          "between": "performing Americanness vs. being oneself",
+          "note": "The double bind: to be seen as American, you must hide what makes you who you are. The American identity and the indigenous identity are framed as mutually exclusive until the transformation."
+        },
+        {
+          "text": "Even my birth certificate says that I'm white",
+          "between": "official/documentary identity vs. lived/embodied identity",
+          "note": "The state literally misidentifies him — his own papers deny his heritage. The birth certificate is a metonym for systemic erasure."
+        }
+      ],
+      "metaphors": [
+        {
+          "metaphor": "identity as CREDENTIAL / BONAFIDES",
+          "evidence": "I had to really sort of like feature my American bonafides, where I was born, where I went to school, where I went to college, the job that I had",
+          "frame": "Americanness as a resume to be presented for inspection. The metaphor reveals that belonging is treated as something earned through documentation, not something inherent."
+        },
+        {
+          "metaphor": "self as WOVEN into TAPESTRY",
+          "evidence": "we wove ourselves into the tapestry of America like we are a part of it. It is not itself without us. We give it color. We give it texture, we give it strength.",
+          "frame": "From his mother's artisan work — identity as thread in a fabric. Notably different from 'melting pot' — you retain your distinctiveness while being integral to the whole."
+        },
+        {
+          "metaphor": "identity as OWNERSHIP",
+          "evidence": "finally seeing that, owning that",
+          "frame": "Identity as property — something you possess or refuse to possess. The shift from hiding to owning is the core transformation expressed as a property metaphor."
+        }
+      ],
+      "bookend": null
+    },
+    {
+      "segment_id": "elizabeth_hira__seg_004",
+      "source": "elizabeth_hira",
+      "source_title": "Elizabeth Hira Interview (Nadira & Elizabeth)",
+      "segment_description": "The little girl at Stanford who asked 'Can anybody go here?'",
+      "segment_text_excerpt": "Stanford liked to do this big day where they would invite all the little first graders in to show them the campus from East Palo Alto... kids that are going to school in trailers, on basketball courts... And she's sitting next to me on this bench, this picnic bench, and I'll never forget it. She pulls my sleeve down so that everybody else sitting around us can't hear her. And she looks at me and she goes, can anybody go here? And it was this crystallizing moment of being like, this is what I want for my life. I want every little girl from East Palo Alto who may learn how to read in a trailer on a basketball court to know that anybody can go here.",
+      "values": [
+        {
+          "value": "belonging",
+          "charge": "AFFIRMED",
+          "alternative_charge": "THREATENED",
+          "evidence": "can anybody go here?",
+          "confidence": "HIGH",
+          "note": "The question itself reveals that belonging is NOT assumed — the child whispers because she suspects the answer might be no. But Hira transforms the question into an affirmation of universal possibility."
+        },
+        {
+          "value": "justice",
+          "charge": "AFFIRMED",
+          "evidence": "I want every little girl from East Palo Alto... to know that anybody can go here. And that, to me, is what embodies America.",
+          "confidence": "HIGH",
+          "note": "Equal access is framed as the defining American value"
+        },
+        {
+          "value": "legacy",
+          "charge": "AFFIRMED",
+          "evidence": "mom brought us here so that you could have this life... you're not better than anybody, but you're also not worse than anybody else",
+          "confidence": "HIGH",
+          "note": "The mother's legacy is the belief that possibility is universal"
+        }
+      ],
+      "emotional_trajectory": {
+        "start_charge": "neutral",
+        "end_charge": "positive",
+        "arc_description": "Begins with descriptive context (the Stanford visit program), builds through the intimate moment (the whispered question), and peaks at crystallized purpose. The emotional energy is aspirational rather than grieving.",
+        "turns": [
+          {
+            "at": "can anybody go here?",
+            "from": "neutral (descriptive setup of the tutoring context)",
+            "to": "positive (crystallizing moment — purpose, mission, the distillation of what America should mean)"
+          }
+        ]
+      },
+      "temporal_markers": [
+        { "text": "when I was in college", "resolved_date": "~early 2000s, Stanford" },
+        { "text": "we just lost our mom... a couple of months into this project", "resolved_date": "~early 2026" },
+        {
+          "text": "mom's mom really believed in adopting this new homeland",
+          "resolved_date": "post-immigration generation"
+        }
+      ],
+      "stance": {
+        "primary": "REFLECTIVE",
+        "evidence": "Hira tells this story from years of distance, having built her career around the answer to that child's question. The reflective frame is clear — this is a founding-myth moment retold with full awareness of its significance.",
+        "transformation_marker": true,
+        "transformation_note": "The child's question is the catalyst for Hira's life mission. Before: a college student tutoring kids. After: 'this is what I want for my life.' The transformation is from individual experience to public commitment."
+      },
+      "tensions": [
+        {
+          "text": "She pulls my sleeve down so that everybody else sitting around us can't hear her",
+          "between": "the promise of universal access vs. the child's internalized sense that it might not apply to her",
+          "note": "The whisper is the tension — the child already knows, at first-grade age, that not everybody CAN go here. The secrecy of the question indicts the system."
+        },
+        {
+          "text": "kids that are going to school in trailers, on basketball courts... Stanford",
+          "between": "material poverty of East Palo Alto vs. material abundance of Stanford",
+          "note": "The physical proximity of extreme inequality — one mile separates trailers from the Calder sculptures"
+        }
+      ],
+      "metaphors": [
+        {
+          "metaphor": "America as DOOR / ENTRY",
+          "evidence": "can anybody go here? / anybody can go here / anybody can thrive here",
+          "frame": "The question of belonging reduced to its simplest form: can I enter this space? The metaphor is spatial — America is a place with a threshold, and the question is whether the door is open."
+        },
+        {
+          "metaphor": "life as CLEARING",
+          "evidence": "I walked you into a clearing, and at some point I have to step back and just let you walk into that clearing on your own",
+          "frame": "The mother's metaphor — life as a forest with a clearing of possibility. The parent's job is to bring the child to the open space; the child's job is to walk into it."
+        },
+        {
+          "metaphor": "generations as SEEDS / PLANTING",
+          "evidence": "she thought it had the capacity for our full potential... she could plant new seeds",
+          "frame": "Immigration as planting — the mother plants herself in American soil so her children can grow."
+        }
+      ],
+      "bookend": null
+    }
+  ]
+}

@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import MuxPlayer from '@mux/mux-player-react';
 import { Box, Button, Typography, CircularProgress } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import { findStoryByTitleHint } from '@/lib/weaviate/search';
 import { getMuxPlaybackId } from '@/app/utils/converters';
@@ -14,6 +16,7 @@ type CelebStory = { uuid: string; title: string; playbackId: string } | null;
 
 export const CelebVideo = () => {
   const [story, setStory] = useState<CelebStory | undefined>(undefined);
+  const [hasPlayed, setHasPlayed] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -52,6 +55,7 @@ export const CelebVideo = () => {
       }}>
       <Box
         sx={{
+          position: 'relative',
           width: '100%',
           aspectRatio: '16 / 9',
           maxHeight: '100%',
@@ -67,6 +71,8 @@ export const CelebVideo = () => {
             height: '100%',
             '--media-object-fit': 'cover',
           },
+          '&:hover .mux-hover-preview': { opacity: 1 },
+          '&:hover .mux-hover-play-icon': { opacity: 1 },
         }}>
         {story === undefined ? (
           <CircularProgress size={28} sx={{ color: 'secondary.main' }} />
@@ -75,13 +81,61 @@ export const CelebVideo = () => {
             Celeb video unavailable.
           </Typography>
         ) : (
-          <MuxPlayer
-            playbackId={story.playbackId}
-            streamType="on-demand"
-            metadata={{ video_title: story.title }}
-            accentColor="#239B8B"
-            style={{ aspectRatio: '16 / 9' }}
-          />
+          <>
+            <MuxPlayer
+              playbackId={story.playbackId}
+              streamType="on-demand"
+              thumbnailTime={5}
+              metadata={{ video_title: story.title }}
+              accentColor="#F96044"
+              onPlaying={() => setHasPlayed(true)}
+              style={{ aspectRatio: '16 / 9' }}
+            />
+            {!hasPlayed && (
+              <>
+                <Box
+                  className="mux-hover-preview"
+                  aria-hidden="true"
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundImage: `url(https://image.mux.com/${story.playbackId}/animated.webp?width=640&height=360&fps=15&start=5&end=10)`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    opacity: 0,
+                    transition: 'opacity 0.4s ease',
+                    pointerEvents: 'none',
+                  }}
+                />
+                <Box
+                  className="mux-hover-play-icon"
+                  aria-hidden="true"
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    opacity: 0,
+                    transition: 'opacity 0.4s ease',
+                    pointerEvents: 'none',
+                  }}>
+                  <Box
+                    component="svg"
+                    aria-hidden="true"
+                    viewBox="0 0 18 14"
+                    sx={{
+                      width: { xs: 56, md: 80 },
+                      height: 'auto',
+                      fill: '#ffffff',
+                      filter: 'drop-shadow(0 2px 14px rgba(0,0,0,0.65))',
+                    }}>
+                    <path d="M15.5987 6.2911L3.45577 0.110898C2.83667 -0.204202 2.06287 0.189698 2.06287 0.819798V13.1802C2.06287 13.8103 2.83667 14.2042 3.45577 13.8891L15.5987 7.7089C16.2178 7.3938 16.2178 6.6061 15.5987 6.2911Z" />
+                  </Box>
+                </Box>
+              </>
+            )}
+          </>
         )}
       </Box>
 
@@ -96,7 +150,7 @@ export const CelebVideo = () => {
             mb: 1.5,
             fontSize: '0.7rem',
           }}>
-          Featured &mdash; George Takei
+          George Takei
         </Typography>
         <Typography
           component="blockquote"
@@ -141,8 +195,31 @@ export const CelebVideo = () => {
             fontWeight: 700,
             letterSpacing: '0.02em',
           }}>
-          Share your American story
+          Record Your American Story
         </Button>
+        {story && story.uuid && (
+          <Box
+            component={Link}
+            href={`/story/${story.uuid}`}
+            sx={{
+              alignSelf: 'flex-start',
+              mt: 1.5,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 0.5,
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              color: 'common.black',
+              textDecoration: 'none',
+              opacity: 0.75,
+              transition: 'opacity 0.15s, color 0.15s',
+              '&:hover': { opacity: 1, color: 'secondary.main' },
+              '&:hover .arrow': { transform: 'translateX(3px)' },
+            }}>
+            Watch full interview
+            <ArrowForwardIcon className="arrow" sx={{ fontSize: 16, transition: 'transform 0.15s ease' }} />
+          </Box>
+        )}
       </Box>
     </Box>
   );

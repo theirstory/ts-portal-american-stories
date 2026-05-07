@@ -24,8 +24,9 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { useSemanticSearchStore } from '@/app/stores/useSemanticSearchStore';
 import { getNerColor, getNerDisplayName } from '@/config/organizationConfig';
 import { searchNerEntitiesAcrossCollection } from '@/lib/weaviate/search';
+import { fetchEntityByUuid, searchChunksByEntityUuid, type EntityRecord } from '@/lib/weaviate/entities';
 import { WeaviateGenericObject } from 'weaviate-client';
-import { Chunks } from '@/types/weaviate';
+import { Chunks, EntityMention } from '@/types/weaviate';
 import { colors } from '@/lib/theme';
 import { Word } from '@/types/transcription';
 import { useTranscriptNavigation } from '@/app/hooks/useTranscriptNavigation';
@@ -47,6 +48,10 @@ interface NerEntityModalProps {
   onClose: () => void;
   entityText: string;
   entityLabel: string;
+  /** Preferred: canonical Entities-collection UUID. When provided, occurrences
+   * are looked up by exact entity reference (no text-overlap matching) and the
+   * canonical entity card (Wikidata, description, relationships) is shown. */
+  entityUuid?: string;
   currentStoryUuid?: string;
   /** Hide the "In the interview" tab (used on pages with no current story, e.g. the homepage word cloud). */
   hideInterviewTab?: boolean;
@@ -261,6 +266,7 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
   onClose,
   entityText,
   entityLabel,
+  entityUuid,
   currentStoryUuid,
   hideInterviewTab = false,
 }) => {
@@ -272,6 +278,7 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
   const [projectMentionCount, setProjectMentionCount] = useState<number | null>(null);
   const [projectRecordingCount, setProjectRecordingCount] = useState<number | null>(null);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+  const [canonicalEntity, setCanonicalEntity] = useState<EntityRecord | null>(null);
   const { storyHubPage, setUpdateSelectedNerLabel, selected_ner_labels, allWords } = useSemanticSearchStore();
   const { seekAndScroll } = useTranscriptNavigation();
   const nerLabel = entityLabel as (typeof selected_ner_labels)[number];
@@ -279,36 +286,81 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
   const labelColor = useMemo(() => getNerColor(entityLabel), [entityLabel]);
   const labelDisplayName = useMemo(() => getNerDisplayName(entityLabel), [entityLabel]);
 
+  // Pull the precise entity_mentions list from the testimony when available;
+  // fall back to the legacy ner_data shape for un-backfilled stories.
+  const testimonyMentions = useMemo<EntityMention[]>(() => {
+    const props = storyHubPage?.properties;
+    const mentions = (props as { entity_mentions?: EntityMention[] } | undefined)?.entity_mentions;
+    if (Array.isArray(mentions) && mentions.length > 0) return mentions;
+    return normalizeNerData((props?.ner_data as unknown[]) ?? []) as unknown as EntityMention[];
+  }, [storyHubPage]);
+
   // Get occurrences in current interview
   const currentInterviewOccurrences = useMemo<EntityOccurrence[]>(() => {
-    if (!storyHubPage?.properties?.ner_data || !allWords) return [];
+    if (!testimonyMentions.length || !allWords) return [];
 
-    const filteredNerData = normalizeNerData(storyHubPage.properties.ner_data as unknown[])
-      .sort((a, b) => a.start_time - b.start_time)
-      .filter((ner) => ner.text.toLowerCase() === entityText.toLowerCase() && ner.label === entityLabel);
+    // Prefer exact entity_uuid match; fall back to text+label for legacy data.
+    const filtered = testimonyMentions
+      .filter((m: any) => {
+        if (entityUuid && m.entity_uuid) return m.entity_uuid === entityUuid;
+        const mentionText = (m.canonical_form ?? m.text ?? '').toLowerCase();
+        return mentionText === entityText.toLowerCase() && m.label === entityLabel;
+      })
+      .sort((a: any, b: any) => a.start_time - b.start_time);
 
-    const uniqueNerData = filteredNerData.filter(
-      (ner, index, arr) => index === 0 || Math.abs(ner.start_time - arr[index - 1].start_time) > DUPLICATE_TIME_EPSILON,
+    const unique = filtered.filter(
+      (m: any, index, arr) =>
+        index === 0 || Math.abs(m.start_time - arr[index - 1].start_time) > DUPLICATE_TIME_EPSILON,
     );
 
-    return uniqueNerData.map(
-      (ner): EntityOccurrence => ({
-        text: ner.text,
-        start_time: ner.start_time,
-        end_time: ner.end_time,
-        ...getContextAroundTime(allWords, ner.start_time, ner.end_time, ner.text),
+    return unique.map(
+      (m: any): EntityOccurrence => ({
+        text: m.text || m.canonical_form || entityText,
+        start_time: m.start_time,
+        end_time: m.end_time,
+        ...getContextAroundTime(allWords, m.start_time, m.end_time, m.text || m.canonical_form || entityText),
       }),
     );
-  }, [allWords, entityLabel, entityText, storyHubPage?.properties.ner_data]);
+  }, [allWords, entityLabel, entityText, entityUuid, testimonyMentions]);
 
-  // Load collection data, total mention count, and recording count when modal opens
-  // Use high limit so "In the project" reflects most matches available in one query (Weaviate max 10k per query)
+  // Load canonical entity record (Wikidata, relationships, description) when
+  // we have an entity_uuid. Cached per-uuid implicitly by React's effect deps.
+  useEffect(() => {
+    if (!open || !entityUuid) {
+      setCanonicalEntity(null);
+      return;
+    }
+    let cancelled = false;
+    fetchEntityByUuid(entityUuid)
+      .then((rec) => {
+        if (!cancelled) setCanonicalEntity(rec);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch canonical entity:', err);
+        if (!cancelled) setCanonicalEntity(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open, entityUuid]);
+
+  // Load cross-source occurrences. With entity_uuid we use the precise
+  // mentionsEntities cross-ref; otherwise we fall back to text-based search.
   useEffect(() => {
     if (!open) return;
     setProjectRecordingCount(null);
     setProjectMentionCount(null);
     setLoading(true);
-    searchNerEntitiesAcrossCollection(entityText, entityLabel, currentStoryUuid, 10_000)
+
+    const loader = entityUuid
+      ? searchChunksByEntityUuid(entityUuid, { excludeTestimonyId: currentStoryUuid, limit: 10_000 }).then(
+          (objects) => ({
+            objects,
+          }),
+        )
+      : searchNerEntitiesAcrossCollection(entityText, entityLabel, currentStoryUuid, 10_000);
+
+    loader
       .then((searchResult) => {
         const objects = searchResult.objects;
         const recordingIds = new Set<string>();
@@ -326,7 +378,7 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [open, entityText, entityLabel, currentStoryUuid]);
+  }, [open, entityText, entityLabel, entityUuid, currentStoryUuid]);
 
   const createSimpleContext = (
     transcription: string,
@@ -494,7 +546,7 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
               whiteSpace: 'nowrap',
               fontSize: { xs: '1.125rem', md: '1rem' },
             }}>
-            {entityText}
+            {canonicalEntity?.properties.canonical_form || entityText}
           </Typography>
         </Box>
 
@@ -519,6 +571,59 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
           flexDirection: 'column',
           overflow: 'hidden',
         }}>
+        {canonicalEntity && (
+          <Box
+            sx={{
+              px: { xs: 2, md: 3 },
+              py: { xs: 1.25, md: 1.5 },
+              bgcolor: colors.common.white,
+              borderBottom: '1px solid',
+              borderColor: colors.grey[200],
+            }}>
+            {canonicalEntity.properties.context_summary && (
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: { xs: '0.95rem', md: '0.85rem' },
+                  color: colors.text.primary,
+                  lineHeight: 1.5,
+                  mb: canonicalEntity.properties.linked_data_url ? 0.75 : 0,
+                }}>
+                {canonicalEntity.properties.context_summary}
+              </Typography>
+            )}
+            {canonicalEntity.properties.linked_data_url && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: colors.text.secondary, fontSize: { xs: '0.85rem', md: '0.75rem' } }}>
+                  Linked data:
+                </Typography>
+                <Typography
+                  component="a"
+                  href={canonicalEntity.properties.linked_data_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    color: colors.primary.main,
+                    fontSize: { xs: '0.85rem', md: '0.75rem' },
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    '&:hover': { textDecoration: 'underline' },
+                  }}>
+                  Wikidata {canonicalEntity.properties.linked_data_qid}
+                </Typography>
+                {canonicalEntity.properties.linked_data_description && (
+                  <Typography
+                    variant="caption"
+                    sx={{ color: colors.text.secondary, fontSize: { xs: '0.85rem', md: '0.75rem' } }}>
+                    — {canonicalEntity.properties.linked_data_description}
+                  </Typography>
+                )}
+              </Box>
+            )}
+          </Box>
+        )}
         <Box
           sx={{
             borderBottom: '1px solid',

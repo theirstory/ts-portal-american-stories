@@ -1,0 +1,140 @@
+{
+  "class": "Storylines",
+  "description": "Editorial storyline compositions. References question threads, chunks, and conflicts in a narrative sequence. Produced by Pass 3 (candidate) and Pass 4 (composition); editorially curated before publish.",
+  "invertedIndexConfig": {
+    "bm25": { "b": 0.75, "k1": 1.2 },
+    "cleanupIntervalSeconds": 60,
+    "stopwords": { "additions": null, "preset": "en", "removals": null },
+    "usingBlockMaxWAND": true
+  },
+  "moduleConfig": {},
+  "multiTenancyConfig": {
+    "autoTenantActivation": false,
+    "autoTenantCreation": false,
+    "enabled": false
+  },
+  "properties": [
+    {
+      "dataType": ["text"],
+      "description": "Stable storyline id.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "storyline_id",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Display title.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "title",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "URL-friendly slug used in /storylines/[slug].",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "slug",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "The Rabiger dramatic question — the single question this storyline answers.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "dramatic_question",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Before-to-after transformation hypothesis (Lisa Cron).",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "transformation",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Editorial attribution paragraph displayed on the storyline page.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "editorial_attribution",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["boolean"],
+      "description": "Editorial publish flag. Storylines stay draft until published.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "published"
+    },
+    {
+      "dataType": ["object[]"],
+      "description": "Composition sequence: ordered sections, each with its own section_question, epigraph (narrator-quote header), accent_color, and segment_ids in narrative order.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "composition",
+      "nestedProperties": [
+        { "dataType": ["text"], "name": "section_question" },
+        { "dataType": ["text"], "name": "epigraph_quote" },
+        { "dataType": ["text"], "name": "epigraph_attribution" },
+        { "dataType": ["text"], "name": "accent_color" },
+        { "dataType": ["text[]"], "name": "segment_ids" }
+      ]
+    },
+    {
+      "dataType": ["text"],
+      "description": "Collection id (e.g. American Stories).",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "collection_id",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["Chunks"],
+      "description": "All Chunks (narrative segments) referenced in this storyline.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "includesChunks"
+    },
+    {
+      "dataType": ["QuestionThreads"],
+      "description": "Question threads that feed into this storyline.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "includesThreads"
+    },
+    {
+      "dataType": ["Conflicts"],
+      "description": "Conflicts central to this storyline (the conflict spine).",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "includesConflicts"
+    }
+  ]
+}

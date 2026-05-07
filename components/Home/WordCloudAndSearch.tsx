@@ -4,44 +4,179 @@ import { useEffect, useMemo, useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, InputBase, IconButton, Typography, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { getNerColor, getNerDisplayName } from '@/config/organizationConfig';
-import { getTopNerEntities, type TopNerEntity } from '@/lib/weaviate/search';
+import {
+  getNerColor,
+  getNerDisplayName,
+  getQuestionLevelColor,
+  getQuestionLevelDisplayName,
+} from '@/config/organizationConfig';
+import { getTopThreads, type ThreadRecord } from '@/lib/weaviate/threads';
+import { getTopCrossSourceEntities, type TopEntity } from '@/lib/weaviate/entities';
+import { ThreadModal } from '@/components/ThreadModal';
 import { NerEntityModal } from '@/app/story/[storyUuid]/Components/NerEntityModal';
 
-const TOP_ENTITY_LIMIT = 15;
+const TOP_THREAD_LIMIT = 30;
+const TOP_ENTITY_LIMIT = 14;
 
-const computeFontSize = (count: number, min: number, max: number) => {
-  if (max === min) return 1.2;
-  const t = (count - min) / (max - min);
-  return 0.9 + t * 1.1;
+type ThreadCloudItem = {
+  kind: 'thread';
+  id: string;
+  label: string;
+  question: string;
+  level: string;
+  weight: number;
+};
+
+type EntityCloudItem = {
+  kind: 'entity';
+  id: string;
+  label: string;
+  entity_text: string;
+  entity_label: string;
+  weight: number;
+};
+
+type CloudItem = ThreadCloudItem | EntityCloudItem;
+
+// Pseudo-random but deterministic per item — keeps the cloud stable between
+// renders while breaking the strict baseline alignment that makes a tag list
+// look like a tag list.
+const hashString = (s: string) => {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i += 1) {
+    h ^= s.charCodeAt(i);
+    h = (h * 16777619) >>> 0;
+  }
+  return h;
+};
+
+const computeFontRem = (weight: number, minW: number, maxW: number, kind: 'thread' | 'entity') => {
+  // Threads scale 1.05rem → 2.4rem; entities sit subtler 0.85rem → 1.5rem.
+  const tMin = kind === 'thread' ? 1.05 : 0.85;
+  const tMax = kind === 'thread' ? 2.4 : 1.5;
+  if (maxW === minW) return (tMin + tMax) / 2;
+  const t = (weight - minW) / (maxW - minW);
+  return tMin + t * (tMax - tMin);
+};
+
+const verticalNudgeFor = (id: string) => {
+  // ±3px wobble around the baseline.
+  const h = hashString(id);
+  return (h % 7) - 3 + 'px';
+};
+
+// Convert a #rrggbb (or shorthand) into rgba(...) with the given alpha.
+// Falls back to the input string if it's not parseable as hex.
+const tintColor = (hex: string, alpha: number): string => {
+  const m = hex.replace('#', '').match(/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/);
+  if (!m) return hex;
+  let h = m[1];
+  if (h.length === 3)
+    h = h
+      .split('')
+      .map((c) => c + c)
+      .join('');
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
 export const WordCloudAndSearch = () => {
   const router = useRouter();
-  const [entities, setEntities] = useState<TopNerEntity[] | null>(null);
+  const [threads, setThreads] = useState<ThreadRecord[] | null>(null);
+  const [entities, setEntities] = useState<TopEntity[] | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeEntity, setActiveEntity] = useState<{ text: string; label: string } | null>(null);
+  const [activeThreadUuid, setActiveThreadUuid] = useState<string | null>(null);
+  const [activeEntity, setActiveEntity] = useState<{
+    text: string;
+    label: string;
+    entity_uuid: string;
+  } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    getTopNerEntities(TOP_ENTITY_LIMIT)
-      .then((result) => {
-        if (!cancelled) setEntities(result);
-      })
-      .catch((err) => {
-        console.error('Failed to load top NER entities:', err);
-        if (!cancelled) setEntities([]);
-      });
+    Promise.all([
+      getTopThreads(TOP_THREAD_LIMIT).catch((err) => {
+        console.error('Failed to load threads:', err);
+        return [] as ThreadRecord[];
+      }),
+      getTopCrossSourceEntities(TOP_ENTITY_LIMIT, 2).catch((err) => {
+        console.error('Failed to load cross-source entities:', err);
+        return [] as TopEntity[];
+      }),
+    ]).then(([t, e]) => {
+      if (cancelled) return;
+      setThreads(t);
+      setEntities(e);
+    });
     return () => {
       cancelled = true;
     };
   }, []);
 
-  const { minCount, maxCount } = useMemo(() => {
-    if (!entities || entities.length === 0) return { minCount: 0, maxCount: 0 };
-    const counts = entities.map((e) => e.count);
-    return { minCount: Math.min(...counts), maxCount: Math.max(...counts) };
-  }, [entities]);
+  const items = useMemo<CloudItem[]>(() => {
+    const rawThreads = (threads ?? []).filter((t) => ((t.properties.source_count as number) ?? 0) >= 3);
+
+    // Disambiguate same theme_label across levels — the loudest source wins
+    // the bare label; smaller siblings get a level qualifier appended.
+    const labelCounts = new Map<string, number>();
+    for (const t of rawThreads) {
+      const label = ((t.properties.theme_label as string) || '').trim().toLowerCase();
+      if (!label) continue;
+      labelCounts.set(label, (labelCounts.get(label) ?? 0) + 1);
+    }
+    const sortedThreads = [...rawThreads].sort(
+      (a, b) => ((b.properties.source_count as number) ?? 0) - ((a.properties.source_count as number) ?? 0),
+    );
+    const labelClaimed = new Set<string>();
+    const labelByUuid = new Map<string, string>();
+    for (const t of sortedThreads) {
+      const baseLabel = (t.properties.theme_label as string) || (t.properties.thread_question as string) || 'Thread';
+      const lc = baseLabel.trim().toLowerCase();
+      const collides = (labelCounts.get(lc) ?? 0) > 1;
+      if (!collides || !labelClaimed.has(lc)) {
+        labelByUuid.set(t.uuid, baseLabel);
+        labelClaimed.add(lc);
+      } else {
+        const levelName = getQuestionLevelDisplayName((t.properties.question_level as string) ?? '');
+        labelByUuid.set(t.uuid, `${baseLabel} · ${levelName}`);
+      }
+    }
+
+    const out: CloudItem[] = [];
+    for (const t of rawThreads) {
+      const props = t.properties;
+      const sourceCount = (props.source_count as number) ?? 0;
+      out.push({
+        kind: 'thread',
+        id: `t:${t.uuid}`,
+        label: labelByUuid.get(t.uuid) ?? (props.theme_label as string) ?? 'Thread',
+        question: (props.thread_question as string) ?? '',
+        level: (props.question_level as string) ?? '',
+        weight: sourceCount,
+      });
+    }
+    for (const e of entities ?? []) {
+      out.push({
+        kind: 'entity',
+        id: `e:${e.entity_uuid}`,
+        label: e.canonical_form,
+        entity_text: e.canonical_form,
+        entity_label: e.label,
+        weight: e.recording_count, // size by cross-source spread, not raw mentions
+      });
+    }
+    // Shuffle deterministically so threads/entities interleave visually.
+    out.sort((a, b) => hashString(a.id) - hashString(b.id));
+    return out;
+  }, [threads, entities]);
+
+  const { minWeight, maxWeight } = useMemo(() => {
+    if (items.length === 0) return { minWeight: 0, maxWeight: 0 };
+    const weights = items.map((i) => i.weight);
+    return { minWeight: Math.min(...weights), maxWeight: Math.max(...weights) };
+  }, [items]);
 
   const handleSearchSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -49,6 +184,9 @@ export const WordCloudAndSearch = () => {
     if (!trimmed) return;
     router.push(`/stories?q=${encodeURIComponent(trimmed)}&searchType=hybrid`);
   };
+
+  const isLoading = threads === null || entities === null;
+  const isEmpty = !isLoading && items.length === 0;
 
   return (
     <Box
@@ -61,16 +199,26 @@ export const WordCloudAndSearch = () => {
         minHeight: 0,
         gap: 1.5,
       }}>
-      <Typography
-        variant="overline"
-        sx={{
-          letterSpacing: '0.2em',
-          color: 'secondary.main',
-          fontWeight: 700,
-          fontSize: { xs: '0.7rem', md: '0.75rem' },
-        }}>
-        Threads
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 1 }}>
+        <Typography
+          variant="overline"
+          sx={{
+            letterSpacing: '0.2em',
+            color: 'secondary.main',
+            fontWeight: 700,
+            fontSize: { xs: '0.7rem', md: '0.75rem' },
+          }}>
+          Threads
+        </Typography>
+        <Typography
+          sx={{
+            color: 'text.secondary',
+            fontSize: { xs: '0.7rem', md: '0.7rem' },
+            fontStyle: 'italic',
+          }}>
+          questions and people across recordings
+        </Typography>
+      </Box>
 
       <Box
         sx={{
@@ -81,55 +229,108 @@ export const WordCloudAndSearch = () => {
           '&::-webkit-scrollbar': { width: 4 },
           '&::-webkit-scrollbar-thumb': { backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: 4 },
         }}>
-        {entities === null ? (
+        {isLoading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
             <CircularProgress size={22} sx={{ color: 'secondary.main' }} />
           </Box>
-        ) : entities.length === 0 ? (
-          <Typography sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>No entities found yet.</Typography>
+        ) : isEmpty ? (
+          <Typography sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
+            Threads appear once at least three recordings answer the same question.
+          </Typography>
         ) : (
           <Box
             sx={{
               display: 'flex',
               flexWrap: 'wrap',
-              gap: { xs: 0.75, md: 1 },
-              alignItems: 'baseline',
-              lineHeight: 1.4,
+              gap: { xs: '6px 14px', md: '10px 18px' },
+              alignItems: 'center',
+              lineHeight: 1.05,
+              py: 1,
             }}>
-            {entities.map((entity) => {
-              const fontSize = computeFontSize(entity.count, minCount, maxCount);
-              const labelColor = getNerColor(entity.label);
+            {items.map((item) => {
+              const fontRem = computeFontRem(item.weight, minWeight, maxWeight, item.kind);
+              const nudge = verticalNudgeFor(item.id);
+              if (item.kind === 'thread') {
+                const color = getQuestionLevelColor(item.level);
+                const bg = tintColor(color, 0.1);
+                const bgHover = tintColor(color, 0.18);
+                const borderColor = tintColor(color, 0.22);
+                return (
+                  <Box
+                    key={item.id}
+                    component="button"
+                    onClick={() => setActiveThreadUuid(item.id.slice(2))}
+                    title={`${getQuestionLevelDisplayName(item.level)} thread · answered in ${item.weight} recordings — ${item.question}`}
+                    sx={{
+                      cursor: 'pointer',
+                      padding: '4px 12px',
+                      borderRadius: '999px',
+                      backgroundColor: bg,
+                      border: '1px solid',
+                      borderColor,
+                      fontFamily: 'var(--font-serif), Georgia, serif',
+                      fontSize: `${fontRem}rem`,
+                      fontWeight: 600,
+                      lineHeight: 1.15,
+                      color: 'common.black',
+                      transform: `translateY(${nudge})`,
+                      transition:
+                        'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease',
+                      whiteSpace: 'nowrap',
+                      '&:hover': {
+                        color,
+                        backgroundColor: bgHover,
+                        borderColor: color,
+                        transform: `translateY(${nudge}) scale(1.04)`,
+                        boxShadow: `0 6px 18px ${tintColor(color, 0.22)}`,
+                      },
+                    }}>
+                    {item.label}
+                  </Box>
+                );
+              }
+
+              const color = getNerColor(item.entity_label);
+              const bg = tintColor(color, 0.12);
+              const bgHover = tintColor(color, 0.22);
+              const borderColor = tintColor(color, 0.28);
               return (
                 <Box
-                  key={`${entity.text}|${entity.label}`}
+                  key={item.id}
                   component="button"
-                  onClick={() => setActiveEntity({ text: entity.text, label: entity.label })}
-                  title={`${getNerDisplayName(entity.label)} — ${entity.count} mention${entity.count !== 1 ? 's' : ''}`}
+                  onClick={() =>
+                    setActiveEntity({
+                      text: item.entity_text,
+                      label: item.entity_label,
+                      entity_uuid: item.id.slice(2),
+                    })
+                  }
+                  title={`${getNerDisplayName(item.entity_label)} · in ${item.weight} recordings`}
                   sx={{
-                    background: 'none',
-                    border: 'none',
                     cursor: 'pointer',
-                    padding: 0,
-                    fontFamily: 'var(--font-serif), Georgia, serif',
-                    fontSize: `${fontSize}rem`,
-                    fontWeight: 600,
-                    lineHeight: 1.1,
-                    color: 'common.black',
-                    transition: 'color 0.15s ease, transform 0.15s ease',
-                    '&::after': {
-                      content: '""',
-                      display: 'block',
-                      height: '2px',
-                      backgroundColor: labelColor,
-                      opacity: 0.55,
-                      marginTop: '1px',
-                      borderRadius: '2px',
-                      transition: 'opacity 0.15s ease',
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                    backgroundColor: bg,
+                    border: '1px solid',
+                    borderColor,
+                    fontFamily: 'var(--font-sans), system-ui, sans-serif',
+                    fontSize: `${fontRem}rem`,
+                    fontWeight: 500,
+                    lineHeight: 1.15,
+                    color: 'rgba(0,0,0,0.78)',
+                    transform: `translateY(${nudge})`,
+                    transition:
+                      'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease',
+                    whiteSpace: 'nowrap',
+                    '&:hover': {
+                      color,
+                      backgroundColor: bgHover,
+                      borderColor: color,
+                      transform: `translateY(${nudge}) scale(1.04)`,
+                      boxShadow: `0 6px 18px ${tintColor(color, 0.22)}`,
                     },
-                    '&:hover': { color: 'secondary.main', transform: 'translateY(-1px)' },
-                    '&:hover::after': { opacity: 1 },
                   }}>
-                  {entity.text}
+                  {item.label}
                 </Box>
               );
             })}
@@ -152,7 +353,7 @@ export const WordCloudAndSearch = () => {
           transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
           '&:focus-within': {
             borderColor: 'secondary.main',
-            boxShadow: '0 0 0 3px rgba(35,155,139,0.15)',
+            boxShadow: '0 0 0 3px rgba(249,96,68,0.18)',
           },
         }}>
         <SearchIcon sx={{ color: 'text.secondary', mr: 1, fontSize: 20 }} />
@@ -168,12 +369,14 @@ export const WordCloudAndSearch = () => {
         </IconButton>
       </Box>
 
+      {activeThreadUuid && <ThreadModal open onClose={() => setActiveThreadUuid(null)} threadUuid={activeThreadUuid} />}
       {activeEntity && (
         <NerEntityModal
           open
           onClose={() => setActiveEntity(null)}
           entityText={activeEntity.text}
           entityLabel={activeEntity.label}
+          entityUuid={activeEntity.entity_uuid}
           hideInterviewTab
         />
       )}

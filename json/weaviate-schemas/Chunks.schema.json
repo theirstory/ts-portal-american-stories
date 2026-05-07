@@ -21,9 +21,7 @@
   },
   "properties": [
     {
-      "dataType": [
-        "number"
-      ],
+      "dataType": ["number"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": false,
@@ -33,9 +31,7 @@
       "name": "interview_duration"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -46,9 +42,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -59,9 +53,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -72,9 +64,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -85,9 +75,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -98,9 +86,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -111,9 +97,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -124,9 +108,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -137,9 +119,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -150,9 +130,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -163,9 +141,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -176,9 +152,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -189,9 +163,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -202,9 +174,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "int"
-      ],
+      "dataType": ["int"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": false,
@@ -214,9 +184,7 @@
       "name": "section_id"
     },
     {
-      "dataType": [
-        "int"
-      ],
+      "dataType": ["int"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": false,
@@ -226,9 +194,7 @@
       "name": "para_id"
     },
     {
-      "dataType": [
-        "int"
-      ],
+      "dataType": ["int"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": false,
@@ -238,9 +204,7 @@
       "name": "chunk_id"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -251,9 +215,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -264,9 +226,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -277,9 +237,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text[]"
-      ],
+      "dataType": ["text[]"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -290,9 +248,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "boolean"
-      ],
+      "dataType": ["boolean"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": false,
@@ -302,9 +258,7 @@
       "name": "is_interviewer"
     },
     {
-      "dataType": [
-        "object[]"
-      ],
+      "dataType": ["object[]"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": false,
@@ -314,27 +268,21 @@
       "name": "word_timestamps",
       "nestedProperties": [
         {
-          "dataType": [
-            "number"
-          ],
+          "dataType": ["number"],
           "indexFilterable": true,
           "indexRangeFilters": false,
           "indexSearchable": false,
           "name": "start"
         },
         {
-          "dataType": [
-            "number"
-          ],
+          "dataType": ["number"],
           "indexFilterable": true,
           "indexRangeFilters": false,
           "indexSearchable": false,
           "name": "end"
         },
         {
-          "dataType": [
-            "text"
-          ],
+          "dataType": ["text"],
           "indexFilterable": true,
           "indexRangeFilters": false,
           "indexSearchable": true,
@@ -344,9 +292,7 @@
       ]
     },
     {
-      "dataType": [
-        "object[]"
-      ],
+      "dataType": ["object[]"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": false,
@@ -356,9 +302,7 @@
       "name": "ner_data",
       "nestedProperties": [
         {
-          "dataType": [
-            "text"
-          ],
+          "dataType": ["text"],
           "indexFilterable": true,
           "indexRangeFilters": false,
           "indexSearchable": true,
@@ -366,9 +310,7 @@
           "tokenization": "word"
         },
         {
-          "dataType": [
-            "text"
-          ],
+          "dataType": ["text"],
           "indexFilterable": true,
           "indexRangeFilters": false,
           "indexSearchable": true,
@@ -376,18 +318,14 @@
           "tokenization": "word"
         },
         {
-          "dataType": [
-            "number"
-          ],
+          "dataType": ["number"],
           "indexFilterable": true,
           "indexRangeFilters": false,
           "indexSearchable": false,
           "name": "start_time"
         },
         {
-          "dataType": [
-            "number"
-          ],
+          "dataType": ["number"],
           "indexFilterable": true,
           "indexRangeFilters": false,
           "indexSearchable": false,
@@ -396,9 +334,74 @@
       ]
     },
     {
-      "dataType": [
-        "text[]"
-      ],
+      "dataType": ["object[]"],
+      "description": "Per-occurrence entity mentions in this chunk. Each mention is bounded to a precise word-level span (start_time/end_time map into word_timestamps), and references a canonical Entities row by entity_uuid. Replaces ner_data for highlighting and click-through.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": {
+        "none": {}
+      },
+      "name": "entity_mentions",
+      "nestedProperties": [
+        {
+          "dataType": ["text"],
+          "indexFilterable": true,
+          "indexRangeFilters": false,
+          "indexSearchable": false,
+          "name": "entity_uuid",
+          "tokenization": "field"
+        },
+        {
+          "dataType": ["text"],
+          "indexFilterable": true,
+          "indexRangeFilters": false,
+          "indexSearchable": true,
+          "name": "canonical_form",
+          "tokenization": "word"
+        },
+        {
+          "dataType": ["text"],
+          "indexFilterable": true,
+          "indexRangeFilters": false,
+          "indexSearchable": true,
+          "name": "label",
+          "tokenization": "word"
+        },
+        {
+          "dataType": ["text"],
+          "indexFilterable": false,
+          "indexRangeFilters": false,
+          "indexSearchable": true,
+          "name": "text",
+          "tokenization": "word"
+        },
+        {
+          "dataType": ["number"],
+          "indexFilterable": false,
+          "indexRangeFilters": false,
+          "indexSearchable": false,
+          "name": "start_time"
+        },
+        {
+          "dataType": ["number"],
+          "indexFilterable": false,
+          "indexRangeFilters": false,
+          "indexSearchable": false,
+          "name": "end_time"
+        },
+        {
+          "dataType": ["text"],
+          "indexFilterable": true,
+          "indexRangeFilters": false,
+          "indexSearchable": false,
+          "name": "segment_id",
+          "tokenization": "field"
+        }
+      ]
+    },
+    {
+      "dataType": ["text[]"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -409,9 +412,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text[]"
-      ],
+      "dataType": ["text[]"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -422,9 +423,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "number"
-      ],
+      "dataType": ["number"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": false,
@@ -434,9 +433,7 @@
       "name": "start_time"
     },
     {
-      "dataType": [
-        "number"
-      ],
+      "dataType": ["number"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": false,
@@ -446,9 +443,7 @@
       "name": "end_time"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -459,9 +454,91 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "Testimonies"
-      ],
+      "dataType": ["text"],
+      "description": "Stable narrative segment id, e.g. george_takei__seg_014. Set by Pass 0 segmentation.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": {
+        "none": {}
+      },
+      "name": "narrative_segment_id",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "One-sentence neutral description of this segment, generated by Pass 0.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": {
+        "none": {}
+      },
+      "name": "segment_summary",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "NARRATOR | INTERVIEWER | OTHER",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": {
+        "none": {}
+      },
+      "name": "speaker_role",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text[]"],
+      "description": "Pass 0 question constellation: facts-level questions this segment answers.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": {
+        "none": {}
+      },
+      "name": "question_facts",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text[]"],
+      "description": "Pass 0 question constellation: feelings-level questions this segment answers.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": {
+        "none": {}
+      },
+      "name": "question_feelings",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text[]"],
+      "description": "Pass 0 question constellation: identity-level questions this segment answers. These are also embedded as the question_vector named vector.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": {
+        "none": {}
+      },
+      "name": "question_identity",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Optional source-level question describing this segment's role in the full testimony arc.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": {
+        "none": {}
+      },
+      "name": "question_source_level",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["Testimonies"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": false,
@@ -471,9 +548,17 @@
       "name": "belongsToTestimony"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["Entities"],
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": {
+        "none": {}
+      },
+      "name": "mentionsEntities"
+    },
+    {
+      "dataType": ["text"],
       "description": "This property was generated by Weaviate's auto-schema feature on Tue Aug 26 19:36:29 2025",
       "indexFilterable": true,
       "indexRangeFilters": false,
@@ -485,9 +570,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "text"
-      ],
+      "dataType": ["text"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": true,
@@ -498,9 +581,7 @@
       "tokenization": "word"
     },
     {
-      "dataType": [
-        "boolean"
-      ],
+      "dataType": ["boolean"],
       "indexFilterable": true,
       "indexRangeFilters": false,
       "indexSearchable": false,
@@ -510,9 +591,7 @@
       "name": "isAudioFile"
     },
     {
-      "dataType": [
-        "date"
-      ],
+      "dataType": ["date"],
       "indexFilterable": true,
       "indexRangeFilters": true,
       "indexSearchable": false,
@@ -580,6 +659,35 @@
       "vectorizer": {
         "none": {}
       }
+    },
+    "question_vector": {
+      "vectorIndexConfig": {
+        "bq": { "enabled": false },
+        "cleanupIntervalSeconds": 300,
+        "distance": "cosine",
+        "dynamicEfFactor": 8,
+        "dynamicEfMax": 500,
+        "dynamicEfMin": 100,
+        "ef": -1,
+        "efConstruction": 128,
+        "filterStrategy": "sweeping",
+        "flatSearchCutoff": 40000,
+        "maxConnections": 32,
+        "multivector": { "aggregation": "maxSim", "enabled": false },
+        "pq": {
+          "bitCompression": false,
+          "centroids": 256,
+          "enabled": false,
+          "encoder": { "distribution": "log-normal", "type": "kmeans" },
+          "segments": 0,
+          "trainingLimit": 100000
+        },
+        "skip": false,
+        "sq": { "enabled": false, "rescoreLimit": 20, "trainingLimit": 100000 },
+        "vectorCacheMaxObjects": 1000000000000
+      },
+      "vectorIndexType": "hnsw",
+      "vectorizer": { "none": {} }
     }
   }
 }

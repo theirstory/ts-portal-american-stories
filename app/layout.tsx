@@ -58,7 +58,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className={`${sans.variable} ${serif.variable} ${display.variable} overflow-x-hidden`} lang="en">
+    <html
+      className={`${sans.variable} ${serif.variable} ${display.variable} overflow-x-hidden`}
+      lang="en"
+      suppressHydrationWarning>
       <body suppressHydrationWarning>
         <MaterialUIThemeProvider>
           <Suspense>

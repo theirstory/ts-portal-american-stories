@@ -29,10 +29,11 @@ export const Banner = () => {
           sx={{
             fontFamily: 'var(--font-serif), Georgia, serif',
             fontStyle: 'italic',
-            fontWeight: 400,
-            fontSize: { xs: '0.95rem', md: '1.1rem' },
-            color: 'text.secondary',
+            fontWeight: 500,
+            fontSize: { xs: '1.25rem', md: '1.75rem', lg: '2rem' },
+            color: '#F96044',
             m: 0,
+            lineHeight: 1.2,
           }}>
           &ldquo;How did your family become American?&rdquo;
         </Typography>

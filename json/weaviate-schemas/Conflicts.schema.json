@@ -1,0 +1,115 @@
+{
+  "class": "Conflicts",
+  "description": "Detected narrative conflicts (factual / emotional / identity / fracture). Produced by Pass 1.5 of the narrative pipeline.",
+  "invertedIndexConfig": {
+    "bm25": { "b": 0.75, "k1": 1.2 },
+    "cleanupIntervalSeconds": 60,
+    "stopwords": { "additions": null, "preset": "en", "removals": null },
+    "usingBlockMaxWAND": true
+  },
+  "moduleConfig": {},
+  "multiTenancyConfig": {
+    "autoTenantActivation": false,
+    "autoTenantCreation": false,
+    "enabled": false
+  },
+  "properties": [
+    {
+      "dataType": ["text"],
+      "description": "Stable conflict id.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "conflict_id",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "FACTUAL | EMOTIONAL | IDENTITY | FRACTURE",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "conflict_type",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "CROSS_SOURCE | INTRA_SOURCE",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "scope",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "One-sentence description of the conflict.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "description",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "The shared question both segments answer (the conflict surfaces in their answers).",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "shared_question",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Why this conflict matters narratively.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "significance",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["boolean"],
+      "description": "True if left open, false if one reading dominates.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "unresolved"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Collection id (e.g. American Stories).",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "collection_id",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["Chunks"],
+      "description": "Chunks that participate in this conflict.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "involvesChunks"
+    },
+    {
+      "dataType": ["Testimonies"],
+      "description": "Testimonies that participate in this conflict.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "involvesTestimonies"
+    }
+  ]
+}

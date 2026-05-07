@@ -1,5 +1,5 @@
 'use server';
-import { Chunks, Testimonies, SchemaMap, SchemaTypes } from '@/types/weaviate';
+import { Chunks, Testimonies, SchemaMap, SearchableSchemaType } from '@/types/weaviate';
 import { initWeaviateClient } from './client';
 import { FilterValue, QueryProperty } from 'weaviate-client';
 import { readdir, readFile } from 'node:fs/promises';
@@ -239,7 +239,7 @@ export async function findStoryByTitleHint(
   return null;
 }
 
-export async function getAllStoriesFromCollection<T extends SchemaTypes>(
+export async function getAllStoriesFromCollection<T extends SearchableSchemaType>(
   collection: T,
   returnProperties?: QueryProperty<SchemaMap[T]>[] | undefined,
   limit = 1000,
@@ -347,7 +347,7 @@ export async function getAvailableFolders(limit = 5000): Promise<FolderFilterOpt
   });
 }
 
-export async function vectorSearch<T extends SchemaTypes>(
+export async function vectorSearch<T extends SearchableSchemaType>(
   collection: T,
   searchTerm: string,
   limit = 1000,
@@ -372,6 +372,7 @@ export async function vectorSearch<T extends SchemaTypes>(
     returnMetadata: ['score', 'certainty', 'distance'],
     filters: combinedFilter,
     returnProperties,
+    targetVector: 'transcription_vector',
   });
 
   const filteredObjects = rawResults.objects.filter((item) => {
@@ -396,7 +397,7 @@ export async function vectorSearch<T extends SchemaTypes>(
   };
 }
 
-export async function hybridSearch<T extends SchemaTypes>(
+export async function hybridSearch<T extends SearchableSchemaType>(
   collection: T,
   searchTerm: string,
   limit = 1000,
@@ -422,6 +423,7 @@ export async function hybridSearch<T extends SchemaTypes>(
     returnMetadata: ['score', 'distance', 'certainty'],
     filters: combinedFilter,
     returnProperties,
+    targetVector: 'transcription_vector',
   });
 
   const filteredObjects = response.objects.filter((item) => {
@@ -444,7 +446,7 @@ export async function hybridSearch<T extends SchemaTypes>(
   };
 }
 
-export async function bm25Search<T extends SchemaTypes>(
+export async function bm25Search<T extends SearchableSchemaType>(
   collection: T,
   searchTerm: string,
   limit = 1000,
@@ -506,7 +508,7 @@ export async function bm25Search<T extends SchemaTypes>(
   };
 }
 
-export async function hybridSearchForStoryId<T extends SchemaTypes>(
+export async function hybridSearchForStoryId<T extends SearchableSchemaType>(
   collection: T,
   theirStoryId: string,
   searchTerm: string,
@@ -536,6 +538,7 @@ export async function hybridSearchForStoryId<T extends SchemaTypes>(
     limit,
     returnMetadata: ['score', 'distance', 'certainty'],
     filters: combinedFilter,
+    targetVector: 'transcription_vector',
   });
 
   const filteredObjects = response.objects.filter((item) => {
@@ -558,7 +561,7 @@ export async function hybridSearchForStoryId<T extends SchemaTypes>(
   };
 }
 
-export async function vectorSearchForStoryId<T extends SchemaTypes>(
+export async function vectorSearchForStoryId<T extends SearchableSchemaType>(
   collection: T,
   theirStoryId: string,
   searchTerm: string,
@@ -588,6 +591,7 @@ export async function vectorSearchForStoryId<T extends SchemaTypes>(
     limit,
     returnMetadata: ['distance', 'certainty', 'score'],
     returnProperties,
+    targetVector: 'transcription_vector',
   });
 
   const processedObjects = response.objects.map((obj) => {
@@ -613,7 +617,7 @@ export async function vectorSearchForStoryId<T extends SchemaTypes>(
   };
 }
 
-export async function bm25SearchForStoryId<T extends SchemaTypes>(
+export async function bm25SearchForStoryId<T extends SearchableSchemaType>(
   collection: T,
   theirStoryId: string,
   searchTerm: string,

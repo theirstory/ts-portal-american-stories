@@ -1,0 +1,103 @@
+{
+  "pass": "1.5",
+  "description": "Cross-source conflict detection across the American Stories collection",
+  "extraction_date": "2026-05-03",
+  "conflicts": [
+    {
+      "conflict_id": "conflict_001",
+      "conflict_type": "IDENTITY",
+      "scope": "CROSS_SOURCE",
+      "segment_ids": ["george_takei__seg_012", "karen_matsuoka__seg_008"],
+      "sources": ["george_takei", "karen_matsuoka"],
+      "description": "Both families faced the loyalty questionnaire and draft at Tule Lake. Takei's father cooperated, served as a community bridge-builder, and taught his son that 'we the people have to participate' — working within the system was the patriotic response. Matsuoka's grandfather refused the draft, answered No-No, and resisted — 'the patriotic thing is to call it out and to resist it.' Both descendants frame their ancestor's choice as the heroic one.",
+      "the_question_they_both_answer": "When your country imprisons you unjustly, is the patriotic response to cooperate and work within the system, or to resist and refuse?",
+      "significance": "This is the central unresolved tension of the Japanese American internment narrative. The archive genuinely holds both answers with equal moral weight. Neither narrator claims the other family was wrong — Matsuoka explicitly says 'both are equally stories of valor.' The audience must sit with the impossibility of a single right answer.",
+      "unresolved": true,
+      "narrative_energy": "HIGH — this conflict can structure an entire storyline because it forces the audience to examine their own assumptions about patriotism and resistance"
+    },
+    {
+      "conflict_id": "conflict_002",
+      "conflict_type": "EMOTIONAL",
+      "scope": "CROSS_SOURCE",
+      "segment_ids": ["sarah_adams__seg_008", "heidi_mathers__seg_009"],
+      "sources": ["sarah_adams", "heidi_mathers"],
+      "description": "Both families lost cultural markers through assimilation in America. For Adams, the loss of Choctaw language is 'a deep wound' — her grandfather chose assimilation under duress ('no dogs or Indians' signs), and the daughter is still grieving what was taken. For Mathers, the fading of Danish traditions (name change from Brodersen to Bruder, grandparents insisting children speak only English) is bittersweet but celebrated — she describes America as 'a beautiful quilt' and the family traditions that survived as enriching. Same structural experience of cultural loss; opposite emotional charge.",
+      "the_question_they_both_answer": "What does it feel like to lose your family's original cultural identity in America?",
+      "significance": "The emotional opposition reveals that coerced assimilation (Adams — boarding schools, legal prohibition of cultural practice until 1978) and voluntary adaptation (Mathers — choosing to change a name to fit a German neighborhood, choosing to speak English) are fundamentally different experiences even when they look structurally similar. The difference is coercion. This conflict forces the audience to ask: who got to choose?",
+      "unresolved": true,
+      "narrative_energy": "HIGH — juxtaposing these two experiences without collapsing them into a single 'immigration story' is where the editorial power lives"
+    },
+    {
+      "conflict_id": "conflict_003",
+      "conflict_type": "FRACTURE",
+      "scope": "INTRA_SOURCE",
+      "segment_ids": ["sarah_adams__seg_018", "sarah_adams__seg_019"],
+      "sources": ["sarah_adams"],
+      "description": "Sarah Adams frames boarding schools as sites of trauma, cultural destruction, abuse, and spiritual violence ('they were places of harm... places to survive, not to learn'). Yet she acknowledges that family members say 'the boarding schools weren't that bad' and that her own grandparents met and fell in love at Goodland Boarding School. The interviewer (her daughter) adds that their grandmother 'says she had a good experience.' Adams holds both: 'in the middle of all of this, our grandparents met each other and fell in love. And that was really an important piece of our family's story.'",
+      "the_question_they_both_answer": "Were Indian boarding schools places of harm or places where life happened anyway?",
+      "significance": "This is the most honest moment in the Adams interview. The family doesn't agree on the meaning of its own history. The fracture reveals that trauma and love can coexist in the same institution — and that the family members who survived may need to remember it as 'not that bad' as a coping mechanism. Any storyline that flattens this into simple victimhood misses the complexity.",
+      "unresolved": true,
+      "narrative_energy": "HIGH — the fracture makes the Adams testimony more trustworthy, not less. The audience can feel the family working through disagreement in real time."
+    },
+    {
+      "conflict_id": "conflict_004",
+      "conflict_type": "IDENTITY",
+      "scope": "CROSS_SOURCE",
+      "segment_ids": ["sheryl_sutton_smith__seg_006", "akir_gutierrez__seg_003"],
+      "sources": ["sheryl_sutton_smith", "akir_gutierrez"],
+      "description": "Both narrators face the same challenge: being told they don't belong. Their responses are opposite strategies with the same goal. Sutton Smith never internalizes the exclusion — 'You got the wrong one. I don't feel un-American. I feel like you think I'm un-American.' Gutierrez internalizes it for decades — 'I always had to prove that I was American... I had to really sort of like feature my American bonafides' — and only breaks free at around age 47. Same external pressure; opposite psychological responses; both eventually arrive at the same destination of self-claimed identity.",
+      "the_question_they_both_answer": "When America tells you that you don't belong, do you refuse the premise or do you try to prove it wrong?",
+      "significance": "This conflict reveals that the psychological cost of othering is not uniform — personality, community support, family modeling all determine whether exclusion is deflected or internalized. Sutton Smith had parents who modeled activism and self-assertion; Gutierrez's family emphasized fitting in. The difference in response maps to the difference in cost.",
+      "unresolved": true,
+      "narrative_energy": "MEDIUM-HIGH — the convergence (both arrive at self-claimed identity) makes this a hopeful conflict, but the decades-long difference in the journey is where the drama lives"
+    },
+    {
+      "conflict_id": "conflict_005",
+      "conflict_type": "EMOTIONAL",
+      "scope": "CROSS_SOURCE",
+      "segment_ids": ["george_takei__seg_028", "karen_matsuoka__seg_015"],
+      "sources": ["george_takei", "karen_matsuoka"],
+      "description": "Both families returned to America after incarceration. Takei's father chose to go back to Los Angeles, scouted ahead, found a flophouse on Skid Row, washed dishes in Chinatown, and rebuilt from nothing — but the tone is one of resilience and community-building (the culinary exchange with Mrs. Gonzalez, the Mexican American neighborhood, learning Spanish). Matsuoka's grandfather returned after 11 years of fighting to regain citizenship, having been to Japan and back — and the community that once called him a traitor offered no hero's welcome. Same structural experience of post-incarceration return; Takei's carries warmth and cultural richness; Matsuoka's carries isolation and continued rejection.",
+      "the_question_they_both_answer": "What was it like to come back to America after it imprisoned you?",
+      "significance": "The emotional opposition reveals that the comply/resist choice echoed long after the camps closed. Takei's father, who cooperated, could rebuild with community support. Matsuoka's grandfather, who resisted, was shunned by the very community he was part of. The cost of resistance was not only legal — it was social.",
+      "unresolved": true,
+      "narrative_energy": "HIGH — this is the downstream consequence of conflict_001. The choice made behind barbed wire determined the reception decades later."
+    },
+    {
+      "conflict_id": "conflict_006",
+      "conflict_type": "FACTUAL",
+      "scope": "CROSS_SOURCE",
+      "segment_ids": ["george_takei__seg_005", "karen_matsuoka__seg_003"],
+      "sources": ["george_takei", "karen_matsuoka"],
+      "description": "Both families were removed from their homes with only what they could carry, both ended up at Santa Anita racetrack in horse stalls, and both were eventually sent to camps. But the removal experiences differ in crucial ways. Takei's family had soldiers with bayonets at their door and five minutes to leave their home. Matsuoka's family on Terminal Island had 48 hours after a Navy order — preceded by the FBI raid that took the first-generation men without warning. The Matsuoka account emphasizes the infant daughter and pregnant grandmother; the Takei account emphasizes the baby sister and the mother's tears. Same event (mass removal), different timelines and textures.",
+      "the_question_they_both_answer": "What was it like when they came for your family?",
+      "significance": "The factual divergence reveals that 'the internment' was not a single event but a cascade of different experiences — FBI raids, Navy orders, Army enforcement — hitting different communities at different times. Terminal Island was raided BEFORE Executive Order 9066. The parallel accounts create a stereoscopic view of the removal that no single testimony can provide.",
+      "unresolved": false,
+      "narrative_energy": "MEDIUM — the two accounts complement rather than contradict, but placing them side by side deepens the audience's understanding of the removal as a process, not a moment"
+    },
+    {
+      "conflict_id": "conflict_007",
+      "conflict_type": "IDENTITY",
+      "scope": "CROSS_SOURCE",
+      "segment_ids": ["sarah_adams__seg_003", "elizabeth_hira__seg_004"],
+      "sources": ["sarah_adams", "elizabeth_hira"],
+      "description": "Adams and Hira answer the question 'How did your family become American?' from opposite positions. Adams: 'Kicking and screaming... America landed on us. We were Choctaw citizens before America was America.' Hira (via her mother): 'She said, we will do it together... nobody loved America more than mom.' Adams's family was made American against its will through colonization; Hira's mother chose America as a place of possibility. The question assumes immigration; Adams's answer breaks the frame.",
+      "the_question_they_both_answer": "What does it mean to become American?",
+      "significance": "This conflict challenges the foundational frame of the American Stories project itself. The question 'How did your family become American?' works beautifully for immigrant families but is structurally violent for indigenous families. Adams's answer ('America landed on us') reframes 'becoming American' as something done TO her family, not something they chose. This tension should be surfaced in any storyline that uses the project's central question.",
+      "unresolved": true,
+      "narrative_energy": "HIGH — this is not just a conflict between two testimonies; it's a conflict with the project's own premise, which makes it invaluable for editorial honesty"
+    },
+    {
+      "conflict_id": "conflict_008",
+      "conflict_type": "FRACTURE",
+      "scope": "INTRA_SOURCE",
+      "segment_ids": ["akir_gutierrez__seg_003", "akir_gutierrez__seg_005"],
+      "sources": ["akir_gutierrez"],
+      "description": "Gutierrez describes hiding his indigenous identity for decades to prove he was American, calling this a painful suppression. Yet his proudest American moment is his son's appointment to West Point — a quintessentially establishment American institution that requires proof of citizenship to enter. The same system that demanded he 'feature his American bonafides' is the one that ultimately validated his family's belonging. He celebrates the validation ('to be certified as American') even after articulating that the demand for certification was the problem.",
+      "the_question_they_both_answer": "Can you reject the system of proving your Americanness while also finding joy when the system finally accepts you?",
+      "significance": "This fracture is deeply human. Gutierrez is not being inconsistent — he's holding two truths. The demand to prove belonging is unjust AND the feeling of being accepted is genuine. The fracture reveals that systemic critique and personal joy can coexist, and that no one is obligated to be ideologically pure about their own life.",
+      "unresolved": true,
+      "narrative_energy": "MEDIUM — this is a quieter, more personal fracture than Adams's, but it reveals something universal about the immigrant experience"
+    }
+  ]
+}

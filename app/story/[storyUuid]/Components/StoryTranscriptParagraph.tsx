@@ -69,7 +69,11 @@ export const StoryTranscriptParagraph = memo(
     /**
      * variables
      */
-    const { ner_data = [] } = storyHubPage?.properties ?? {};
+    const { entity_mentions = [], ner_data = [] } = storyHubPage?.properties ?? {};
+    // entity_mentions is the precise per-occurrence list (Phase 1C). Falls back
+    // to ner_data for legacy testimonies that haven't been backfilled yet.
+    const mentionsForHighlights: any[] =
+      Array.isArray(entity_mentions) && entity_mentions.length > 0 ? entity_mentions : ner_data;
     const renderedWordIndexes = new Set<number>();
     const isMobileView = isMobile();
     const transcriptTopOffset = isMobileView ? -44 : -36;
@@ -79,11 +83,11 @@ export const StoryTranscriptParagraph = memo(
     const selectedNerLabelSet = useMemo(() => new Set(selected_ner_labels), [selected_ner_labels]);
 
     const nerMatchByWordIndex = useMemo(() => {
-      if (!hasSelectedNerLabels || ner_data.length === 0 || wordsInParagraph.length === 0) {
+      if (!hasSelectedNerLabels || mentionsForHighlights.length === 0 || wordsInParagraph.length === 0) {
         return new Map<number, any>();
       }
 
-      const selectedNers = ner_data
+      const selectedNers = mentionsForHighlights
         .filter((ner: any) => selectedNerLabelSet.has(ner.label))
         .sort((a: any, b: any) => a.start_time - b.start_time);
 
@@ -110,7 +114,7 @@ export const StoryTranscriptParagraph = memo(
       }
 
       return matches;
-    }, [hasSelectedNerLabels, ner_data, selectedNerLabelSet, wordsInParagraph]);
+    }, [hasSelectedNerLabels, mentionsForHighlights, selectedNerLabelSet, wordsInParagraph]);
 
     const traditionalMatchSet = useMemo(
       () => new Set(traditionalSearchMatches.map((match) => getWordKey(match))),

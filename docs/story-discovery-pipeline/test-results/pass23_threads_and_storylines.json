@@ -1,0 +1,950 @@
+{
+  "pass": "2-3",
+  "description": "Cross-source pattern detection (Pass 2) and storyline candidate generation (Pass 3) for the American Stories collection",
+  "extraction_date": "2026-05-03",
+  "editorial_context": "Elizabeth Hira's vision for American Stories: a national, nonpartisan oral history project that asks families 'How did your family become American?' — designed to help Americans 'really see and understand each other,' to show connections across diverse family stories, and to build 'bridges' at a time of division. The project is meant to be inclusive (every family has an answer), intergenerational, and ultimately archival. Hira's mother's phrase captures the ethos: 'you can't spell American without I can.' The strongest storylines should serve this mission while not sanitizing the tensions the archive surfaces.",
+  "five_frame_analysis": {
+    "frame_1_power_dynamics": {
+      "patterns": [
+        {
+          "pattern": "State power overriding individual agency through law and force",
+          "evidence": [
+            "Soldiers with bayonets at Takei's door; Executive Order 9066; loyalty questionnaire as coerced compliance",
+            "FBI raid on Terminal Island — first-generation men taken without notice or due process",
+            "Indian boarding schools — government/church institutions designed to destroy indigenous identity; children taken from families through food-ration coercion",
+            "Laws preventing Asian immigrants from becoming citizens; denaturalization laws targeting Japanese Americans specifically",
+            "Takei's mother forced to renounce citizenship under pressure from radicals AND government simultaneously"
+          ]
+        },
+        {
+          "pattern": "Individuals reclaiming power from institutions through defiance or creativity",
+          "evidence": [
+            "Matsuoka's grandfather refusing the draft — and winning in court through Judge Goodman's substantive due process ruling",
+            "Wayne Collins fighting for Japanese Americans' citizenship — 'one lawyer's bravery changed the course of your life'",
+            "Sutton Smith: 'You got the wrong one' — refusing to internalize exclusion",
+            "Sarah Adams's family reclaiming Choctaw language and culture after generations of suppression",
+            "Hira's mother choosing America as site of possibility despite having nothing"
+          ]
+        },
+        {
+          "pattern": "Who gets to define who belongs",
+          "evidence": [
+            "The loyalty questionnaire (Questions 27 and 28) as the state defining who is loyal enough to be American",
+            "'Where are you really from?' — civilians policing Gutierrez's belonging",
+            "Signs reading 'no dogs or Indians' — social exclusion as informal power",
+            "The little girl at Stanford whispering 'Can anybody go here?' — a child already knowing she might not belong",
+            "Alexandra Dean's grandfather denied entry to clubs because he was Jewish; her father denied Harvard admission for checking the Jewish box"
+          ]
+        }
+      ]
+    },
+    "frame_2_identity_formation": {
+      "patterns": [
+        {
+          "pattern": "Self-defined identity vs. externally imposed identity",
+          "evidence": [
+            "Takei: 'We are of Japanese ancestry, but we're Americans' — identity claimed against external denial",
+            "Sutton Smith: 'I don't feel un-American. I feel like you think I'm un-American' — the cleanest articulation of this tension",
+            "Gutierrez: decades of performing American bonafides to counter 'where are you really from?'",
+            "Adams: 'America landed on us' — refusing the immigration frame imposed by the question itself",
+            "Matsuoka: grandfather 'to his core believed America is the greatest country on earth' even as America imprisoned him"
+          ]
+        },
+        {
+          "pattern": "The cost of hiding, suppressing, or performing identity",
+          "evidence": [
+            "Takei closeted as gay actor for decades — 'there was no way that a young actor can hope to have an acting career and be known as a gay actor'",
+            "Gutierrez hiding indigenous identity — 'my birth certificate says I'm white, but I don't have to deny one to be the other'",
+            "Adams's Grandpa Pop assimilating, choosing not to teach Choctaw — protecting children at the cost of culture",
+            "Dean's grandfather hiding his Jewish identity to succeed in Hollywood; then becoming 'very, very Jewish' at end of life",
+            "Hira's mother putting on her 'armor' of British colonial propriety when excluded by Connecticut church ladies"
+          ]
+        },
+        {
+          "pattern": "Generational shifts in what identity means",
+          "evidence": [
+            "Adams: Grandpa Pop suppresses → Sarah angry then understanding → Blue (grandchild) learning Choctaw",
+            "Takei: father cooperates quietly → George becomes activist, comes out publicly",
+            "Gutierrez: parents emphasize fitting in → Akir hides indigeneity → then reclaims it at ~47",
+            "Dean: grandfather hides Jewishness → father proclaims it → Alexandra celebrates the whole mix",
+            "Hira: grandmother tattooed to be tracked → mother imagines limitless possibility → Elizabeth builds American Stories"
+          ]
+        }
+      ]
+    },
+    "frame_3_loss_and_adaptation": {
+      "patterns": [
+        {
+          "pattern": "What was specifically lost: language, land, home, community, status, safety",
+          "evidence": [
+            "Adams: Choctaw language (one generation away from first-language speaker), land (Trail of Tears, Land Run), ceremony (illegal until 1978)",
+            "Takei: home, business, possessions, mother's citizenship, the family dog Blackie",
+            "Matsuoka: Terminal Island community (furusato), fishing livelihoods, grandfather's citizenship (11 years to regain)",
+            "Dean's grandfather: all assets frozen, relationship with Marushka, homeland (Libya)",
+            "Sutton Smith: Granddaddy Talman's farm 'taken because the white guy wanted it'"
+          ]
+        },
+        {
+          "pattern": "Coerced loss vs. voluntary adaptation — and the difference it makes",
+          "evidence": [
+            "Adams (COERCED): boarding schools, language prohibition, 'no dogs or Indians' — assimilation at gunpoint. Result: 'deep wound'",
+            "Mathers (VOLUNTARY): name change from Brodersen to Bruder for business reasons, children speak English by parental choice. Result: 'beautiful quilt'",
+            "Takei (COERCED): imprisonment, forced renunciation of citizenship. Result: lifelong activism",
+            "LoCicero (VOLUNTARY): Italian gradually fading, grandparents spoke Italian but parents spoke English. Result: nostalgia, Duolingo attempts",
+            "The emotional charge of loss correlates directly with whether it was chosen or imposed"
+          ]
+        },
+        {
+          "pattern": "What was created or preserved in response to loss",
+          "evidence": [
+            "Takei: father's philosophy of participatory democracy — 'we the people have to participate' — created from the ruins of citizenship",
+            "Adams: the reclamation generation — Blue learning Choctaw, ceremony revival, 'our resilience and resistance is based in joy'",
+            "Matsuoka: the legal precedent — Judge Goodman's ruling became one of the earliest civil rights victories for Japanese Americans",
+            "Sutton Smith: Creole culinary tradition preserved as source of joy and cultural continuity through slavery and segregation",
+            "Hira: the American Stories project itself — born from a desire to help Americans 'really see and understand each other'"
+          ]
+        }
+      ]
+    },
+    "frame_4_systemic_dynamics": {
+      "patterns": [
+        {
+          "pattern": "Cultural identity as a stock deliberately depleted, then painfully rebuilt",
+          "description": "Cultural knowledge (language, ceremony, tradition) functions as a stock that was systematically depleted through boarding schools, internment, legal prohibition, and social pressure. The depletion was invisible until the next generation tried to draw on it and found it empty. The feedback loop: external threat -> suppress identity -> survive -> children lose cultural foundation -> grief -> reclamation attempt (but some things can't be recovered).",
+          "evidence": [
+            "Adams: 'God, we could just almost reach out and grab it' — the stock of Choctaw language was one generation from empty",
+            "Gutierrez: 'it wasn't until six years ago that I really came to grips' — decades of cultural knowledge lying dormant",
+            "Matsuoka: Terminal Island community as a cultural stock that was liquidated overnight (48-hour eviction)",
+            "Mathers: Danish traditions as a slowly depleting stock — still present but thinning (pickled herring, skol, Danish Day celebrations)"
+          ]
+        },
+        {
+          "pattern": "Reinforcing loops that accelerated once they started",
+          "description": "Discrimination -> hiding identity -> loss of culture -> invisibility -> more discrimination. This loop appears in multiple testimonies.",
+          "evidence": [
+            "Adams: persecution -> assimilation -> language loss -> children can't communicate with Choctaw-speaking grandparent -> cultural disconnection -> more invisibility ('a large portion of Americans don't believe we exist anymore')",
+            "Gutierrez: being called Mexican -> proving American bonafides -> hiding indigenous heritage -> birth certificate says white -> more erasure",
+            "Takei: internment -> shame -> silence (Japanese American fathers didn't talk about it) -> next generation doesn't understand -> history forgotten"
+          ]
+        },
+        {
+          "pattern": "Leverage points — moments where a small intervention changed the trajectory",
+          "description": "One lawyer, one judge, one neighbor, one policy change",
+          "evidence": [
+            "Wayne Collins saving Takei's mother's citizenship — 'I am an American because of Wayne Collins passion for the Constitution'",
+            "Judge Goodman dismissing Matsuoka grandfather's case — one ruling in one courthouse",
+            "The American Indian Religious Freedom Act of 1978 — one law unlocking cultural practice for all indigenous people",
+            "Mrs. Gonzalez next door — one neighbor creating cross-cultural community through shared cooking",
+            "The man in the cafe who overheard Dean's grandfather and connected him with the US Embassy — one random stranger"
+          ]
+        }
+      ]
+    },
+    "frame_5_joy_and_resilience": {
+      "patterns": [
+        {
+          "pattern": "Joy that exists ALONGSIDE suffering, not as its replacement",
+          "evidence": [
+            "Sutton Smith: 'I think we know the struggle. But we will talk about them here anyway. But, you know, to be enslaved and to be taken advantage of... And there's joy and there's joy in community. So much. Praise God.'",
+            "Adams: 'I'd like them to know about the joy of indigenous people... our resilience and resistance is based in joy'",
+            "Takei: the taco-eating contest with brother Henry after returning from internment; the culinary exchange with Mrs. Gonzalez; learning Spanish on the playground",
+            "Adams's grandparents falling in love at boarding school — romance in a place designed to destroy",
+            "Hira's mother buying chips and salsa for the Super Bowl — asserting American belonging through joyful ritual"
+          ]
+        },
+        {
+          "pattern": "Cultural practices that survived because they were sources of joy",
+          "evidence": [
+            "Sutton Smith: Creole cooking tradition — 'we share culture over food'",
+            "Mathers: Danish apple cake, pickled herring, skol tradition — holidays as cultural preservation",
+            "Adams: Choctaw creation story of Nanih Waiya — origin stories carried through oral tradition",
+            "LoCicero family: food and language as preservation — 'a little part of the sentence was in English, a little part was in Spanish, and a little part was in Italian'",
+            "Hira: dancing — 'anytime any of the kids and mom is anywhere, we are always the first on the dance floor and the last off'"
+          ]
+        },
+        {
+          "pattern": "Humor as resistance or coping",
+          "evidence": [
+            "Adams: daughter says 'I think they'd think we're soft... Y'all are crying around a lot'",
+            "Dean: family joke about getting shot in the butt across generations — 'we think in our family we have healthy booties because it's genetics'",
+            "Sutton Smith: 'How lucky are you, America? That's what I would say.' — defiant humor as identity assertion",
+            "Takei: 'I'm a weeper in a theater. So, you know, it's not that momentous occasion.' — deflecting emotional depth with humor",
+            "LoCicero grandson Sam: 'I won't let you down' to imagined great-grandfather — humor masking deep emotion"
+          ]
+        }
+      ]
+    }
+  },
+  "threads": [
+    {
+      "thread_id": "thread_001",
+      "thread_name": "The Cost of Belonging",
+      "dramatic_question": "What does America demand you give up in order to belong — and what happens when the next generation wants it back?",
+      "core_tension": "The promise of belonging vs. the demand to surrender identity as the price of admission",
+      "sources_involved": [
+        "sarah_adams",
+        "george_takei",
+        "karen_matsuoka",
+        "akir_gutierrez",
+        "heidi_mathers",
+        "elizabeth_hira"
+      ],
+      "supporting_segments": [
+        "sarah_adams__seg_003",
+        "sarah_adams__seg_008",
+        "sarah_adams__seg_018",
+        "sarah_adams__seg_040",
+        "george_takei__seg_005",
+        "george_takei__seg_012",
+        "george_takei__seg_028",
+        "karen_matsuoka__seg_002",
+        "karen_matsuoka__seg_008",
+        "karen_matsuoka__seg_015",
+        "akir_gutierrez__seg_003",
+        "heidi_mathers__seg_009",
+        "elizabeth_hira__seg_004"
+      ],
+      "temporal_arc": "CYCLIC — each generation faces the same tension in a different form. The arc across the collection moves from coerced assimilation (boarding schools, internment camps) to voluntary adaptation (Danish name change, Italian language fading) to active reclamation (Blue learning Choctaw, Gutierrez owning indigeneity). But the cycle is not linear — new forms of the demand appear in each era.",
+      "key_voices": ["Sarah Adams", "George Takei", "Karen Matsuoka", "Akir Gutierrez"],
+      "system_dynamic": "Cultural identity as a stock deliberately depleted through institutional force. The cost becomes visible only when the next generation tries to draw on it and finds it empty. Feedback loop: external threat -> suppress identity -> survive -> children lose cultural foundation -> grief and attempted reclamation. The leverage point is the moment someone decides to stop depleting the stock — Adams's family in the current generation, Gutierrez six years ago.",
+      "frames_that_surfaced_it": ["power_dynamics", "identity_formation", "loss_and_adaptation", "systemic_dynamics"],
+      "conflicts": ["conflict_001", "conflict_002", "conflict_003", "conflict_007"]
+    },
+    {
+      "thread_id": "thread_002",
+      "thread_name": "Who Gets to Say You Belong",
+      "dramatic_question": "If America can revoke your belonging based on how you look, how you pray, or where you're from — can you ever truly have it?",
+      "core_tension": "Self-claimed identity vs. externally gatekept identity — the question of whether belonging is inherent or granted",
+      "sources_involved": [
+        "sheryl_sutton_smith",
+        "akir_gutierrez",
+        "george_takei",
+        "karen_matsuoka",
+        "elizabeth_hira",
+        "alexandra_dean"
+      ],
+      "supporting_segments": [
+        "sheryl_sutton_smith__seg_006",
+        "akir_gutierrez__seg_003",
+        "akir_gutierrez__seg_005",
+        "george_takei__seg_005",
+        "george_takei__seg_012",
+        "karen_matsuoka__seg_008",
+        "elizabeth_hira__seg_004",
+        "alexandra_dean__seg_008"
+      ],
+      "temporal_arc": "INTENSIFYING across the collection's time span but UNRESOLVED in the present. The explicit legal exclusions (can't become citizens, loyalty questionnaires, denaturalization) have been replaced by social exclusions ('where are you really from?', microaggressions, a senator's bill to strip citizenship). The form changes; the dynamic persists.",
+      "key_voices": ["Sheryl Sutton Smith", "Akir Gutierrez", "Elizabeth Hira", "Karen Matsuoka"],
+      "system_dynamic": "Belonging functions as a gatekept resource. Those with power to define belonging (government, social institutions, even neighbors) can grant or revoke it based on appearance, religion, or origin. The system is self-reinforcing: exclusion -> proving belonging -> conditional acceptance -> vulnerability to re-exclusion. Breaking the loop requires what Sutton Smith does: refuse to accept that belonging requires external validation.",
+      "frames_that_surfaced_it": ["power_dynamics", "identity_formation", "systemic_dynamics", "joy_and_resilience"],
+      "conflicts": ["conflict_004", "conflict_007", "conflict_008"]
+    },
+    {
+      "thread_id": "thread_003",
+      "thread_name": "The Comply/Resist Paradox",
+      "dramatic_question": "When your country betrays you, is the braver choice to fight within the system or to refuse it entirely — and who gets to judge?",
+      "core_tension": "Compliance-as-patriotism vs. resistance-as-patriotism — two equally valid responses to the same injustice",
+      "sources_involved": ["george_takei", "karen_matsuoka", "sarah_adams", "sheryl_sutton_smith"],
+      "supporting_segments": [
+        "george_takei__seg_012",
+        "george_takei__seg_028",
+        "karen_matsuoka__seg_008",
+        "karen_matsuoka__seg_015",
+        "sarah_adams__seg_008",
+        "sheryl_sutton_smith__seg_006"
+      ],
+      "temporal_arc": "OPEN — the tension between comply and resist remains unresolved across the collection and across American history. The Japanese American internment narrative embodies it most sharply, but it echoes in Adams's grandfather's choice to assimilate, in Sutton Smith's parents choosing HBCUs and community involvement, and in every immigrant family's calculus about how much to conform.",
+      "key_voices": ["George Takei", "Karen Matsuoka"],
+      "system_dynamic": "The comply/resist binary is a false choice imposed by a system that makes both options costly. Compliance (Takei's father) preserves immediate safety but depletes the cultural-identity stock. Resistance (Matsuoka's grandfather) preserves dignity but incurs social ostracism and legal jeopardy. The system profits from either choice — both keep the excluded group focused on survival rather than systemic change.",
+      "frames_that_surfaced_it": ["power_dynamics", "identity_formation", "systemic_dynamics"],
+      "conflicts": ["conflict_001", "conflict_005"]
+    },
+    {
+      "thread_id": "thread_004",
+      "thread_name": "Joy as the Thing They Couldn't Take",
+      "dramatic_question": "What survives when everything else is taken — and why is it almost always joy?",
+      "core_tension": "Systemic destruction of culture and community vs. the persistence of joy, humor, food, music, and love as irreducible human resources",
+      "sources_involved": [
+        "sarah_adams",
+        "sheryl_sutton_smith",
+        "george_takei",
+        "heidi_mathers",
+        "gloria_and_joe_locicero",
+        "elizabeth_hira"
+      ],
+      "supporting_segments": [
+        "sarah_adams__seg_035",
+        "sarah_adams__seg_040",
+        "sheryl_sutton_smith__seg_003",
+        "sheryl_sutton_smith__seg_010",
+        "george_takei__seg_028",
+        "heidi_mathers__seg_009",
+        "gloria_and_joe_locicero__seg_008",
+        "elizabeth_hira__seg_004"
+      ],
+      "temporal_arc": "PERSISTENT — joy appears in every era and every community, often in the darkest moments. The arc is not about joy increasing or decreasing; it's about joy being the constant while everything else changes.",
+      "key_voices": ["Sarah Adams", "Sheryl Sutton Smith", "Heidi Mathers", "George Takei"],
+      "system_dynamic": "Joy functions as a stock that resists depletion even when all other stocks (land, language, citizenship, economic security) are emptied. Cultural practices that survived are disproportionately the joyful ones — food traditions, music, dance, humor, creation stories. Joy is the last stock standing because it requires no institutional support to maintain.",
+      "frames_that_surfaced_it": ["joy_and_resilience", "loss_and_adaptation", "identity_formation"],
+      "conflicts": ["conflict_002", "conflict_003"]
+    },
+    {
+      "thread_id": "thread_005",
+      "thread_name": "One Person Changed Everything",
+      "dramatic_question": "What happens when one ordinary person — a lawyer, a judge, a neighbor, a stranger in a cafe — decides the system is wrong and acts?",
+      "core_tension": "Systemic injustice vs. individual moral courage as leverage point",
+      "sources_involved": ["george_takei", "karen_matsuoka", "alexandra_dean", "elizabeth_hira"],
+      "supporting_segments": [
+        "george_takei__seg_016",
+        "karen_matsuoka__seg_010",
+        "alexandra_dean__seg_002",
+        "elizabeth_hira__seg_004"
+      ],
+      "temporal_arc": "EPISODIC — these are pivot moments scattered across the collection. Each one is a leverage point where the entire trajectory of a family changed because of one person's decision.",
+      "key_voices": [
+        "George Takei (re: Wayne Collins)",
+        "Karen Matsuoka (re: Judge Goodman)",
+        "Alexandra Dean (re: US Embassy man in cafe)"
+      ],
+      "system_dynamic": "In systems terms (Meadows), these individuals occupy leverage points — small interventions at critical junctures that redirect the entire system trajectory. Wayne Collins saving Takei's family from deportation; Judge Goodman ruling on substantive due process; the stranger in the Italian cafe who heard Dean's grandfather and connected him with the embassy. The system failed these families, but individuals within the system chose to intervene.",
+      "frames_that_surfaced_it": ["power_dynamics", "systemic_dynamics"],
+      "conflicts": []
+    }
+  ],
+  "storyline_candidates": [
+    {
+      "storyline_id": "storyline_001",
+      "thread_id": "thread_001",
+      "dramatic_question": "What does America demand you give up in order to belong — and what happens when the next generation wants it back?",
+      "transformation": "From assimilation as the price of survival -> reclamation as the form resistance takes when survival is no longer in doubt",
+      "question_sequence": [
+        {
+          "question": "What did these families have before the demand to assimilate?",
+          "evidence": [
+            {
+              "segment_id": "karen_matsuoka__seg_002",
+              "source": "karen_matsuoka",
+              "note": "Terminal Island as furusato — Japanese and American identities coexisting without conflict: 'never having to choose between his Japanese heritage or being American'"
+            },
+            {
+              "segment_id": "sarah_adams__seg_040",
+              "source": "sarah_adams",
+              "note": "Choctaw creation story of Nanih Waiya — identity rooted in the earth itself: 'the earth gave birth to us, and that is our mother'"
+            },
+            {
+              "segment_id": "heidi_mathers__seg_002",
+              "source": "heidi_mathers",
+              "note": "Scandinavian culture transplanted to Minnesota — the traditions of Danish Day celebrations, skol, family gatherings around hot coffee"
+            }
+          ]
+        },
+        {
+          "question": "What forced the choice — assimilate or be destroyed?",
+          "evidence": [
+            {
+              "segment_id": "george_takei__seg_005",
+              "source": "george_takei",
+              "note": "Soldiers with bayonets at the family home — 'Henry and I were terrorized... tears were streaming down her cheeks'"
+            },
+            {
+              "segment_id": "karen_matsuoka__seg_003",
+              "source": "karen_matsuoka",
+              "note": "48 hours to evacuate Terminal Island — 'my grandmother was pregnant with her second child... bring only what they could carry'"
+            },
+            {
+              "segment_id": "sarah_adams__seg_018",
+              "source": "sarah_adams",
+              "note": "Indian boarding schools: 'they were not about education, they were about assimilation... places to survive, not to learn'"
+            },
+            {
+              "segment_id": "sarah_adams__seg_008",
+              "source": "sarah_adams",
+              "note": "Signs reading 'no dogs or Indians' — Grandpa Pop's choice to assimilate as survival"
+            }
+          ]
+        },
+        {
+          "question": "Why did some choose to comply and others to resist?",
+          "evidence": [
+            {
+              "segment_id": "george_takei__seg_012",
+              "source": "george_takei",
+              "note": "Father chose participation: 'we the people have to participate, that our democracy is dependent on people participation'"
+            },
+            {
+              "segment_id": "karen_matsuoka__seg_008",
+              "source": "karen_matsuoka",
+              "note": "Grandfather chose refusal: 'the patriotic thing is to call it out and to resist it'"
+            },
+            {
+              "segment_id": "sarah_adams__seg_008",
+              "source": "sarah_adams",
+              "note": "Grandpa Pop chose assimilation: 'he really wanted his kids to not feel persecuted in America'"
+            },
+            {
+              "segment_id": "heidi_mathers__seg_003",
+              "source": "heidi_mathers",
+              "note": "Grandfather changed name from Brodersen to Bruder to fit in — voluntary adaptation for economic opportunity"
+            }
+          ]
+        },
+        {
+          "question": "What was the cost of each choice — and who paid it?",
+          "evidence": [
+            {
+              "segment_id": "sarah_adams__seg_008",
+              "source": "sarah_adams",
+              "note": "Grandpa Pop's assimilation meant children lost language and culture: 'It feels like a deep wound'"
+            },
+            {
+              "segment_id": "karen_matsuoka__seg_012",
+              "source": "karen_matsuoka",
+              "note": "Grandfather's resistance cost 11 years fighting to regain citizenship, community shunning: 'that's not the welcome that he got'"
+            },
+            {
+              "segment_id": "akir_gutierrez__seg_003",
+              "source": "akir_gutierrez",
+              "note": "Hiding indigenous identity to prove American credentials: 'I have to deny who I am'"
+            },
+            {
+              "segment_id": "george_takei__seg_016",
+              "source": "george_takei",
+              "note": "Mother's forced renunciation of citizenship: 'a painful, excruciating choice'"
+            }
+          ]
+        },
+        {
+          "question": "What did the next generation inherit — and what did they discover was missing?",
+          "evidence": [
+            {
+              "segment_id": "sarah_adams__seg_010",
+              "source": "sarah_adams",
+              "note": "'God, we could just almost reach out and grab it' — the Choctaw language was one generation away but the chain was broken"
+            },
+            {
+              "segment_id": "akir_gutierrez__seg_003",
+              "source": "akir_gutierrez",
+              "note": "'Six years ago I really came to grips with the fact that I am part of this indigenous diaspora' — decades of suppressed identity"
+            },
+            {
+              "segment_id": "george_takei__seg_012",
+              "source": "george_takei",
+              "note": "'I later discovered that there were very few Japanese American fathers who talked about that experience' — silence as inherited cost"
+            },
+            {
+              "segment_id": "heidi_mathers__seg_009",
+              "source": "heidi_mathers",
+              "note": "Danish traditions thinning but still present — apple cake, herring, skol — 'values that have persisted through the generations'"
+            }
+          ]
+        },
+        {
+          "question": "What are they bringing back, and what is lost forever?",
+          "evidence": [
+            {
+              "segment_id": "sarah_adams__seg_035",
+              "source": "sarah_adams",
+              "note": "Blue learning Choctaw language — the reclamation generation: 'definitely knows more Choctaw language than I do'"
+            },
+            {
+              "segment_id": "sarah_adams__seg_009",
+              "source": "sarah_adams",
+              "note": "'I think he would be proud that we are in a time now that we can bring it back'"
+            },
+            {
+              "segment_id": "sarah_adams__seg_017",
+              "source": "sarah_adams",
+              "note": "1978 — the first year indigenous people could legally practice culture without jail. 'Isn't that profound?'"
+            },
+            {
+              "segment_id": "karen_matsuoka__seg_015",
+              "source": "karen_matsuoka",
+              "note": "'There was never a sense that the Japanese side of my background was something I needed to suppress' — but Terminal Island as furusato is gone forever"
+            }
+          ]
+        },
+        {
+          "question": "Can the cost of belonging ever be repaid — or only acknowledged?",
+          "evidence": [
+            {
+              "segment_id": "sarah_adams__seg_040",
+              "source": "sarah_adams",
+              "note": "Bookend answer: 'Kicking and screaming... America landed on us... it was definitely a difficult story of assimilation, of rematriation of revival and of resistance'"
+            },
+            {
+              "segment_id": "karen_matsuoka__seg_015",
+              "source": "karen_matsuoka",
+              "note": "'Becoming American is almost this constant negotiation... this active, almost like insistence that we're here, we're going to be here. We belong here. We are American.'"
+            },
+            {
+              "segment_id": "elizabeth_hira__seg_004",
+              "source": "elizabeth_hira",
+              "note": "'Can anybody go here?' — the question is still being asked, the answer still not universal"
+            }
+          ]
+        }
+      ],
+      "conflict_spine": [
+        {
+          "conflict_id": "conflict_001",
+          "role": "Central — the comply/resist paradox structures the middle of the storyline"
+        },
+        {
+          "conflict_id": "conflict_002",
+          "role": "Contextual — the coerced/voluntary distinction is the key to why some losses wound and others don't"
+        },
+        {
+          "conflict_id": "conflict_003",
+          "role": "Emotional anchor — the Adams family fracture over boarding schools humanizes the cost question"
+        },
+        {
+          "conflict_id": "conflict_007",
+          "role": "Structural — the Adams/Hira conflict over what 'becoming American' means challenges the storyline's own frame"
+        }
+      ],
+      "entity_anchors": [
+        "Tule Lake Segregation Center",
+        "Terminal Island, San Pedro, California",
+        "Goodland Boarding School, Oklahoma",
+        "Santa Anita Racetrack (assembly center)",
+        "Executive Order 9066",
+        "Questions 27 and 28 (loyalty questionnaire)",
+        "American Indian Religious Freedom Act (1978)",
+        "Judge Louis Goodman",
+        "Wayne Collins (attorney)",
+        "Nanih Waiya (Choctaw creation site)",
+        "Grandpa Pop (Adams family)",
+        "Olaf Fisher Brodersen/Bruder (Mathers family)"
+      ],
+      "gap_analysis": {
+        "weak_evidence": "The 'why did some comply and others resist?' question is well-covered for Japanese Americans (Takei vs. Matsuoka) but needs more voices from other communities. The Choctaw/Cherokee perspective on this question is mostly about boarding school compliance vs. later reclamation — we don't have a Choctaw voice who actively resisted during the boarding school era. The 'what is lost forever?' question is emotionally covered but could use more specificity about what can and cannot be recovered.",
+        "missing_perspectives": [
+          "Someone who chose assimilation and does NOT regret it — the archive is weighted toward reclamation narratives. Where is the voice that says 'I gave up the old ways and I'm glad I did'?",
+          "A descendant of people who enforced assimilation — a boarding school administrator's family, a WRA official's descendant, a missionary's grandchild. Their testimony would complete the system.",
+          "A younger-generation person who is ambivalent about reclamation — not everyone feels the pull to recover what was lost, and that ambivalence is itself an honest American story",
+          "A 442nd veteran or their descendant — someone whose family answered Yes-Yes and considers military service the heroic choice, to balance Matsuoka's grandfather's No-No stance"
+        ],
+        "suggested_interviews": [
+          {
+            "who": "A Japanese American whose family served in the 442nd Regimental Combat Team — someone whose family answered Yes-Yes and sees that as heroic",
+            "questions": [
+              "Did you ever question whether compliance was the right response to internment?",
+              "How do you feel about the No-No boys being recognized as heroes now, alongside the 442nd?",
+              "What did it cost your family to prove your loyalty through military service — and was it worth it?"
+            ]
+          },
+          {
+            "who": "An elder Choctaw first-language speaker who attended a boarding school",
+            "questions": [
+              "What did you hold onto from your culture that they tried to take from you?",
+              "When young people are learning Choctaw now, what do you want them to know about what it cost to keep the language alive?",
+              "When family members say the boarding schools 'weren't that bad,' what do you want to say to them?"
+            ]
+          },
+          {
+            "who": "A second- or third-generation immigrant who feels fully assimilated and is at peace with it — perhaps someone from the Scandinavian Minnesota community or the Italian Tampa community",
+            "questions": [
+              "Do you feel any loss around the cultural traditions your family let go of?",
+              "When you hear people talk about reclaiming their heritage, does that resonate with you or does it feel foreign?",
+              "What does 'being American' mean to you without a hyphenated identity?"
+            ]
+          }
+        ],
+        "missing_documents": [
+          "Court records from Judge Louis Goodman's ruling in the Matsuoka draft resistance case",
+          "The actual text of Questions 27 and 28 from the loyalty questionnaire",
+          "Photos of Terminal Island before the FBI raids",
+          "Department of the Interior records on boarding school operations at Goodland",
+          "Haskell Institute or Goodland Boarding School records — attendance, mortality, correspondence",
+          "American Indian Religious Freedom Act (1978) legislative history"
+        ]
+      },
+      "strength": {
+        "source_count": 6,
+        "frames_count": 4,
+        "conflict_genuine": true,
+        "unique_to_collection": true,
+        "confidence": "HIGH",
+        "assessment": "This is the collection's strongest storyline. It spans the most sources (6), emerges from the most frames (4), contains genuinely unresolved conflicts, and tells a story that only becomes visible when these specific testimonies are placed in dialogue. The transformation hypothesis (assimilation-as-survival -> reclamation-as-resistance) is supported by explicit evidence across multiple families and communities. The Mathers/Adams juxtaposition (voluntary vs. coerced assimilation) is the storyline's most distinctive editorial move — it prevents the narrative from becoming a simple victimhood story. The Adams bookend answer ('Kicking and screaming... America landed on us') provides a powerful structural endpoint."
+      }
+    },
+    {
+      "storyline_id": "storyline_002",
+      "thread_id": "thread_003",
+      "dramatic_question": "When your country betrays you, is the braver choice to fight within the system or to refuse it entirely — and who gets to decide which was right?",
+      "transformation": "From a binary (comply = patriotic, resist = treasonous) -> toward recognition that both responses were forms of patriotism, and that the binary itself was imposed by the oppressor",
+      "question_sequence": [
+        {
+          "question": "What did it mean to be Japanese American the day after Pearl Harbor?",
+          "evidence": [
+            {
+              "segment_id": "karen_matsuoka__seg_002",
+              "source": "karen_matsuoka",
+              "note": "Terminal Island families had been 'deeply American' — celebrating both Japanese and American holidays, never having to choose"
+            },
+            {
+              "segment_id": "george_takei__seg_005",
+              "source": "george_takei",
+              "note": "'We are of Japanese ancestry, but we're Americans' — the identity was not in question until the state made it so"
+            }
+          ]
+        },
+        {
+          "question": "What impossible choice did the government force on Japanese Americans behind barbed wire?",
+          "evidence": [
+            {
+              "segment_id": "karen_matsuoka__seg_008",
+              "source": "karen_matsuoka",
+              "note": "Questions 27 and 28: 'Here we are behind barbed wire. You've stripped us of all of our rights, and yet you're asking us to pay the ultimate sacrifice.'"
+            },
+            {
+              "segment_id": "george_takei__seg_012",
+              "source": "george_takei",
+              "note": "The radicals pressuring Takei's mother to renounce citizenship; the government creating the denaturalization process 'just for the Japanese'"
+            }
+          ]
+        },
+        {
+          "question": "Why did the Takei family choose to work within the system?",
+          "evidence": [
+            {
+              "segment_id": "george_takei__seg_012",
+              "source": "george_takei",
+              "note": "Father as bridge-builder: 'he served as a kind of bridge with the immigrant generation and the American born generation'"
+            },
+            {
+              "segment_id": "george_takei__seg_012",
+              "source": "george_takei",
+              "note": "Father's philosophy: 'we the people have to participate, that our democracy is dependent on people participation'"
+            },
+            {
+              "segment_id": "george_takei__seg_016",
+              "source": "george_takei",
+              "note": "Father admired Roosevelt despite internment — 'even he was a fallible human being'"
+            }
+          ]
+        },
+        {
+          "question": "Why did the Matsuoka family choose to refuse?",
+          "evidence": [
+            {
+              "segment_id": "karen_matsuoka__seg_008",
+              "source": "karen_matsuoka",
+              "note": "'My grandfather's response to injustice was to stand up for his rights. It's very intuitive to me that if your rights are being violated, the patriotic thing is to call it out and to resist it.'"
+            },
+            {
+              "segment_id": "karen_matsuoka__seg_010",
+              "source": "karen_matsuoka",
+              "note": "Judge Goodman staging 'this whole intervention' — keeping the car running for a quick escape after his ruling"
+            }
+          ]
+        },
+        {
+          "question": "What was the cost of each choice — and how far did the consequences reach?",
+          "evidence": [
+            {
+              "segment_id": "george_takei__seg_028",
+              "source": "george_takei",
+              "note": "Father rebuilt on Skid Row, washing dishes, helping others find jobs — community rebuilding through compliance"
+            },
+            {
+              "segment_id": "karen_matsuoka__seg_012",
+              "source": "karen_matsuoka",
+              "note": "Grandfather shunned by community, spent 11 years regaining citizenship: 'that's not the welcome that he got'"
+            },
+            {
+              "segment_id": "karen_matsuoka__seg_015",
+              "source": "karen_matsuoka",
+              "note": "'Instead of treating my grandfather as I would have treated him — like a hero — that's not the welcome he got'"
+            }
+          ]
+        },
+        {
+          "question": "Can both choices be heroic — and what does that tell us about patriotism?",
+          "evidence": [
+            {
+              "segment_id": "karen_matsuoka__seg_015",
+              "source": "karen_matsuoka",
+              "note": "'Both are equally stories of valor, and yet one was pushed as American and his actions were presented as being the most un-American thing that he could have done'"
+            },
+            {
+              "segment_id": "george_takei__seg_034",
+              "source": "george_takei",
+              "note": "Takei linking internment to LGBTQ rights to civil rights: 'Same story, Same issue. Anyone who's different in any way is somehow inferior.'"
+            },
+            {
+              "segment_id": "sheryl_sutton_smith__seg_006",
+              "source": "sheryl_sutton_smith",
+              "note": "'This is my country, and it's imperfect. And that's what we need to be working toward is a more perfect union' — a third option: claim the country AND insist it change"
+            }
+          ]
+        }
+      ],
+      "conflict_spine": [
+        {
+          "conflict_id": "conflict_001",
+          "role": "This IS the storyline — the Takei/Matsuoka divergence is the engine of the entire narrative"
+        },
+        {
+          "conflict_id": "conflict_005",
+          "role": "The downstream emotional consequence — how the comply/resist choice determined community reception after the war"
+        },
+        {
+          "conflict_id": "conflict_006",
+          "role": "Factual texture — the parallel removal experiences show the shared starting point before the paths diverge"
+        }
+      ],
+      "entity_anchors": [
+        "Tule Lake Segregation Center",
+        "Terminal Island, San Pedro",
+        "Jerome, Arkansas (incarceration camp)",
+        "Questions 27 and 28",
+        "No-No boys",
+        "442nd Regimental Combat Team",
+        "Judge Louis Goodman",
+        "Wayne Collins",
+        "Executive Order 9066",
+        "Santa Anita Racetrack",
+        "Eureka, California (courthouse)",
+        "George Takei's father",
+        "Karen Matsuoka's grandfather"
+      ],
+      "gap_analysis": {
+        "weak_evidence": "The storyline has two strong voices but needs a third — specifically a 442nd veteran's perspective. We hear about the Yes-Yes choice through Takei's father (who cooperated but didn't serve militarily) and the No-No choice through Matsuoka's grandfather. Missing is the voice of someone who answered Yes-Yes and actually went to war for the country that imprisoned them. Also missing: a voice from the community that ostracized the No-No boys — someone who can articulate why compliance felt necessary.",
+        "missing_perspectives": [
+          "A 442nd veteran or their descendant — the soldier's version of the comply choice",
+          "A Japanese American from the generation that maintained the stigma against No-No boys — someone who can speak honestly about why the community enforced the binary",
+          "A historian who can contextualize the legal battles (Korematsu, Hirabayashi, Yasui, Goodman ruling)"
+        ],
+        "suggested_interviews": [
+          {
+            "who": "A descendant of a 442nd soldier, ideally one who also had family members at Tule Lake",
+            "questions": [
+              "Was your family ever divided between the Yes-Yes and No-No positions?",
+              "How does your family talk about the No-No boys today versus how they talked about them when you were growing up?",
+              "Do you feel the 442nd's sacrifice 'proved' Japanese American loyalty, or should it never have been in question?"
+            ]
+          }
+        ],
+        "missing_documents": [
+          "The actual text of Questions 27 and 28",
+          "Judge Goodman's written opinion in the Matsuoka case",
+          "Tule Lake camp records — enrollment, transfers, draft resistance cases",
+          "442nd Regimental Combat Team casualty records and commendation records"
+        ]
+      },
+      "strength": {
+        "source_count": 3,
+        "frames_count": 3,
+        "conflict_genuine": true,
+        "unique_to_collection": true,
+        "confidence": "HIGH",
+        "assessment": "This storyline is tightly focused and powerfully structured. The Takei/Matsuoka pairing is one of the collection's great editorial assets — two families at the same camp, facing the same questions, making opposite choices, both framed as heroic by their descendants. The storyline's weakness is its narrow source base (primarily two testimonies), which means it needs additional voices to avoid feeling like a debate rather than a story. But the conflict spine is genuinely unresolved and deeply relevant to contemporary debates about patriotism and resistance. Matsuoka's line — 'Both are equally stories of valor' — is the storyline's thesis statement."
+      }
+    },
+    {
+      "storyline_id": "storyline_003",
+      "thread_id": "thread_004",
+      "dramatic_question": "When America takes your land, your language, your freedom, your citizenship, or your dignity — what is the thing it cannot take, and why does that thing keep you alive?",
+      "transformation": "From joy as the opposite of suffering -> joy as the form survival takes when institutions fail — the irreducible resource that outlasts every system designed to destroy it",
+      "question_sequence": [
+        {
+          "question": "What did these families lose?",
+          "evidence": [
+            {
+              "segment_id": "george_takei__seg_005",
+              "source": "george_takei",
+              "note": "Home, possessions, the family dog Blackie — 'I still remember his barking as the car drove us away'"
+            },
+            {
+              "segment_id": "sarah_adams__seg_018",
+              "source": "sarah_adams",
+              "note": "Language, ceremony, hair, freedom to be indigenous: 'children... punished for speaking your language... the trauma that creates is profound'"
+            },
+            {
+              "segment_id": "sheryl_sutton_smith__seg_003",
+              "source": "sheryl_sutton_smith",
+              "note": "Ella Garrett 'worked in the house... she was raped in the house'; Granddaddy Talman's farm taken because 'the white guy wanted it'"
+            },
+            {
+              "segment_id": "karen_matsuoka__seg_003",
+              "source": "karen_matsuoka",
+              "note": "Terminal Island — the entire community liquidated in 48 hours; citizenship itself stripped through denaturalization"
+            }
+          ]
+        },
+        {
+          "question": "What survived — and why those things specifically?",
+          "evidence": [
+            {
+              "segment_id": "sheryl_sutton_smith__seg_003",
+              "source": "sheryl_sutton_smith",
+              "note": "'We have a rich, rich culinary tradition. We're steeped in Creole foods... we share culture over food' — cooking as cultural preservation through slavery and segregation"
+            },
+            {
+              "segment_id": "sarah_adams__seg_040",
+              "source": "sarah_adams",
+              "note": "The Choctaw creation story of Nanih Waiya survived — oral tradition passed through generations even when language was suppressed"
+            },
+            {
+              "segment_id": "heidi_mathers__seg_009",
+              "source": "heidi_mathers",
+              "note": "Danish apple cake, skol toast, pickled herring at Christmas — holidays as cultural life support"
+            },
+            {
+              "segment_id": "elizabeth_hira__seg_004",
+              "source": "elizabeth_hira",
+              "note": "Dancing: 'we are always the first on the dance floor and the last off the dance floor' — Caribbean joy as inheritance"
+            },
+            {
+              "segment_id": "george_takei__seg_028",
+              "source": "george_takei",
+              "note": "The culinary exchange with Mrs. Gonzalez — 'my mother served us enchiladas... she taught Mrs. Gonzalez how to make sukiyaki' — food as cross-cultural bridge building"
+            }
+          ]
+        },
+        {
+          "question": "How did joy function as resistance — not escape from suffering but alongside it?",
+          "evidence": [
+            {
+              "segment_id": "sarah_adams__seg_035",
+              "source": "sarah_adams",
+              "note": "'Our resilience and resistance is based in joy... our ceremony and our languages are joyful' — joy reframed as the engine of survival, not its reward"
+            },
+            {
+              "segment_id": "sheryl_sutton_smith__seg_010",
+              "source": "sheryl_sutton_smith",
+              "note": "'There's joy and there's joy in community. So much. Praise God.' — joy acknowledged alongside the full weight of historical suffering"
+            },
+            {
+              "segment_id": "sarah_adams__seg_019",
+              "source": "sarah_adams",
+              "note": "Grandparents fell in love at boarding school: 'there was a romance that happened in the middle of this institution that was really there to destroy part of who they were'"
+            },
+            {
+              "segment_id": "alexandra_dean__seg_002",
+              "source": "alexandra_dean",
+              "note": "Grandfather making people laugh at the captain's table to build his fortune from nothing — humor as survival strategy"
+            }
+          ]
+        },
+        {
+          "question": "What does the joy look like now — in the generation that gets to choose it?",
+          "evidence": [
+            {
+              "segment_id": "sarah_adams__seg_035",
+              "source": "sarah_adams",
+              "note": "Blue learning Choctaw: 'they learn very early... very different time' — the reclamation generation experiencing culture as joy, not obligation"
+            },
+            {
+              "segment_id": "sarah_adams__seg_040",
+              "source": "sarah_adams",
+              "note": "The Marvel Echo series showing Choctaw creation story on screen: 'I was so excited... just like, just squealing'"
+            },
+            {
+              "segment_id": "george_takei__seg_028",
+              "source": "george_takei",
+              "note": "Hiring a mariachi band for backyard parties — childhood Mexican American community joy carried into adult life"
+            },
+            {
+              "segment_id": "gloria_and_joe_locicero__seg_008",
+              "source": "gloria_and_joe_locicero",
+              "note": "Sam McGinnis: 'These stories like inform who I am. And they make me more compassionate to others' — storytelling itself as inherited joy"
+            },
+            {
+              "segment_id": "heidi_mathers__seg_012",
+              "source": "heidi_mathers",
+              "note": "Son brings parents to Hmong restaurant in St. Paul — joy expanding to include new communities: 'we can go to the Somali Mall and we can shop there, or we can still go to the Swedish store'"
+            }
+          ]
+        },
+        {
+          "question": "What does joy tell us about what it means to be American?",
+          "evidence": [
+            {
+              "segment_id": "sarah_adams__seg_035",
+              "source": "sarah_adams",
+              "note": "'I think that's the thing that I want people to understand is that like our resilience and resistance is based in joy. I think that's the piece that sometimes gets overlooked.'"
+            },
+            {
+              "segment_id": "elizabeth_hira__seg_004",
+              "source": "elizabeth_hira",
+              "note": "The American Stories project vision: 'connections that archive will surely show... they're fascinating and they're so often unexpected... a spark of hope and even optimism'"
+            },
+            {
+              "segment_id": "heidi_mathers__seg_014",
+              "source": "heidi_mathers",
+              "note": "'I see our country as a beautiful quilt, a mosaic of many colors... we need to take the time to look at those little pieces that make up this mosaic'"
+            },
+            {
+              "segment_id": "gloria_and_joe_locicero__seg_008",
+              "source": "gloria_and_joe_locicero",
+              "note": "Joe: 'it's not only what they got from coming to America, it's what America got from them coming to America'"
+            }
+          ]
+        }
+      ],
+      "conflict_spine": [
+        {
+          "conflict_id": "conflict_002",
+          "role": "The Adams/Mathers emotional opposition grounds the storyline — same loss, different charge, because the key variable is whether joy was permitted or prohibited"
+        },
+        {
+          "conflict_id": "conflict_003",
+          "role": "The boarding school fracture shows joy surviving even in institutions designed to destroy it — grandparents fell in love at Goodland"
+        }
+      ],
+      "entity_anchors": [
+        "Goodland Boarding School (where Adams's grandparents fell in love)",
+        "Terminal Island / furusato",
+        "New Orleans Creole culinary tradition",
+        "Nanih Waiya (Choctaw creation site)",
+        "Mrs. Gonzalez's kitchen (Takei's East LA neighbor)",
+        "Danish Day celebrations, Minneapolis",
+        "Echo (Marvel series featuring Choctaw creation story)",
+        "American Indian Religious Freedom Act (1978)",
+        "Skol toast tradition"
+      ],
+      "gap_analysis": {
+        "weak_evidence": "The 'joy as resistance' framing is most explicitly articulated by Sarah Adams but is present across the collection in less theorized form. The storyline would benefit from more voices that explicitly connect joy and survival — particularly from the Black American tradition, where Sutton Smith's testimony gestures at it but doesn't develop it fully. The Creole food tradition is mentioned but not deeply explored.",
+        "missing_perspectives": [
+          "A musician, visual artist, or performer who can speak to cultural art forms that survived oppression specifically because they were joyful",
+          "An elder from any community who can describe the specific cultural practices they maintained in secret — what was worth the risk?",
+          "A young person from a reclamation generation who experiences the recovered culture primarily through its joy (food, music, language, ceremony) rather than its trauma"
+        ],
+        "suggested_interviews": [
+          {
+            "who": "A New Orleans second-line organizer or Mardi Gras Indian — someone who can speak to the Black tradition of public joy as resistance",
+            "questions": [
+              "What does it mean to take joy to the streets in a city built on enslaved labor?",
+              "How is the joy you create connected to the suffering your ancestors endured?",
+              "What would be lost if your community stopped celebrating?"
+            ]
+          },
+          {
+            "who": "A Choctaw language teacher working with the current generation of learners",
+            "questions": [
+              "What does it feel like to teach a language that was nearly destroyed?",
+              "Do the young people learning Choctaw experience it as obligation or as joy?",
+              "What words or concepts in Choctaw don't have English equivalents — what worldview lives only in the language?"
+            ]
+          }
+        ],
+        "missing_documents": [
+          "Audio or video of Choctaw language classes — the sound of reclamation",
+          "Photos of Terminal Island community celebrations before the raids",
+          "Recipes from cross-cultural exchanges (Takei's mother and Mrs. Gonzalez)",
+          "Documentation of Danish Day celebrations in Minneapolis"
+        ]
+      },
+      "strength": {
+        "source_count": 7,
+        "frames_count": 3,
+        "conflict_genuine": true,
+        "unique_to_collection": true,
+        "confidence": "HIGH",
+        "assessment": "This storyline draws from the widest range of sources (7 of 10) and serves the American Stories mission most directly — it finds the connective tissue across radically different American experiences without flattening the differences. The transformation hypothesis (joy as survival, not its opposite) is the collection's most original editorial insight. The storyline's risk is sentimentality — 'joy' can sound like a feel-good overlay unless it is kept in direct tension with the suffering it accompanies. The Adams/boarding school fracture (grandparents fell in love at a place designed to destroy them) and the Adams/Mathers emotional opposition (wound vs. quilt) provide the necessary grit. Sarah Adams's line — 'our resilience and resistance is based in joy' — is the thesis statement, and it earns its weight because she says it after describing the boarding school horrors, the 'no dogs or Indians' signs, and the cultural genocide."
+      }
+    }
+  ]
+}

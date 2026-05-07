@@ -1,0 +1,332 @@
+{
+  "source_id": "george_takei",
+  "constellations": [
+    {
+      "segment_id": "george_takei__seg_001",
+      "facts": ["Where is George Takei from?", "What is the American Stories project?"],
+      "feelings": ["What does it mean to claim multiple places as home?"],
+      "identity": ["How do Japanese Americans define their American identity when their roots span two countries?"],
+      "source_level": null
+    },
+    {
+      "segment_id": "george_takei__seg_002",
+      "facts": [
+        "When did George Takei see In the Heights on Broadway?",
+        "What is the song Inutil from In the Heights about?",
+        "What does the Spanish word 'inutil' mean?"
+      ],
+      "feelings": [
+        "Why would a song about feeling useless make someone cry in a theater full of strangers?",
+        "What does it feel like to be moved to tears by art that unexpectedly connects to personal trauma?"
+      ],
+      "identity": [
+        "How does art from one culture unlock buried emotions from a completely different experience?",
+        "What happens when a stranger's creative expression mirrors your family's deepest pain?"
+      ],
+      "source_level": "How did the song 'Inutil' become the entry point for George Takei to tell his family's internment story?"
+    },
+    {
+      "segment_id": "george_takei__seg_003",
+      "facts": [
+        "What did George Takei's father tell him about the internment camps?",
+        "What was it like for families at the Arkansas internment camps?",
+        "What did the barbed wire camps in the swamps of Arkansas look like?"
+      ],
+      "feelings": [
+        "What did George Takei's father feel watching his children play behind barbed wire?",
+        "What is the experience of a parent feeling helpless to protect their children's future?",
+        "What does uselessness feel like for an incarcerated father who cannot provide for his family?"
+      ],
+      "identity": [
+        "How does a parent's sense of powerlessness during incarceration shape the family across generations?",
+        "What does it mean when a father's deepest wound is not his own suffering but his children's lost future?",
+        "How do children eventually learn about trauma their parents carried silently?"
+      ],
+      "source_level": "How did George Takei's father's pain in the internment camp become the emotional foundation of Takei's lifelong testimony?"
+    },
+    {
+      "segment_id": "george_takei__seg_004",
+      "facts": [
+        "Did children attend school inside Japanese American internment camps?",
+        "What were the schools like in internment camps during WWII?",
+        "Did Japanese American children say the Pledge of Allegiance in internment camps?"
+      ],
+      "feelings": [
+        "What did it feel like to pledge allegiance to a country that imprisoned you?",
+        "What is the experience of a child who does not yet understand the contradiction of their situation?"
+      ],
+      "identity": [
+        "What does it mean to pledge loyalty to a country that has betrayed you?",
+        "How does the gap between a nation's ideals and its actions shape a child's understanding of patriotism?",
+        "Can you love a country that doesn't love you back, and what does that cost?"
+      ],
+      "source_level": "How did the contradiction of pledging allegiance behind barbed wire become central to George Takei's understanding of American democracy?"
+    },
+    {
+      "segment_id": "george_takei__seg_005",
+      "facts": [
+        "Could Japanese immigrants become US citizens before WWII?",
+        "What laws prevented Asian immigrants from becoming American citizens?",
+        "Was George Takei's mother a US citizen?"
+      ],
+      "feelings": [
+        "What does it feel like to live in a country for decades and be legally barred from becoming a citizen?",
+        "How did it feel for Japanese immigrants to be fluent in English and culturally American but legally excluded?"
+      ],
+      "identity": [
+        "What does citizenship mean when it can be granted to some and denied to others based on race?",
+        "How does legal exclusion shape an immigrant's relationship to the country they call home?"
+      ],
+      "source_level": null
+    },
+    {
+      "segment_id": "george_takei__seg_006",
+      "facts": [
+        "What happened when Japanese American families were ordered to leave their homes?",
+        "How were soldiers involved in removing Japanese Americans from their homes?",
+        "What were families allowed to bring when evacuated during WWII internment?",
+        "What was the Santa Anita Assembly Center like for Japanese Americans?"
+      ],
+      "feelings": [
+        "What did it feel like as a child to see armed soldiers at your front door?",
+        "What is the experience of watching your parent be threatened at gunpoint?",
+        "What does it feel like to leave your home not knowing if you will return?",
+        "What was it like for a mother carrying a baby to walk out of her home for the last time in tears?"
+      ],
+      "identity": [
+        "How does childhood trauma from state violence shape a person's relationship to their country?",
+        "What does it mean to witness your parents' powerlessness as a child?",
+        "How do families preserve dignity when stripped of everything they own?",
+        "What does it do to a person when their earliest vivid memory is of state-sponsored terror?"
+      ],
+      "source_level": "How did the day of forced removal become the foundational memory of George Takei's life and activism?"
+    },
+    {
+      "segment_id": "george_takei__seg_007",
+      "facts": [
+        "Did Japanese American parents talk to their children about internment after the war?",
+        "What did George Takei's father teach him about democracy?",
+        "How did George Takei learn about the internment as a teenager?"
+      ],
+      "feelings": [
+        "What does it feel like to learn as a teenager that your childhood was spent in a prison camp?",
+        "What is the emotional weight of a parent choosing to explain injustice to their child rather than hide it?"
+      ],
+      "identity": [
+        "How does a parent teach a child to believe in democracy after the government imprisoned their family?",
+        "What does it mean to embrace civic participation after being victimized by the state?",
+        "How do survivors of injustice transmit hope rather than bitterness to the next generation?"
+      ],
+      "source_level": "How did the after-dinner conversations with his father shape George Takei's lifelong belief in participatory democracy?"
+    },
+    {
+      "segment_id": "george_takei__seg_008",
+      "facts": [
+        "What was Tule Lake segregation center?",
+        "Why did some Japanese Americans renounce their US citizenship during WWII?",
+        "What pressure did radicals put on Japanese Americans at Tule Lake?",
+        "How did George Takei's mother lose her citizenship?"
+      ],
+      "feelings": [
+        "What did it feel like for a mother to choose between her citizenship and her family's safety?",
+        "What is the experience of being pressured by your own community while imprisoned by your government?",
+        "What was it like for children to see their parents go on long walks and come back with bloodshot eyes?"
+      ],
+      "identity": [
+        "What does it mean to renounce your citizenship as an act of love rather than disloyalty?",
+        "How do impossible choices during incarceration reveal what people truly value?",
+        "When loyalty to family and loyalty to country are in direct conflict, what does that tell us about citizenship?"
+      ],
+      "source_level": "How did his mother's forced renunciation of citizenship shape Takei's understanding of what it means to be American?"
+    },
+    {
+      "segment_id": "george_takei__seg_009",
+      "facts": [
+        "Who was Wayne Collins and what did he do for Japanese Americans?",
+        "How did Wayne Collins prevent the deportation of Japanese Americans who renounced citizenship?",
+        "Who represented Fred Korematsu before the Supreme Court?",
+        "Who were the Japanese Americans who challenged internment in the courts?"
+      ],
+      "feelings": [
+        "What does it feel like to owe your entire life to a stranger's moral courage?",
+        "What is the experience of almost being deported to a country you have never known?"
+      ],
+      "identity": [
+        "How does one person's constitutional conviction change the course of another's life?",
+        "What does it mean to be American because of a lawyer's passion for the Constitution rather than by birthright alone?",
+        "How do acts of individual moral courage reshape the meaning of citizenship for entire communities?"
+      ],
+      "source_level": "How did Wayne Collins' intervention become the pivotal moment that made George Takei's American life possible?"
+    },
+    {
+      "segment_id": "george_takei__seg_010",
+      "facts": [
+        "What was it like for Japanese Americans returning to the West Coast after WWII?",
+        "Where did Japanese American families live when they returned to Los Angeles after internment?",
+        "What was Skid Row in Los Angeles like in the 1940s?",
+        "When did the Tule Lake internment camp close?"
+      ],
+      "feelings": [
+        "What does it feel like to return to a city that is no longer the home you remember?",
+        "What is the experience of leaving a beloved pet behind because you have no choice?",
+        "What was Christmas like for a family separated by internment in 1945?"
+      ],
+      "identity": [
+        "What does it mean to rebuild a life from nothing after unjust imprisonment?",
+        "How does the experience of starting over after dispossession shape a family's values?",
+        "What does resilience actually look like when a father washes dishes to feed his family and helps others for free?"
+      ],
+      "source_level": null
+    },
+    {
+      "segment_id": "george_takei__seg_011",
+      "facts": [
+        "Where did Japanese Americans settle in East Los Angeles after WWII?",
+        "What was the relationship between Japanese American and Mexican American communities in East LA?",
+        "What was the Boyle Heights neighborhood like in the 1940s and 1950s?",
+        "How did George Takei learn Spanish?"
+      ],
+      "feelings": [
+        "What does it feel like to be welcomed into a community that is not your own?",
+        "What is the joy of cross-cultural friendship forged through food and shared neighborhood life?"
+      ],
+      "identity": [
+        "How do marginalized communities build solidarity through everyday acts like sharing food?",
+        "What does it mean when your American experience is shaped by a culture other than your own?",
+        "How does growing up in a multicultural neighborhood shape a person's understanding of diversity?"
+      ],
+      "source_level": null
+    },
+    {
+      "segment_id": "george_takei__seg_012",
+      "facts": [
+        "How did George Takei get involved in the civil rights movement?",
+        "What was Mount Vernon Junior High School in Los Angeles?",
+        "What was the musical Fly Blackbird about?",
+        "How did Japanese American families connect the internment experience to the Black civil rights movement?"
+      ],
+      "feelings": [
+        "What does it feel like to see another group suffering the same kind of injustice your family endured?",
+        "What is the experience of recognizing your own story in someone else's struggle?"
+      ],
+      "identity": [
+        "How does one form of racial injustice create empathy and solidarity with people facing a different form?",
+        "What role do parents play in helping children see the connections between different civil rights struggles?",
+        "How does personal experience of oppression become a bridge to broader social activism?"
+      ],
+      "source_level": "How did Takei's father transform the internment experience into a launching pad for his son's civil rights activism?"
+    },
+    {
+      "segment_id": "george_takei__seg_013",
+      "facts": [
+        "How did George Takei get cast as Sulu on Star Trek?",
+        "Why was the character named Sulu?",
+        "What was Gene Roddenberry's vision for diversity on Star Trek?",
+        "Where does the name Sulu come from in Star Trek?",
+        "What does IDIC mean in Star Trek?"
+      ],
+      "feelings": [
+        "What did it feel like for a Japanese American actor to be offered a role representing all of Asia?",
+        "What is the experience of desperately wanting a role that could change your career and represent your people?"
+      ],
+      "identity": [
+        "How does representation in popular culture reshape who a marginalized group believes they can become?",
+        "What does it mean to embody 'infinite diversity in infinite combinations' on screen?",
+        "How does a fictional vision of a better future influence the real pursuit of equality?"
+      ],
+      "source_level": "How did Gene Roddenberry's casting of George Takei as Sulu connect the internment experience to a hopeful vision of humanity's future?"
+    },
+    {
+      "segment_id": "george_takei__seg_014",
+      "facts": [
+        "What was it like to be a gay actor in 1960s Hollywood?",
+        "Were actors like Rock Hudson and Tab Hunter openly gay?",
+        "Why did gay actors stay closeted in the 1960s?"
+      ],
+      "feelings": [
+        "What does it feel like to hide a fundamental part of yourself to protect your career?",
+        "What is the emotional cost of being closeted while trying to represent your community on screen?",
+        "What does it feel like to carry two forms of marginalization — racial and sexual — simultaneously?"
+      ],
+      "identity": [
+        "How does being closeted while advocating for one form of equality complicate a person's sense of integrity?",
+        "What does it mean to choose strategic visibility in one identity while concealing another?",
+        "How do intersecting marginalized identities compound the pressure to conform?"
+      ],
+      "source_level": null
+    },
+    {
+      "segment_id": "george_takei__seg_015",
+      "facts": [
+        "Did the Star Trek cast know George Takei was gay?",
+        "Who was Walter Koenig on Star Trek?",
+        "What was it like on the Star Trek set?"
+      ],
+      "feelings": [
+        "What does it feel like when a friend signals acceptance of your secret without forcing you to say it aloud?",
+        "What is the comfort of being known without having to come out?"
+      ],
+      "identity": [
+        "What does quiet allyship look like before the language of allyship exists?",
+        "How do small acts of recognition sustain a closeted person's sense of self?"
+      ],
+      "source_level": null
+    },
+    {
+      "segment_id": "george_takei__seg_016",
+      "facts": [
+        "When did George Takei come out publicly?",
+        "What prompted George Takei to come out?",
+        "Did Arnold Schwarzenegger veto a marriage equality bill in California?",
+        "When did Massachusetts legalize same-sex marriage?"
+      ],
+      "feelings": [
+        "What does it feel like when a political betrayal becomes the catalyst for personal courage?",
+        "What is the experience of deciding to come out after decades in the closet?",
+        "What does rage channeled into action feel like?"
+      ],
+      "identity": [
+        "How does a political moment transform a private identity decision into a public act of resistance?",
+        "What does it mean to come out not just for yourself but as part of a broader movement?",
+        "How does witnessing legislative injustice echo across different civil rights struggles in one person's life?"
+      ],
+      "source_level": "How did Schwarzenegger's veto become the tipping point that connected Takei's internment story to his LGBTQ advocacy?"
+    },
+    {
+      "segment_id": "george_takei__seg_017",
+      "facts": [
+        "How did George Takei connect Japanese American internment to LGBTQ rights in his activism?",
+        "What role did the Human Rights Campaign play in George Takei's coming out?",
+        "What did George Takei's father think about Franklin Roosevelt?",
+        "What did Eleanor Roosevelt think about Japanese internment?"
+      ],
+      "feelings": [
+        "What does it feel like to finally integrate two parts of your identity — the interned Japanese American and the gay man — into one public narrative?",
+        "What is the experience of admiring a leader while acknowledging they caused your family's suffering?"
+      ],
+      "identity": [
+        "How does a person reconcile admiration for a flawed leader who both inspired and harmed their community?",
+        "What does it mean to treat different forms of prejudice as the same fundamental story?",
+        "How does linking personal testimony across civil rights movements create a more powerful call for justice?"
+      ],
+      "source_level": "How did Takei's synthesis of internment and LGBTQ activism embody his father's teaching about democratic participation?"
+    },
+    {
+      "segment_id": "george_takei__seg_018",
+      "facts": [
+        "What is George Takei's message about democracy and diversity?",
+        "What does 'infinite diversity in infinite combinations' mean as a democratic ideal?"
+      ],
+      "feelings": [
+        "What does it feel like to arrive at the end of a life shaped by injustice with a message of hope rather than bitterness?",
+        "What is the experience of turning personal suffering into a universal call to action?"
+      ],
+      "identity": [
+        "How does someone who has been imprisoned by their own government still believe in democracy?",
+        "What does it mean to say that people are fragile but democracy is strong?",
+        "How do survivors of injustice become the strongest advocates for the system that failed them?"
+      ],
+      "source_level": "How does Takei's closing statement that 'we are the ones that are fragile' synthesize the entire arc from internment through civil rights through LGBTQ equality?"
+    }
+  ]
+}

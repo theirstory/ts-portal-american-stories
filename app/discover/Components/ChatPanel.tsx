@@ -97,11 +97,7 @@ export const ChatPanel = () => {
             flexDirection: 'column',
             gap: 2.5,
           }}>
-          <Typography
-            variant="h4"
-            fontWeight={700}
-            color={colors.text.primary}
-            sx={{ textAlign: 'center', mb: 0.5 }}>
+          <Typography variant="h4" fontWeight={700} color={colors.text.primary} sx={{ textAlign: 'center', mb: 0.5 }}>
             {copy.title}
           </Typography>
 
@@ -155,24 +151,26 @@ export const ChatPanel = () => {
         id="chat-panel-actions"
         sx={{ display: 'flex', justifyContent: 'flex-end', pt: 0.25, pb: 0.25, flexShrink: 0 }}>
         <Tooltip title="Clear conversation">
-          <Button
-            id="chat-clear-button"
-            size="small"
-            startIcon={<DeleteOutlineIcon sx={{ fontSize: 15 }} />}
-            onClick={clearMessages}
-            disabled={isStreaming}
-            sx={{
-              color: colors.text.secondary,
-              textTransform: 'none',
-              fontSize: '0.75rem',
-              minHeight: 0,
-              borderRadius: 999,
-              px: 1,
-              py: 0.25,
-              '&:hover': { color: colors.error.main, bgcolor: colors.error.light + '1a' },
-            }}>
-            Clear chat
-          </Button>
+          <span>
+            <Button
+              id="chat-clear-button"
+              size="small"
+              startIcon={<DeleteOutlineIcon sx={{ fontSize: 15 }} />}
+              onClick={clearMessages}
+              disabled={isStreaming}
+              sx={{
+                color: colors.text.secondary,
+                textTransform: 'none',
+                fontSize: '0.75rem',
+                minHeight: 0,
+                borderRadius: 999,
+                px: 1,
+                py: 0.25,
+                '&:hover': { color: colors.error.main, bgcolor: colors.error.light + '1a' },
+              }}>
+              Clear chat
+            </Button>
+          </span>
         </Tooltip>
       </Box>
       <ChatComposer

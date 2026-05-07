@@ -38,16 +38,20 @@ export const StoryTranscriptToolbarFilterMenu = () => {
    * variables
    */
   const open = Boolean(anchorEl);
-  const nerData = useMemo(() => storyHubPage?.properties?.ner_data ?? [], [storyHubPage]);
+  const mentionList = useMemo(() => {
+    const props = storyHubPage?.properties;
+    const mentions = props?.entity_mentions;
+    if (Array.isArray(mentions) && mentions.length > 0) return mentions;
+    return props?.ner_data ?? [];
+  }, [storyHubPage]);
 
-  // Deduplicate NER data by label and start_time to get accurate counts
+  // Deduplicate by label and start_time to get accurate counts.
   const deduplicatedNerData = useMemo(() => {
-    const labelGroups = groupBy(nerData, (item) => item.label);
+    const labelGroups = groupBy(mentionList, (item: any) => item.label);
     const deduplicated: any[] = [];
 
     Object.entries(labelGroups).forEach(([, instances]) => {
-      // Sort by start_time and filter out duplicates within 0.001 seconds
-      const sorted = instances.sort((a, b) => a.start_time - b.start_time);
+      const sorted = (instances as any[]).sort((a, b) => a.start_time - b.start_time);
       const unique = sorted.filter(
         (instance, index, arr) => index === 0 || Math.abs(instance.start_time - arr[index - 1].start_time) > 0.001,
       );
@@ -55,7 +59,7 @@ export const StoryTranscriptToolbarFilterMenu = () => {
     });
 
     return deduplicated;
-  }, [nerData]);
+  }, [mentionList]);
 
   const grouped = groupBy(deduplicatedNerData, (item) => item.label);
   const sortedEntries = useMemo(() => Object.entries(grouped).sort(([, a], [, b]) => b.length - a.length), [grouped]);

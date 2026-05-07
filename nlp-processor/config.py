@@ -32,12 +32,10 @@ class Config:
     )
     DEFAULT_NER_LABELS = [x.strip() for x in DEFAULT_NER_LABELS_ENV.split(",") if x.strip()]
     
-    # GLiNER Model Configuration
-    GLINER_MODEL = os.getenv("GLINER_MODEL", "urchade/gliner_multi-v2.1")
-    GLINER_THRESHOLD = float(os.getenv("GLINER_THRESHOLD", "0.3"))
-    GLINER_LOAD_TIMEOUT_SECONDS = int(
-        os.getenv("GLINER_LOAD_TIMEOUT_SECONDS", "500")
-    )
+    # GLiNER configuration removed in Phase 1C — NER now runs through the
+    # narrative pipeline LLM (see narrative_pipeline/entity_extraction.py).
+    # MIN_TEXT_LENGTH_FOR_NER kept for legacy callers; safe to drop in a
+    # follow-up if no consumer remains.
     MIN_TEXT_LENGTH_FOR_NER = int(os.getenv("MIN_TEXT_LENGTH_FOR_NER", "50"))
     
     # HuggingFace Local Embeddings Configuration
@@ -84,9 +82,6 @@ class Config:
     @classmethod
     def print_config(cls):
         """Print current configuration for debugging."""
-        print(f"[Config] GLiNER model: {cls.GLINER_MODEL}")
-        print(f"[Config] GLiNER threshold: {cls.GLINER_THRESHOLD}")
-        print(f"[Config] GLiNER load timeout (s): {cls.GLINER_LOAD_TIMEOUT_SECONDS}")
         print(f"[Config] Min text length for NER: {cls.MIN_TEXT_LENGTH_FOR_NER}")
         print(f"[Config] Weaviate URL: {cls.WEAVIATE_URL}")
         print(f"[Config] Embedding model: {cls.EMBEDDING_MODEL}")

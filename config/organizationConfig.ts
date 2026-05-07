@@ -171,3 +171,46 @@ export const getNerLabelColorMap = (): Map<string, string> => {
 export const getNerColorPalette = (): string[] => {
   return [...config.ner.labels.map((l) => l.color), ...config.ner.fallbackColors];
 };
+
+// ---------------------------------------------------------------------------
+// Question thread (Pass 2) presentation tokens.
+// ---------------------------------------------------------------------------
+
+export type QuestionLevel = 'FACTS' | 'FEELINGS' | 'IDENTITY';
+
+const QUESTION_LEVEL_PRESENTATION: Record<QuestionLevel, { color: string; displayName: string; description: string }> =
+  {
+    // Facts: anchored, slate. Anchored history, names, dates.
+    FACTS: {
+      color: '#3F4A5B',
+      displayName: 'Facts',
+      description: 'Anchored history — what happened, when, who was there.',
+    },
+    // Feelings: warm coral, leans into the brand accent.
+    FEELINGS: {
+      color: '#F96044',
+      displayName: 'Feelings',
+      description: 'Affective trajectory — what it felt like, in the moment.',
+    },
+    // Identity: deep ink, the most reflective layer.
+    IDENTITY: {
+      color: '#1F2A37',
+      displayName: 'Identity',
+      description: 'Reflective meaning — who this makes you, what you held onto.',
+    },
+  };
+
+export const getQuestionLevelColor = (level: string | null | undefined): string => {
+  const key = (level ?? '').toUpperCase() as QuestionLevel;
+  return QUESTION_LEVEL_PRESENTATION[key]?.color ?? '#666666';
+};
+
+export const getQuestionLevelDisplayName = (level: string | null | undefined): string => {
+  const key = (level ?? '').toUpperCase() as QuestionLevel;
+  return QUESTION_LEVEL_PRESENTATION[key]?.displayName ?? String(level ?? '');
+};
+
+export const getQuestionLevelDescription = (level: string | null | undefined): string => {
+  const key = (level ?? '').toUpperCase() as QuestionLevel;
+  return QUESTION_LEVEL_PRESENTATION[key]?.description ?? '';
+};

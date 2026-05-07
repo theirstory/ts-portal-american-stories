@@ -1,6 +1,6 @@
 import { useSemanticSearchStore } from '@/app/stores/useSemanticSearchStore';
 import { colors } from '@/lib/theme';
-import { SchemaMap, SchemaTypes } from '@/types/weaviate';
+import { SchemaMap, SchemaTypes, SearchableSchemaType } from '@/types/weaviate';
 import {
   Box,
   Button,
@@ -29,7 +29,7 @@ import useLayoutState from '@/app/stores/useLayout';
 import { CollectionsDropdown } from './CollectionsDropdown';
 import { FoldersDropdown } from './FoldersDropdown';
 
-export const returnedFields: QueryProperty<SchemaMap[SchemaTypes]>[] | undefined = [
+export const returnedFields: QueryProperty<SchemaMap[SearchableSchemaType]>[] | undefined = [
   'interview_title',
   'interview_duration',
   'start_time',

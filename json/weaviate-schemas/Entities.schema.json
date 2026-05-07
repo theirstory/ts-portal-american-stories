@@ -1,0 +1,208 @@
+{
+  "class": "Entities",
+  "description": "Named entities (PERSON / PLACE / EVENT / DATE / INSTITUTION / CULTURAL_ITEM) with variant resolution, linked-data reconciliation, and relationship graph. Produced by Pass 0 narrative pipeline.",
+  "invertedIndexConfig": {
+    "bm25": { "b": 0.75, "k1": 1.2 },
+    "cleanupIntervalSeconds": 60,
+    "stopwords": { "additions": null, "preset": "en", "removals": null },
+    "usingBlockMaxWAND": true
+  },
+  "moduleConfig": {},
+  "multiTenancyConfig": {
+    "autoTenantActivation": false,
+    "autoTenantCreation": false,
+    "enabled": false
+  },
+  "properties": [
+    {
+      "dataType": ["text"],
+      "description": "Stable entity id (Wikidata QID like Q189330 if linked, otherwise internal_<source>_<type>_<NNN>).",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "entity_id",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Human-readable canonical form (e.g. \"George Takei\", \"Tule Lake Internment Camp\").",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "canonical_form",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "URL-friendly slug used in /entities/[slug] pages.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "entity_slug",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "PERSON | PLACE | EVENT | DATE | INSTITUTION | CULTURAL_ITEM",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "entity_type",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text[]"],
+      "description": "All variant forms found in transcripts (spelling variations, nicknames, transcription errors).",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "variants",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Wikidata QID if reconciled with HIGH confidence, else null.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "linked_data_qid",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Wikipedia (or other authoritative source) URL when linked.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "linked_data_url"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Brief description from linked source (Wikidata).",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "linked_data_description",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["text"],
+      "description": "Internal authority record id for entities with no linked-data match.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "internal_id",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["text"],
+      "description": "One-sentence description of this entity's role across the source(s).",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "moduleConfig": { "none": {} },
+      "name": "context_summary",
+      "tokenization": "word"
+    },
+    {
+      "dataType": ["object[]"],
+      "description": "Potential transcription errors flagged during reconciliation. Each: { variant, likely_correct, reason }.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "transcription_notes",
+      "nestedProperties": [
+        { "dataType": ["text"], "name": "variant" },
+        { "dataType": ["text"], "name": "likely_correct" },
+        { "dataType": ["text"], "name": "reason" }
+      ]
+    },
+    {
+      "dataType": ["object[]"],
+      "description": "Outgoing relationships to other entities. Each: { target_entity_id, target_canonical_form, relationship_type, qualifier, grounding_quote, source_chunk_id, confidence }.",
+      "indexFilterable": false,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "relationships",
+      "nestedProperties": [
+        { "dataType": ["text"], "name": "target_entity_id" },
+        { "dataType": ["text"], "name": "target_canonical_form" },
+        { "dataType": ["text"], "name": "relationship_type" },
+        { "dataType": ["text"], "name": "qualifier" },
+        { "dataType": ["text"], "name": "grounding_quote" },
+        { "dataType": ["text"], "name": "source_chunk_id" },
+        { "dataType": ["text"], "name": "confidence" }
+      ]
+    },
+    {
+      "dataType": ["text"],
+      "description": "Collection id this entity belongs to (e.g. American Stories).",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "collection_id",
+      "tokenization": "field"
+    },
+    {
+      "dataType": ["boolean"],
+      "description": "Editorial publish flag. Entities stay draft until reviewed (per SKILL.md \"Published-by-default\" project setting). Public entity pages should filter on published=true.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "published"
+    },
+    {
+      "dataType": ["Chunks"],
+      "description": "Cross-reference to all Chunks that mention this entity.",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": false,
+      "moduleConfig": { "none": {} },
+      "name": "mentionedInChunks"
+    }
+  ],
+  "vectorConfig": {
+    "description_vector": {
+      "vectorIndexConfig": {
+        "bq": { "enabled": false },
+        "cleanupIntervalSeconds": 300,
+        "distance": "cosine",
+        "dynamicEfFactor": 8,
+        "dynamicEfMax": 500,
+        "dynamicEfMin": 100,
+        "ef": -1,
+        "efConstruction": 128,
+        "filterStrategy": "sweeping",
+        "flatSearchCutoff": 40000,
+        "maxConnections": 32,
+        "multivector": { "aggregation": "maxSim", "enabled": false },
+        "pq": {
+          "bitCompression": false,
+          "centroids": 256,
+          "enabled": false,
+          "encoder": { "distribution": "log-normal", "type": "kmeans" },
+          "segments": 0,
+          "trainingLimit": 100000
+        },
+        "skip": false,
+        "sq": { "enabled": false, "rescoreLimit": 20, "trainingLimit": 100000 },
+        "vectorCacheMaxObjects": 1000000000000
+      },
+      "vectorIndexType": "hnsw",
+      "vectorizer": { "none": {} }
+    }
+  }
+}

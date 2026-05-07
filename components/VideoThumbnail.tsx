@@ -1,5 +1,5 @@
 import { AudioFileWave } from '@/app/assets/svg/AudioFileWave';
-import { getMuxPlaybackId } from '@/app/utils/converters';
+import { DEFAULT_THUMBNAIL_TIME, getMuxPlaybackId, getThumbnailTimeForTitle } from '@/app/utils/converters';
 import { durationFormatHandler } from '@/app/utils/util';
 import { colors } from '@/lib/theme';
 import { Chunks, Testimonies } from '@/types/weaviate';
@@ -40,14 +40,18 @@ export const VideoThumbnail = ({
     const targetWidth = 320;
     const targetHeight = Math.round(targetWidth / aspectRatio);
 
-    const gifStart = startTime || 3;
+    // Caller can pin a specific time; otherwise fall back to the per-title
+    // override (e.g. teaser/intro have a slow open) or the default 5s.
+    const title = (story.properties as { interview_title?: string }).interview_title;
+    const resolvedThumbnailTime = startTime ?? getThumbnailTimeForTitle(title);
+    const gifStart = startTime ?? (resolvedThumbnailTime !== DEFAULT_THUMBNAIL_TIME ? resolvedThumbnailTime : 3);
     const gifEnd = gifStart + 2;
 
     return {
-      thumbnailUrl: `https://image.mux.com/${playbackId}/thumbnail.jpg?time=${startTime || 5}&width=${targetWidth}&height=${targetHeight}&fit_mode=crop`,
+      thumbnailUrl: `https://image.mux.com/${playbackId}/thumbnail.jpg?time=${resolvedThumbnailTime}&width=${targetWidth}&height=${targetHeight}&fit_mode=crop`,
       gifUrl: `https://image.mux.com/${playbackId}/animated.gif?start=${gifStart}&end=${gifEnd}&width=${targetWidth}&height=${targetHeight}&fps=10&fit_mode=crop`,
     };
-  }, [aspectRatio, startTime, story.properties.video_url]);
+  }, [aspectRatio, startTime, story.properties]);
 
   // Lazy loading with IntersectionObserver
   useEffect(() => {

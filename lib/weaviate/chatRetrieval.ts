@@ -84,6 +84,7 @@ export async function retrieveChunksForChat(query: string, limit = 8): Promise<C
     limit,
     returnMetadata: ['score'],
     returnProperties: CHAT_RETURN_PROPS,
+    targetVector: 'transcription_vector',
   });
 
   const citations: Citation[] = response.objects.map((obj, idx) => {

@@ -66,6 +66,19 @@ mux-player::part(control-bar) {
   border-bottom-right-radius: 16px;
 }
 
+/* Strip the dark circle behind the centered "pre-play" button on the poster
+   without touching its 90×90 sizing — sizing comes from
+   `[breakpointsm] .center-controls media-play-button` inside Mux Player's
+   shadow DOM, and we want to keep that. The element exposes
+   `part="center play button pre-play"`, so ::part(pre-play) reaches it. */
+mux-player::part(pre-play) {
+  background: transparent !important;
+  background-color: transparent !important;
+  --media-control-background: transparent !important;
+  --media-control-hover-background: rgba(255, 255, 255, 0.18) !important;
+  filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.65));
+}
+
 /* Mobile scrollbar - slightly wider for touch */
 @media (max-width: 768px) {
   ::-webkit-scrollbar {
@@ -113,7 +126,7 @@ mux-player::part(control-bar) {
 /* Mobile-friendly focus states */
 @media (max-width: 768px) {
   *:focus {
-    outline: 2px solid #239b8b;
+    outline: 2px solid #f96044;
     outline-offset: 2px;
   }
 

@@ -4,15 +4,36 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import MuxPlayer from '@mux/mux-player-react';
 import { Box, IconButton, Typography, CircularProgress } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { isChatEnabled } from '@/config/organizationConfig';
 import { getAllStoriesFromCollection } from '@/lib/weaviate/search';
 import { SchemaTypes } from '@/types/weaviate';
-import { getMuxPlaybackId } from '@/app/utils/converters';
+import { getMuxPlaybackId, getThumbnailTimeForTitle } from '@/app/utils/converters';
 import { getNerDisplayName } from '@/config/organizationConfig';
 
 const FEATURED_LIMIT = 12;
 const RETURN_PROPERTIES = ['interview_title', 'video_url', 'ner_labels', 'collection_name'] as const;
+
+// Pin specific videos to the front of the carousel by title-substring match (case insensitive).
+const FEATURED_PIN_ORDER = ['teaser', 'what is american stories', 'karen matsuoka', 'sarah adams'];
+
+const sortByPinOrder = <T extends { title: string }>(items: T[]): T[] => {
+  const pinned: T[] = [];
+  const rest: T[] = [];
+  const remaining = [...items];
+  for (const pin of FEATURED_PIN_ORDER) {
+    const idx = remaining.findIndex((s) => s.title.toLowerCase().includes(pin));
+    if (idx !== -1) {
+      pinned.push(remaining[idx]);
+      remaining.splice(idx, 1);
+    }
+  }
+  rest.push(...remaining);
+  return [...pinned, ...rest];
+};
 
 type FeaturedStory = {
   uuid: string;
@@ -26,6 +47,7 @@ type FeaturedStory = {
 export const FeaturedStories = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [stories, setStories] = useState<FeaturedStory[] | null>(null);
+  const [playedMap, setPlayedMap] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     let cancelled = false;
@@ -50,7 +72,7 @@ export const FeaturedStories = () => {
           if (typeof props.collection_name === 'string') story.collectionName = props.collection_name;
           mapped.push(story);
         }
-        setStories(mapped);
+        setStories(sortByPinOrder(mapped));
       })
       .catch((err) => {
         console.error('Failed to load featured stories:', err);
@@ -96,38 +118,71 @@ export const FeaturedStories = () => {
           }}>
           Featured American Stories
         </Typography>
-        {stories && stories.length > 0 && (
-          <Box sx={{ display: 'flex', gap: 0.5 }}>
-            <IconButton
-              onClick={() => scroll('left')}
-              size="small"
-              aria-label="Scroll left"
-              sx={{
-                bgcolor: 'background.paper',
-                border: '1px solid',
-                borderColor: 'divider',
-                width: 32,
-                height: 32,
-                '&:hover': { bgcolor: 'background.subtle' },
-              }}>
-              <ChevronLeftIcon fontSize="small" />
-            </IconButton>
-            <IconButton
-              onClick={() => scroll('right')}
-              size="small"
-              aria-label="Scroll right"
-              sx={{
-                bgcolor: 'background.paper',
-                border: '1px solid',
-                borderColor: 'divider',
-                width: 32,
-                height: 32,
-                '&:hover': { bgcolor: 'background.subtle' },
-              }}>
-              <ChevronRightIcon fontSize="small" />
-            </IconButton>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: { xs: 1.5, md: 2.5 },
+            '& .home-nav-link': {
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 0.5,
+              color: 'common.black',
+              textDecoration: 'none',
+              fontSize: '0.8125rem',
+              fontWeight: 600,
+              opacity: 0.75,
+              transition: 'opacity 0.15s, color 0.15s',
+              '&:hover': { opacity: 1, color: 'secondary.main' },
+              '&:hover .arrow': { transform: 'translateX(3px)' },
+            },
+          }}>
+          <Box component={Link} href="/stories" className="home-nav-link">
+            All stories
+            <ArrowForwardIcon className="arrow" sx={{ fontSize: 15, transition: 'transform 0.15s ease' }} />
           </Box>
-        )}
+          <Box component={Link} href="/indexes" className="home-nav-link">
+            Indexes
+          </Box>
+          {isChatEnabled && (
+            <Box component={Link} href="/discover" className="home-nav-link">
+              <AutoAwesomeIcon sx={{ fontSize: 14 }} />
+              Discover
+            </Box>
+          )}
+          {stories && stories.length > 0 && (
+            <Box sx={{ display: 'flex', gap: 0.5, ml: { xs: 0, md: 1 } }}>
+              <IconButton
+                onClick={() => scroll('left')}
+                size="small"
+                aria-label="Scroll left"
+                sx={{
+                  bgcolor: 'background.paper',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  width: 32,
+                  height: 32,
+                  '&:hover': { bgcolor: 'background.subtle' },
+                }}>
+                <ChevronLeftIcon fontSize="small" />
+              </IconButton>
+              <IconButton
+                onClick={() => scroll('right')}
+                size="small"
+                aria-label="Scroll right"
+                sx={{
+                  bgcolor: 'background.paper',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  width: 32,
+                  height: 32,
+                  '&:hover': { bgcolor: 'background.subtle' },
+                }}>
+                <ChevronRightIcon fontSize="small" />
+              </IconButton>
+            </Box>
+          )}
+        </Box>
       </Box>
 
       {stories === null ? (
@@ -164,6 +219,7 @@ export const FeaturedStories = () => {
               }}>
               <Box
                 sx={{
+                  position: 'relative',
                   width: '100%',
                   aspectRatio: '16 / 9',
                   borderRadius: 1.5,
@@ -176,14 +232,62 @@ export const FeaturedStories = () => {
                     height: '100%',
                     '--media-object-fit': 'cover',
                   },
+                  '&:hover .mux-hover-preview': { opacity: 1 },
+                  '&:hover .mux-hover-play-icon': { opacity: 1 },
                 }}>
                 <MuxPlayer
                   playbackId={story.playbackId}
                   streamType="on-demand"
+                  thumbnailTime={getThumbnailTimeForTitle(story.title)}
                   metadata={{ video_title: story.title }}
-                  accentColor="#239B8B"
+                  accentColor="#F96044"
+                  onPlaying={() => setPlayedMap((prev) => ({ ...prev, [story.uuid]: true }))}
                   style={{ aspectRatio: '16 / 9' }}
                 />
+                {!playedMap[story.uuid] && (
+                  <>
+                    <Box
+                      className="mux-hover-preview"
+                      aria-hidden="true"
+                      sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        backgroundImage: `url(https://image.mux.com/${story.playbackId}/animated.webp?width=480&height=270&fps=15&start=${getThumbnailTimeForTitle(story.title)}&end=${getThumbnailTimeForTitle(story.title) + 5})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        opacity: 0,
+                        transition: 'opacity 0.4s ease',
+                        pointerEvents: 'none',
+                      }}
+                    />
+                    <Box
+                      className="mux-hover-play-icon"
+                      aria-hidden="true"
+                      sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        opacity: 0,
+                        transition: 'opacity 0.4s ease',
+                        pointerEvents: 'none',
+                      }}>
+                      <Box
+                        component="svg"
+                        aria-hidden="true"
+                        viewBox="0 0 18 14"
+                        sx={{
+                          width: { xs: 38, md: 44 },
+                          height: 'auto',
+                          fill: '#ffffff',
+                          filter: 'drop-shadow(0 2px 12px rgba(0,0,0,0.6))',
+                        }}>
+                        <path d="M15.5987 6.2911L3.45577 0.110898C2.83667 -0.204202 2.06287 0.189698 2.06287 0.819798V13.1802C2.06287 13.8103 2.83667 14.2042 3.45577 13.8891L15.5987 7.7089C16.2178 7.3938 16.2178 6.6061 15.5987 6.2911Z" />
+                      </Box>
+                    </Box>
+                  </>
+                )}
               </Box>
               <Box
                 component={Link}

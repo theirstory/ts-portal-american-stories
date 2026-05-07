@@ -1,6 +1,6 @@
 import { useSemanticSearchStore } from '@/app/stores/useSemanticSearchStore';
 
-import { Box, Chip, Skeleton, Typography, Tooltip, useMediaQuery } from '@mui/material';
+import { Box, Chip, Typography, Tooltip, useMediaQuery } from '@mui/material';
 import React, { useMemo, useState, useEffect } from 'react';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -10,6 +10,7 @@ import usePlayerStore from '@/app/stores/usePlayerStore';
 import { NerEntityModal } from './NerEntityModal';
 import { colors, theme } from '@/lib/theme';
 import { getNerEntityRecordingCounts } from '@/lib/weaviate/search';
+import { getEntityRecordingCounts } from '@/lib/weaviate/entities';
 import { useTranscriptNavigation } from '@/app/hooks/useTranscriptNavigation';
 
 const recordingCountKey = (text: string, label: string) => `${text.toLowerCase()}|${label}`;
@@ -19,16 +20,16 @@ type NerDataItem = {
   text: string;
   label: string;
   start_time: number;
+  /** Present on entity_mentions; absent on legacy ner_data. */
+  entity_uuid?: string;
+  /** Present on entity_mentions; absent on legacy ner_data. */
+  canonical_form?: string;
 };
 
 const isNerDataItem = (value: unknown): value is NerDataItem => {
   if (typeof value !== 'object' || value == null) return false;
   const maybe = value as Partial<NerDataItem>;
-  return (
-    typeof maybe.text === 'string' &&
-    typeof maybe.label === 'string' &&
-    typeof maybe.start_time === 'number'
-  );
+  return typeof maybe.text === 'string' && typeof maybe.label === 'string' && typeof maybe.start_time === 'number';
 };
 
 export const StoryMetadataEntity = () => {
@@ -51,15 +52,15 @@ export const StoryMetadataEntity = () => {
   const [selectedEntity, setSelectedEntity] = useState<{
     text: string;
     label: string;
+    entity_uuid?: string;
   } | null>(null);
   const [recordingCounts, setRecordingCounts] = useState<Record<string, number>>({});
-  const [countsLoading, setCountsLoading] = useState(false);
 
   /**
    * handlers
    */
-  const handleOpenModal = (text: string, label: string) => {
-    setSelectedEntity({ text, label });
+  const handleOpenModal = (text: string, label: string, entity_uuid?: string) => {
+    setSelectedEntity({ text, label, entity_uuid });
     setModalOpen(true);
   };
 
@@ -104,7 +105,15 @@ export const StoryMetadataEntity = () => {
    * variables
    */
   const { ner_data } = storyHubPage?.properties || {};
-  const normalizedNerData = useMemo(() => ((ner_data as unknown[]) ?? []).filter(isNerDataItem), [ner_data]);
+  // Prefer the precise per-occurrence list (carries entity_uuid + canonical_form);
+  // fall back to legacy ner_data for un-backfilled testimonies.
+  const mentionsSource = useMemo(() => {
+    const props = storyHubPage?.properties as { entity_mentions?: unknown[] } | undefined;
+    const mentions = props?.entity_mentions;
+    if (Array.isArray(mentions) && mentions.length > 0) return mentions;
+    return (ner_data as unknown[]) ?? [];
+  }, [storyHubPage, ner_data]);
+  const normalizedNerData = useMemo(() => mentionsSource.filter(isNerDataItem), [mentionsSource]);
   const currentStoryUuid = useMemo(() => {
     const props = (storyHubPage?.properties ?? {}) as Partial<{ theirstory_id: string }>;
     return props.theirstory_id;
@@ -115,26 +124,41 @@ export const StoryMetadataEntity = () => {
 
     return Object.fromEntries(
       Object.entries(grouped).map(([label, entries]) => {
-        const textMap = new Map<string, { count: number; start_times: number[] }>();
+        // Group by entity_uuid (preferred) so "Karen" and "Karen Matsuoka"
+        // collapse to a single canonical chip. Falls back to text for legacy
+        // un-backfilled testimonies that lack entity_uuid.
+        type Acc = {
+          entity_uuid?: string;
+          display_text: string;
+          start_times: number[];
+        };
+        const byKey = new Map<string, Acc>();
 
-        for (const { text, start_time } of entries) {
-          if (textMap.has(text)) {
-            const existing = textMap.get(text)!;
-            existing.start_times.push(start_time);
+        for (const item of entries) {
+          const key = item.entity_uuid || item.canonical_form?.toLowerCase() || item.text.toLowerCase();
+          const display = item.canonical_form || item.text;
+          const existing = byKey.get(key);
+          if (existing) {
+            existing.start_times.push(item.start_time);
           } else {
-            textMap.set(text, { count: 1, start_times: [start_time] });
+            byKey.set(key, {
+              entity_uuid: item.entity_uuid,
+              display_text: display,
+              start_times: [item.start_time],
+            });
           }
         }
 
-        const uniqueItems = Array.from(textMap.entries())
-          .map(([text, data]) => {
-            const sortedTimes = data.start_times.sort((a, b) => a - b);
+        const uniqueItems = Array.from(byKey.values())
+          .map(({ entity_uuid, display_text, start_times }) => {
+            const sortedTimes = start_times.sort((a, b) => a - b);
             const uniqueTimes = sortedTimes.filter(
               (time, index, arr) => index === 0 || Math.abs(time - arr[index - 1]) > 0.001,
             );
 
             return {
-              text,
+              text: display_text,
+              entity_uuid,
               count: uniqueTimes.length,
               start_times: uniqueTimes,
             };
@@ -147,9 +171,9 @@ export const StoryMetadataEntity = () => {
   }, [normalizedNerData]);
 
   const entityList = useMemo(() => {
-    const list: { text: string; label: string }[] = [];
+    const list: { text: string; label: string; entity_uuid?: string }[] = [];
     Object.entries(groupedEntities).forEach(([label, items]) => {
-      items.forEach(({ text }) => list.push({ text, label }));
+      items.forEach(({ text, entity_uuid }) => list.push({ text, label, entity_uuid }));
     });
     return list;
   }, [groupedEntities]);
@@ -166,18 +190,30 @@ export const StoryMetadataEntity = () => {
   useEffect(() => {
     if (entityList.length === 0) {
       setRecordingCounts({});
-      setCountsLoading(false);
       return;
     }
     let cancelled = false;
-    setCountsLoading(true);
-    getNerEntityRecordingCounts(entityList)
-      .then((counts) => {
-        if (!cancelled) setRecordingCounts(counts);
-      })
-      .finally(() => {
-        if (!cancelled) setCountsLoading(false);
-      });
+
+    // When every entity has a canonical uuid, use the precise cross-ref count.
+    // Otherwise fall back to legacy text-based aggregation. Chips render
+    // immediately with their in-recording count; project counts populate
+    // progressively as this resolves.
+    const allHaveUuid = entityList.every((e) => Boolean(e.entity_uuid));
+    const loader = allHaveUuid
+      ? getEntityRecordingCounts(entityList.map((e) => e.entity_uuid as string)).then((byUuid) => {
+          const out: Record<string, number> = {};
+          for (const e of entityList) {
+            if (e.entity_uuid && byUuid[e.entity_uuid] != null) {
+              out[recordingCountKey(e.text, e.label)] = byUuid[e.entity_uuid];
+            }
+          }
+          return out;
+        })
+      : getNerEntityRecordingCounts(entityList);
+
+    loader.then((counts) => {
+      if (!cancelled) setRecordingCounts(counts);
+    });
     return () => {
       cancelled = true;
     };
@@ -232,54 +268,49 @@ export const StoryMetadataEntity = () => {
             overflow="auto"
             p={1}
             sx={{ borderRadius: 1 }}>
-            {countsLoading
-              ? items.map((_, index) => (
-                  <Skeleton key={index} variant="rounded" width={80} height={22} sx={{ borderRadius: 2 }} />
-                ))
-              : [...items]
-                  .sort((a, b) => {
-                    const recA = recordingCounts[recordingCountKey(a.text, category)] ?? 0;
-                    const recB = recordingCounts[recordingCountKey(b.text, category)] ?? 0;
-                    if (recB !== recA) return recB - recA;
-                    if (b.count !== a.count) return b.count - a.count;
-                    return a.text.localeCompare(b.text);
-                  })
-                  .map(({ text, count }, index) => {
-                    const recCount = recordingCounts[recordingCountKey(text, category)];
-                    const recordingLabel =
-                      recCount != null ? ` in ${recCount} recording${recCount !== 1 ? 's' : ''}` : '';
-                    return (
-                      <Tooltip
-                        key={`${text}-${category}-${index}`}
-                        title={
-                          recCount != null
-                            ? `${count} mention${count !== 1 ? 's' : ''} in this recording · appears${recordingLabel}`
-                            : `${count} mention${count !== 1 ? 's' : ''} in this recording`
-                        }
-                        arrow>
-                        <Chip
-                          id="ner-entity-chip"
-                          variant="outlined"
-                          label={
-                            <>
-                              <Box component="span" sx={{ fontWeight: 600 }}>
-                                {text}
-                              </Box>
-                              <Box component="span" sx={{ fontWeight: 400, opacity: 0.85 }}>
-                                {recCount != null
-                                  ? ` (${count} here · ${recCount} ${recCount === 1 ? 'recording' : 'recordings'})`
-                                  : ` (${count} here)`}
-                              </Box>
-                            </>
-                          }
-                          onClick={() => handleOpenModal(text, category)}
-                          clickable
-                          size="small"
-                          sx={{ fontSize: '0.75rem', height: 22, minHeight: 22 }}
-                        />
-                      </Tooltip>
-                    );
-                  })}
+            {[...items]
+              .sort((a, b) => {
+                const recA = recordingCounts[recordingCountKey(a.text, category)] ?? 0;
+                const recB = recordingCounts[recordingCountKey(b.text, category)] ?? 0;
+                if (recB !== recA) return recB - recA;
+                if (b.count !== a.count) return b.count - a.count;
+                return a.text.localeCompare(b.text);
+              })
+              .map(({ text, count, entity_uuid }, index) => {
+                const recCount = recordingCounts[recordingCountKey(text, category)];
+                const recordingLabel = recCount != null ? ` in ${recCount} recording${recCount !== 1 ? 's' : ''}` : '';
+                return (
+                  <Tooltip
+                    key={`${entity_uuid || text}-${category}-${index}`}
+                    title={
+                      recCount != null
+                        ? `${count} mention${count !== 1 ? 's' : ''} in this recording · appears${recordingLabel}`
+                        : `${count} mention${count !== 1 ? 's' : ''} in this recording`
+                    }
+                    arrow>
+                    <Chip
+                      id="ner-entity-chip"
+                      variant="outlined"
+                      label={
+                        <>
+                          <Box component="span" sx={{ fontWeight: 600 }}>
+                            {text}
+                          </Box>
+                          <Box component="span" sx={{ fontWeight: 400, opacity: 0.85 }}>
+                            {recCount != null
+                              ? ` (${count} here · ${recCount} ${recCount === 1 ? 'recording' : 'recordings'})`
+                              : ` (${count} here)`}
+                          </Box>
+                        </>
+                      }
+                      onClick={() => handleOpenModal(text, category, entity_uuid)}
+                      clickable
+                      size="small"
+                      sx={{ fontSize: '0.75rem', height: 22, minHeight: 22 }}
+                    />
+                  </Tooltip>
+                );
+              })}
           </Box>
         </Box>
       ))}
@@ -289,6 +320,7 @@ export const StoryMetadataEntity = () => {
           onClose={handleCloseModal}
           entityText={selectedEntity.text}
           entityLabel={selectedEntity.label}
+          entityUuid={selectedEntity.entity_uuid}
           currentStoryUuid={currentStoryUuid}
         />
       )}

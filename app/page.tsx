@@ -5,9 +5,8 @@ import { ExploreLinks } from '@/components/Home/ExploreLinks';
 import { WordCloudAndSearch } from '@/components/Home/WordCloudAndSearch';
 import { FeaturedStories } from '@/components/Home/FeaturedStories';
 
-// AppTopBar on the homepage is a sticky 56-64px nav. Reserve viewport height accordingly so
-// the five sections fit without scrolling on a typical desktop.
-const HOME_TOPBAR_OFFSET = { xs: 56, md: 64 };
+// AppTopBar is hidden on the home page (Stories / Indexes / Discover live
+// inside the page sections), so the grid takes the full viewport.
 
 export default function Home() {
   return (
@@ -15,7 +14,7 @@ export default function Home() {
       sx={{
         bgcolor: 'background.default',
         color: 'text.primary',
-        minHeight: { xs: 'auto', md: `calc(100dvh - ${HOME_TOPBAR_OFFSET.md}px)` },
+        minHeight: { xs: 'auto', md: '100dvh' },
         display: 'grid',
         gridTemplateRows: { xs: 'auto auto auto auto auto', md: 'auto 1fr 1fr' },
         gridTemplateColumns: '1fr',

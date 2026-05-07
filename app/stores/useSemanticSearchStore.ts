@@ -16,7 +16,7 @@ import {
   type CollectionFilterOption,
   type FolderFilterOption,
 } from '@/lib/weaviate/search';
-import { Chunks, Testimonies, SchemaMap, SchemaTypes } from '@/types/weaviate';
+import { Chunks, Testimonies, SchemaMap, SearchableSchemaType } from '@/types/weaviate';
 import { NerLabel } from '@/types/ner';
 import { SearchType } from '@/types/searchType';
 import { Transcription, Word } from '@/types/transcription';
@@ -57,7 +57,7 @@ type SemanticSearchStore = {
   setHasSearched: (searched: boolean) => void;
   setSearchTerm: (term: string) => void;
   setLoading: (loading: boolean) => void;
-  getAllStories: <T extends SchemaTypes>(
+  getAllStories: <T extends SearchableSchemaType>(
     collection: T,
     returnProperties?: QueryProperty<SchemaMap[T]>[] | undefined,
     limit?: number,
@@ -67,48 +67,48 @@ type SemanticSearchStore = {
   getStoryTranscriptByUuid: (uuid: string) => Promise<void>;
   setIsSemanticSearching: (isSearching: boolean) => void;
   runVectorSearch: (
-    collection: SchemaTypes,
+    collection: SearchableSchemaType,
     limit: number,
     offset: number,
     filter?: string[],
-    returnProperties?: QueryProperty<SchemaMap[SchemaTypes]>[] | undefined,
+    returnProperties?: QueryProperty<SchemaMap[SearchableSchemaType]>[] | undefined,
     minValue?: number,
     maxValue?: number,
   ) => Promise<void>;
   runHybridSearch: (
-    collection: SchemaTypes,
+    collection: SearchableSchemaType,
     limit: number,
     offset: number,
     filter?: string[],
-    returnProperties?: QueryProperty<SchemaMap[SchemaTypes]>[] | undefined,
+    returnProperties?: QueryProperty<SchemaMap[SearchableSchemaType]>[] | undefined,
     minValue?: number,
     maxValue?: number,
   ) => Promise<void>;
   run25bmSearch: (
-    collection: SchemaTypes,
+    collection: SearchableSchemaType,
     limit: number,
     offset: number,
     filter?: string[],
-    returnProperties?: QueryProperty<SchemaMap[SchemaTypes]>[] | undefined,
+    returnProperties?: QueryProperty<SchemaMap[SearchableSchemaType]>[] | undefined,
     minValue?: number,
     maxValue?: number,
   ) => Promise<void>;
   runHybridSearchForStoryId: (
-    collection: SchemaTypes,
+    collection: SearchableSchemaType,
     limit: number,
     nerFilters?: string[],
     minValue?: number,
     maxValue?: number,
   ) => Promise<void>;
   runVectorSearchForStoryId: (
-    collection: SchemaTypes,
+    collection: SearchableSchemaType,
     limit: number,
     nerFilters?: string[],
     minValue?: number,
     maxValue?: number,
   ) => Promise<void>;
   run25bmSearchForStoryId: (
-    collection: SchemaTypes,
+    collection: SearchableSchemaType,
     limit: number,
     nerFilters?: string[],
     minValue?: number,
@@ -127,11 +127,7 @@ type SemanticSearchStore = {
   clearStore: () => void;
 };
 
-function syncFilterSelections(
-  folders: FolderFilterOption[],
-  collectionIds: string[],
-  folderIds: string[],
-) {
+function syncFilterSelections(folders: FolderFilterOption[], collectionIds: string[], folderIds: string[]) {
   const foldersById = new Map(folders.map((folder) => [folder.id, folder]));
   const normalizedCollectionIds = Array.from(new Set(collectionIds));
   const normalizedFolderIds = Array.from(new Set(folderIds));
@@ -266,7 +262,7 @@ export const useSemanticSearchStore = create<SemanticSearchStore>()(
 
       setSearchType: (type: SearchType) => set({ searchType: type }, false, 'setSearchType'),
 
-      getAllStories: async <T extends SchemaTypes>(
+      getAllStories: async <T extends SearchableSchemaType>(
         collection: T,
         returnProperties?: QueryProperty<SchemaMap[T]>[] | undefined,
         limit = 100,
@@ -283,6 +279,19 @@ export const useSemanticSearchStore = create<SemanticSearchStore>()(
             selectedCollectionIds,
             selectedFolderIds,
           );
+
+          // Pin the American Stories teaser to the top of page 1.
+          if (offset === 0 && stories?.objects?.length) {
+            const teaserIdx = stories.objects.findIndex((obj) => {
+              const title = (obj.properties as { interview_title?: string })?.interview_title;
+              return typeof title === 'string' && title.toLowerCase().includes('teaser');
+            });
+            if (teaserIdx > 0) {
+              const [teaser] = stories.objects.splice(teaserIdx, 1);
+              stories.objects.unshift(teaser);
+            }
+          }
+
           let hasNextStoriesPage = false;
           if ((stories?.objects?.length ?? 0) === limit) {
             const nextPageProbe = await getAllStoriesFromCollection(
@@ -375,11 +384,11 @@ export const useSemanticSearchStore = create<SemanticSearchStore>()(
       },
 
       runVectorSearch: async (
-        collection: SchemaTypes,
+        collection: SearchableSchemaType,
         limit: number,
         offset = 0,
         filter: string[],
-        returnProperties?: QueryProperty<SchemaMap[SchemaTypes]>[],
+        returnProperties?: QueryProperty<SchemaMap[SearchableSchemaType]>[],
         minValue?: number,
         maxValue?: number,
       ) => {
@@ -404,11 +413,11 @@ export const useSemanticSearchStore = create<SemanticSearchStore>()(
       },
 
       runHybridSearch: async (
-        collection: SchemaTypes,
+        collection: SearchableSchemaType,
         limit: number,
         offset = 0,
         filter: string[],
-        returnProperties?: QueryProperty<SchemaMap[SchemaTypes]>[],
+        returnProperties?: QueryProperty<SchemaMap[SearchableSchemaType]>[],
         minValue?: number,
         maxValue?: number,
       ) => {
@@ -434,11 +443,11 @@ export const useSemanticSearchStore = create<SemanticSearchStore>()(
       },
 
       run25bmSearch: async (
-        collection: SchemaTypes,
+        collection: SearchableSchemaType,
         limit: number,
         offset = 0,
         filter: string[],
-        returnProperties?: QueryProperty<SchemaMap[SchemaTypes]>[],
+        returnProperties?: QueryProperty<SchemaMap[SearchableSchemaType]>[],
         minValue?: number,
         maxValue?: number,
       ) => {
@@ -463,7 +472,7 @@ export const useSemanticSearchStore = create<SemanticSearchStore>()(
       },
 
       runHybridSearchForStoryId: async (
-        collection: SchemaTypes,
+        collection: SearchableSchemaType,
         limit: number,
         nerFilters?: string[],
         minValue?: number,
@@ -512,7 +521,7 @@ export const useSemanticSearchStore = create<SemanticSearchStore>()(
       },
 
       runVectorSearchForStoryId: async (
-        collection: SchemaTypes,
+        collection: SearchableSchemaType,
         limit: number,
         nerFilters?: string[],
         minValue?: number,
@@ -563,7 +572,7 @@ export const useSemanticSearchStore = create<SemanticSearchStore>()(
       },
 
       run25bmSearchForStoryId: async (
-        collection: SchemaTypes,
+        collection: SearchableSchemaType,
         limit: number,
         nerFilters?: string[],
         minValue?: number,
