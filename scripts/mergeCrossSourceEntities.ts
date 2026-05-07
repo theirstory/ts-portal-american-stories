@@ -24,6 +24,14 @@
  * Run:  yarn merge:entities --dry-run          # report only
  *       yarn merge:entities                    # apply
  *       yarn merge:entities --types EVENT,PLACE
+ *       yarn merge:entities --common-person    # PERSON entities with
+ *                                              # lowercase canonical_forms
+ *                                              # only (e.g. "grandma",
+ *                                              # "father") merge across
+ *                                              # sources. Proper-noun
+ *                                              # PERSON entities are not
+ *                                              # touched — Karen Matsuoka
+ *                                              # and Wilhelm stay distinct.
  */
 
 import weaviate, { type WeaviateClient } from 'weaviate-client';
@@ -60,6 +68,72 @@ function isCanonicalEnoughToMerge(canonical: string): boolean {
   // Skip lowercase first letter — likely a generic noun phrase ("the war").
   const first = trimmed.charAt(0);
   if (first !== first.toUpperCase()) return false;
+  const lower = trimmed.toLowerCase();
+  for (const p of NON_PROPER_PREFIXES) {
+    if (lower.startsWith(p)) return false;
+  }
+  return true;
+}
+
+/** Kinship-role synonym groups — entities whose canonical_forms map into
+ * the same row collapse together regardless of which surface form the LLM
+ * picked. The first entry of each group is the survivor's preferred label.
+ * Add additional roles or spellings here when they show up in the data.
+ */
+const KINSHIP_SYNONYM_GROUPS: string[][] = [
+  ['grandfather', 'grandpa', 'grandpop', 'granddad', 'gramps', 'grandfathers'],
+  ['grandmother', 'grandma', 'grandmom', 'nana', 'grandmothers'],
+  ['mother', 'mom', 'mama', 'mommy', 'mum', 'momma', 'mothers'],
+  ['father', 'dad', 'papa', 'daddy', 'pop', 'pa', 'fathers'],
+  ['brother', 'bro', 'brothers'],
+  ['sister', 'sis', 'sisters'],
+  ['son', 'sons'],
+  ['daughter', 'daughters'],
+  ['uncle', 'uncles'],
+  ['aunt', 'aunts', 'auntie', 'aunty'],
+  ['cousin', 'cousins'],
+  ['niece', 'nieces'],
+  ['nephew', 'nephews'],
+  ['grandparents', 'grandparent'],
+  ['parents', 'parent'],
+  ['grandchildren', 'grandchild', 'grandkids', 'grandkid'],
+  ['great grandfather', 'great-grandfather', 'great grandpa', 'great-grandpa'],
+  ['great grandmother', 'great-grandmother', 'great grandma', 'great-grandma'],
+];
+
+const SYNONYM_TO_CANONICAL = ((): Map<string, string> => {
+  const m = new Map<string, string>();
+  for (const group of KINSHIP_SYNONYM_GROUPS) {
+    const canonical = group[0];
+    for (const variant of group) m.set(variant.toLowerCase(), canonical);
+  }
+  return m;
+})();
+
+/** Returns the canonical synonym key for a common-person canonical_form.
+ * Falls back to the lowercased input when no synonym group matches — that
+ * way "indigenous people" still groups by exact text. */
+function commonPersonGroupKey(canonical: string): string {
+  const lower = canonical.trim().toLowerCase();
+  return SYNONYM_TO_CANONICAL.get(lower) ?? lower;
+}
+
+/** Inverse rule for common-noun PERSON entities (kinship roles like
+ * "grandma", "father"). The whole canonical_form starts lowercase — that's
+ * the signal we use to distinguish them from named people. We DO want to
+ * merge these across sources so the entity modal can show "everyone's
+ * grandma" stories. We also keep the leading-article guard so phrases
+ * starting with "my "/"the " don't sneak through (the normalizer already
+ * stripped those, but a defensive check costs nothing).
+ */
+function isCommonPersonCanonical(canonical: string): boolean {
+  if (!canonical) return false;
+  const trimmed = canonical.trim();
+  if (trimmed.length < 3) return false;
+  const first = trimmed.charAt(0);
+  // Must start lowercase to count as a common noun.
+  if (first !== first.toLowerCase()) return false;
+  if (first === first.toUpperCase()) return false; // e.g. digits — bail
   const lower = trimmed.toLowerCase();
   for (const p of NON_PROPER_PREFIXES) {
     if (lower.startsWith(p)) return false;
@@ -124,7 +198,11 @@ async function loadChunksByEntityRefs(client: WeaviateClient, entityUuids: Set<s
   return out;
 }
 
-function rewriteChunkMentions(mentions: any[], remap: Map<string, string>): { mentions: any[]; changed: boolean } {
+function rewriteChunkMentions(
+  mentions: any[],
+  remap: Map<string, string>,
+  preferredCanonicalByUuid: Map<string, string>,
+): { mentions: any[]; changed: boolean } {
   if (!mentions.length) return { mentions, changed: false };
   let changed = false;
   // Replace UUIDs and dedupe identical (entity_uuid, start_time, end_time) tuples.
@@ -144,7 +222,13 @@ function rewriteChunkMentions(mentions: any[], remap: Map<string, string>): { me
       continue;
     }
     seen.add(key);
-    out.push({ ...m, entity_uuid: target });
+    const preferredForm = preferredCanonicalByUuid.get(target);
+    const next = { ...m, entity_uuid: target };
+    if (preferredForm && next.canonical_form !== preferredForm) {
+      next.canonical_form = preferredForm;
+      changed = true;
+    }
+    out.push(next);
   }
   return { mentions: out, changed };
 }
@@ -181,13 +265,19 @@ async function patchTestimony(
   });
 }
 
-async function mergeSurvivor(client: WeaviateClient, survivor: EntityRow, duplicates: EntityRow[]): Promise<void> {
+async function mergeSurvivor(
+  client: WeaviateClient,
+  survivor: EntityRow,
+  duplicates: EntityRow[],
+  preferredCanonicalForm?: string,
+): Promise<void> {
+  const finalCanonical = preferredCanonicalForm ?? survivor.canonical_form;
   const variantSet = new Set<string>([survivor.canonical_form, ...(survivor.variants ?? [])]);
   for (const d of duplicates) {
     variantSet.add(d.canonical_form);
     for (const v of d.variants ?? []) variantSet.add(v);
   }
-  const mergedVariants = Array.from(variantSet).filter((v) => v && v !== survivor.canonical_form);
+  const mergedVariants = Array.from(variantSet).filter((v) => v && v !== finalCanonical);
 
   const relSeen = new Set<string>();
   const mergedRelationships: any[] = [];
@@ -224,16 +314,20 @@ async function mergeSurvivor(client: WeaviateClient, survivor: EntityRow, duplic
   }
 
   const collection = client.collections.get('Entities');
+  const props: Record<string, unknown> = {
+    variants: mergedVariants,
+    relationships: mergedRelationships,
+    transcription_notes: mergedNotes,
+    linked_data_qid: qid,
+    linked_data_url: qurl,
+    linked_data_description: qdesc,
+  };
+  if (finalCanonical !== survivor.canonical_form) {
+    props.canonical_form = finalCanonical;
+  }
   await collection.data.update({
     id: survivor.uuid,
-    properties: {
-      variants: mergedVariants,
-      relationships: mergedRelationships,
-      transcription_notes: mergedNotes,
-      linked_data_qid: qid,
-      linked_data_url: qurl,
-      linked_data_description: qdesc,
-    } as any,
+    properties: props as any,
   });
 }
 
@@ -245,9 +339,13 @@ async function deleteEntity(client: WeaviateClient, uuid: string): Promise<void>
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const dryRun = args.includes('--dry-run');
+  const commonPersonMode = args.includes('--common-person');
   const typesIdx = args.indexOf('--types');
-  const safeTypes =
-    typesIdx >= 0 ? args[typesIdx + 1].split(',').map((s) => s.trim().toUpperCase()) : DEFAULT_SAFE_TYPES;
+  const safeTypes = commonPersonMode
+    ? ['PERSON']
+    : typesIdx >= 0
+      ? args[typesIdx + 1].split(',').map((s) => s.trim().toUpperCase())
+      : DEFAULT_SAFE_TYPES;
 
   const httpHost = process.env.WEAVIATE_HOST_URL ?? 'localhost';
   const httpPort = Number(process.env.WEAVIATE_PORT ?? 8080);
@@ -256,18 +354,28 @@ async function main(): Promise<void> {
 
   const client = await weaviate.connectToCustom({ httpHost, httpPort, grpcHost, grpcPort });
   try {
-    console.log(`[merge] Safe types: ${safeTypes.join(', ')}`);
+    console.log(
+      `[merge] Mode: ${commonPersonMode ? 'common-noun PERSON across sources' : `safe types: ${safeTypes.join(', ')}`}`,
+    );
     console.log(`[merge] Dry run: ${dryRun}`);
     console.log(`[merge] Loading entities...`);
     const entities = await loadAllEntities(client);
     console.log(`[merge] ${entities.length} entities loaded`);
 
-    // Group by (type, lower(canonical_form)).
+    // Group by (type, lower(canonical_form)). The eligibility rule depends
+    // on the mode: common-person mode requires lowercase canonical_form,
+    // the default proper-noun mode requires uppercase first letter.
+    const eligible = (canonical: string) =>
+      commonPersonMode ? isCommonPersonCanonical(canonical) : isCanonicalEnoughToMerge(canonical);
+    const groupKeyFor = (e: EntityRow) =>
+      commonPersonMode
+        ? `${e.entity_type}|${commonPersonGroupKey(e.canonical_form)}`
+        : `${e.entity_type}|${e.canonical_form.toLowerCase()}`;
     const groups = new Map<string, EntityRow[]>();
     for (const e of entities) {
       if (!safeTypes.includes(e.entity_type)) continue;
-      if (!isCanonicalEnoughToMerge(e.canonical_form)) continue;
-      const key = `${e.entity_type}|${e.canonical_form.toLowerCase()}`;
+      if (!eligible(e.canonical_form)) continue;
+      const key = groupKeyFor(e);
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key)!.push(e);
     }
@@ -279,17 +387,31 @@ async function main(): Promise<void> {
       return;
     }
 
-    // Build the merge map: dup_uuid → survivor_uuid.
+    // Build the merge map: dup_uuid → survivor_uuid. In common-person mode
+    // we also compute the preferred canonical_form for each survivor (first
+    // entry of the kinship synonym group), so "grandpa" wins on UUID rules
+    // but ends up renamed to "grandfather" once the merge completes.
     const remap = new Map<string, string>();
-    type Plan = { survivor: EntityRow; duplicates: EntityRow[] };
+    const preferredCanonicalByUuid = new Map<string, string>();
+    type Plan = { survivor: EntityRow; duplicates: EntityRow[]; preferredCanonical?: string };
     const plans: Plan[] = [];
     for (const group of duplicateGroups) {
       const survivor = pickSurvivor(group);
       const duplicates = group.filter((e) => e.uuid !== survivor.uuid);
-      plans.push({ survivor, duplicates });
+      let preferredCanonical: string | undefined;
+      if (commonPersonMode) {
+        const candidate = SYNONYM_TO_CANONICAL.get(survivor.canonical_form.trim().toLowerCase());
+        if (candidate && candidate !== survivor.canonical_form) {
+          preferredCanonical = candidate;
+        }
+        const finalForm = preferredCanonical ?? survivor.canonical_form;
+        preferredCanonicalByUuid.set(survivor.uuid, finalForm);
+      }
+      plans.push({ survivor, duplicates, preferredCanonical });
       for (const d of duplicates) remap.set(d.uuid, survivor.uuid);
+      const renameNote = preferredCanonical ? ` → rename to "${preferredCanonical}"` : '';
       console.log(
-        `[merge] ${survivor.entity_type} "${survivor.canonical_form}" : keep ${survivor.uuid.slice(0, 8)} + merge ${duplicates.length} dup(s)`,
+        `[merge] ${survivor.entity_type} "${survivor.canonical_form}"${renameNote} : keep ${survivor.uuid.slice(0, 8)} + merge ${duplicates.length} dup(s)`,
       );
     }
 
@@ -300,17 +422,29 @@ async function main(): Promise<void> {
       return;
     }
 
-    // Load every chunk that links to any entity in remap, so we can rewrite
-    // both the cross-ref and the entity_mentions array.
+    // Load every chunk that links to any duplicate (so we can rewrite the
+    // cross-ref + entity_mentions UUIDs) OR to a survivor that's being
+    // renamed (so we can rewrite the mention's canonical_form too — those
+    // chunks may not link to any duplicate).
     console.log(`[merge] Loading affected chunks...`);
     const dupSet = new Set(remap.keys());
-    const chunks = await loadChunksByEntityRefs(client, dupSet);
-    console.log(`[merge] ${chunks.length} chunk(s) reference a duplicate`);
+    const renamedSurvivors = new Set<string>();
+    for (const [uuid, form] of preferredCanonicalByUuid) {
+      const plan = plans.find((p) => p.survivor.uuid === uuid);
+      if (plan && plan.survivor.canonical_form !== form) renamedSurvivors.add(uuid);
+    }
+    const chunkLoadSet = new Set<string>([...dupSet, ...renamedSurvivors]);
+    const chunks = await loadChunksByEntityRefs(client, chunkLoadSet);
+    console.log(`[merge] ${chunks.length} chunk(s) reference a duplicate or renamed survivor`);
 
     let chunkUpdates = 0;
     const affectedTestimonies = new Set<string>();
     for (const chunk of chunks) {
-      const { mentions: rewritten, changed } = rewriteChunkMentions(chunk.entity_mentions, remap);
+      const { mentions: rewritten, changed } = rewriteChunkMentions(
+        chunk.entity_mentions,
+        remap,
+        preferredCanonicalByUuid,
+      );
       const newCrossRef = Array.from(new Set(chunk.linkedEntityUuids.map((u) => remap.get(u) ?? u)));
       const crossRefChanged =
         newCrossRef.length !== chunk.linkedEntityUuids.length ||
@@ -323,9 +457,11 @@ async function main(): Promise<void> {
 
     console.log(`[merge] ${chunkUpdates} chunk(s) updated`);
 
-    // Merge survivors (variants, relationships, notes, optional Wikidata).
-    for (const { survivor, duplicates } of plans) {
-      await mergeSurvivor(client, survivor, duplicates);
+    // Merge survivors (variants, relationships, notes, optional Wikidata,
+    // and — in common-person mode — rename the canonical_form to the
+    // preferred synonym so cross-source counts collapse into one label).
+    for (const { survivor, duplicates, preferredCanonical } of plans) {
+      await mergeSurvivor(client, survivor, duplicates, preferredCanonical);
     }
     console.log(`[merge] Survivors merged: ${plans.length}`);
 

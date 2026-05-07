@@ -224,12 +224,14 @@ export const StoryContainer = ({ storyUuid }: { storyUuid: string }) => {
           </Box>
         </Box>
       ) : (
-        /* Desktop Layout — three columns: video+metadata · chapters · transcript */
+        /* Desktop Layout — two visual columns. The chapter rail + transcript
+            sit inside a single shared container so they read as one component
+            divided by a hairline, not two floating cards. */
         <Box
           id="container"
           sx={{
             display: 'grid',
-            gridTemplateColumns: 'minmax(360px, 480px) minmax(240px, 300px) minmax(0, 1fr)',
+            gridTemplateColumns: 'minmax(360px, 480px) minmax(0, 1fr)',
             gap: 2,
             height: `calc(100dvh - 100px - 54px)`,
             paddingTop: '6px',
@@ -270,26 +272,45 @@ export const StoryContainer = ({ storyUuid }: { storyUuid: string }) => {
             </Box>
           </Box>
 
+          {/* Chapters + transcript share a single bordered container so the
+              two surfaces read as one, separated only by an internal rule. */}
           <Box
-            id="chapters-rail"
+            id="reading-pane"
             sx={{
+              display: 'grid',
+              gridTemplateColumns: 'minmax(240px, 300px) minmax(0, 1fr)',
               height: '100%',
               minHeight: 0,
               minWidth: 0,
-              display: 'flex',
+              bgcolor: 'background.default',
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 2,
+              overflow: 'hidden',
             }}>
-            <StoryChapterList />
-          </Box>
+            <Box
+              id="chapters-rail"
+              sx={{
+                height: '100%',
+                minHeight: 0,
+                minWidth: 0,
+                display: 'flex',
+                borderRight: '1px solid',
+                borderColor: 'divider',
+              }}>
+              <StoryChapterList />
+            </Box>
 
-          <Box
-            id="right-side-container"
-            sx={{
-              height: '100%',
-              minHeight: 0,
-              minWidth: 0,
-              display: 'flex',
-            }}>
-            <StoryTranscriptPanel />
+            <Box
+              id="right-side-container"
+              sx={{
+                height: '100%',
+                minHeight: 0,
+                minWidth: 0,
+                display: 'flex',
+              }}>
+              <StoryTranscriptPanel />
+            </Box>
           </Box>
         </Box>
       )}

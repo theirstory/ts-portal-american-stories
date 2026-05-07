@@ -7,12 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Link from 'next/link';
 import MapIcon from '@mui/icons-material/Map';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import {
-  getNerColor,
-  getNerDisplayName,
-  getQuestionLevelColor,
-  getQuestionLevelDisplayName,
-} from '@/config/organizationConfig';
+import { getNerColor, getNerDisplayName } from '@/config/organizationConfig';
 import { getTopThreads, type ThreadRecord } from '@/lib/weaviate/threads';
 import { getTopCrossSourceEntities, type TopEntity } from '@/lib/weaviate/entities';
 import { ThreadModal } from '@/components/ThreadModal';
@@ -121,32 +116,9 @@ export const WordCloudAndSearch = () => {
   const items = useMemo<CloudItem[]>(() => {
     const rawThreads = (threads ?? []).filter((t) => ((t.properties.source_count as number) ?? 0) >= 3);
 
-    // Disambiguate same theme_label across levels — the loudest source wins
-    // the bare label; smaller siblings get a level qualifier appended.
-    const labelCounts = new Map<string, number>();
-    for (const t of rawThreads) {
-      const label = ((t.properties.theme_label as string) || '').trim().toLowerCase();
-      if (!label) continue;
-      labelCounts.set(label, (labelCounts.get(label) ?? 0) + 1);
-    }
-    const sortedThreads = [...rawThreads].sort(
-      (a, b) => ((b.properties.source_count as number) ?? 0) - ((a.properties.source_count as number) ?? 0),
-    );
-    const labelClaimed = new Set<string>();
-    const labelByUuid = new Map<string, string>();
-    for (const t of sortedThreads) {
-      const baseLabel = (t.properties.theme_label as string) || (t.properties.thread_question as string) || 'Thread';
-      const lc = baseLabel.trim().toLowerCase();
-      const collides = (labelCounts.get(lc) ?? 0) > 1;
-      if (!collides || !labelClaimed.has(lc)) {
-        labelByUuid.set(t.uuid, baseLabel);
-        labelClaimed.add(lc);
-      } else {
-        const levelName = getQuestionLevelDisplayName((t.properties.question_level as string) ?? '');
-        labelByUuid.set(t.uuid, `${baseLabel} · ${levelName}`);
-      }
-    }
-
+    // Curation has already deduped: each surviving thread carries
+    // display_label / display_description from the lib layer. No further
+    // label disambiguation needed.
     const out: CloudItem[] = [];
     for (const t of rawThreads) {
       const props = t.properties;
@@ -154,8 +126,8 @@ export const WordCloudAndSearch = () => {
       out.push({
         kind: 'thread',
         id: `t:${t.uuid}`,
-        label: labelByUuid.get(t.uuid) ?? (props.theme_label as string) ?? 'Thread',
-        question: (props.thread_question as string) ?? '',
+        label: t.display_label || (props.theme_label as string) || 'Throughline',
+        question: t.display_description ?? '',
         level: (props.question_level as string) ?? '',
         weight: sourceCount,
       });
@@ -234,7 +206,7 @@ export const WordCloudAndSearch = () => {
               '& .arrow': { transform: 'translateX(3px)' },
             },
           }}>
-          <MapIcon sx={{ fontSize: 16 }} />
+          <MapIcon sx={{ fontSize: 14 }} />
           View in Map
           <ArrowForwardIcon className="arrow" sx={{ fontSize: 14, transition: 'transform 0.15s ease' }} />
         </Box>
@@ -271,7 +243,10 @@ export const WordCloudAndSearch = () => {
               const fontRem = computeFontRem(item.weight, minWeight, maxWeight, item.kind);
               const nudge = verticalNudgeFor(item.id);
               if (item.kind === 'thread') {
-                const color = getQuestionLevelColor(item.level);
+                // All throughlines share one coral accent — the FACTS /
+                // FEELINGS / IDENTITY split is internal scaffolding, not
+                // editorial content, so we don't surface it.
+                const color = '#F96044';
                 const bg = tintColor(color, 0.1);
                 const bgHover = tintColor(color, 0.18);
                 const borderColor = tintColor(color, 0.22);
@@ -280,7 +255,11 @@ export const WordCloudAndSearch = () => {
                     key={item.id}
                     component="button"
                     onClick={() => setActiveThreadUuid(item.id.slice(2))}
-                    title={`${getQuestionLevelDisplayName(item.level)} throughline · answered in ${item.weight} recordings — ${item.question}`}
+                    title={
+                      item.question
+                        ? `Throughline · ${item.weight} recordings — ${item.question}`
+                        : `Throughline · ${item.weight} recordings`
+                    }
                     sx={{
                       cursor: 'pointer',
                       padding: '4px 12px',
@@ -298,7 +277,10 @@ export const WordCloudAndSearch = () => {
                         'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease',
                       whiteSpace: 'nowrap',
                       '&:hover': {
-                        color,
+                        // Keep text dark for legibility — only the bg/border
+                        // pop on hover. Coloring the text on a tinted bg
+                        // tanked contrast.
+                        color: 'common.black',
                         backgroundColor: bgHover,
                         borderColor: color,
                         transform: `translateY(${nudge}) scale(1.04)`,
@@ -343,7 +325,9 @@ export const WordCloudAndSearch = () => {
                       'background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease',
                     whiteSpace: 'nowrap',
                     '&:hover': {
-                      color,
+                      // Keep text near-black on hover so readability survives
+                      // a stronger tint behind it.
+                      color: 'rgba(0,0,0,0.92)',
                       backgroundColor: bgHover,
                       borderColor: color,
                       transform: `translateY(${nudge}) scale(1.04)`,

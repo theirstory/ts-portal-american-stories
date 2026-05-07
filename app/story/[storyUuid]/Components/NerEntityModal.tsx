@@ -138,7 +138,7 @@ const ExpandableHighlightedText: React.FC<ExpandableHighlightedTextProps> = ({
             color: colors.primary.main,
             fontSize: { xs: '0.95rem', md: '0.82rem' },
           }}>
-          {expanded ? 'Expand less' : 'Expand more'}
+          {expanded ? 'Show less' : 'Show more'}
         </Button>
       )}
     </Box>

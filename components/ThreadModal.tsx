@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   CircularProgress,
@@ -18,17 +18,13 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {
-  getQuestionLevelColor,
-  getQuestionLevelDescription,
-  getQuestionLevelDisplayName,
-} from '@/config/organizationConfig';
 import { getThreadModalData, type ThreadModalData } from '@/lib/weaviate/threads';
 import { colors } from '@/lib/theme';
 import { formatTime } from '@/app/utils/util';
 import { getMuxPlaybackId, getThumbnailTimeForTitle } from '@/app/utils/converters';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import { useTranscriptNavigation } from '@/app/hooks/useTranscriptNavigation';
+import { ExpandableExcerpt } from '@/components/ExpandableExcerpt';
 
 type Props = {
   open: boolean;
@@ -38,12 +34,6 @@ type Props = {
    * recording is pinned to the top of the list and clicking an excerpt seeks
    * the local player instead of opening a new tab. */
   currentStoryUuid?: string;
-};
-
-const buildExcerptSnippet = (text: string, maxChars = 320): string => {
-  if (!text) return '';
-  if (text.length <= maxChars) return text;
-  return `${text.slice(0, maxChars).trimEnd()}…`;
 };
 
 export const ThreadModal = ({ open, onClose, threadUuid, currentStoryUuid }: Props) => {
@@ -77,14 +67,11 @@ export const ThreadModal = ({ open, onClose, threadUuid, currentStoryUuid }: Pro
   }, [open, threadUuid, currentStoryUuid]);
 
   const props = data?.thread.properties;
-  const themeLabel = (props?.theme_label as string) || '';
-  const threadQuestion = (props?.thread_question as string) || '';
-  const level = (props?.question_level as string) || '';
+  const themeLabel = data?.thread.display_label || (props?.theme_label as string) || '';
+  const description = data?.thread.display_description || '';
   const sourceCount = (props?.source_count as number) ?? data?.recordings.length ?? 0;
-
-  const levelColor = useMemo(() => getQuestionLevelColor(level), [level]);
-  const levelName = useMemo(() => getQuestionLevelDisplayName(level), [level]);
-  const levelDescription = useMemo(() => getQuestionLevelDescription(level), [level]);
+  // Single brand accent — FACTS/FEELINGS/IDENTITY split is internal.
+  const accent = '#F96044';
 
   const toggleRecording = (theirstoryId: string) => {
     setExpanded((prev) => {
@@ -140,23 +127,6 @@ export const ThreadModal = ({ open, onClose, threadUuid, currentStoryUuid }: Pro
           bgcolor: colors.common.white,
         }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0, pr: 1 }}>
-          <Box
-            component="span"
-            sx={{
-              backgroundColor: levelColor,
-              color: '#FFFFFF',
-              fontWeight: 700,
-              fontSize: { xs: '0.78rem', md: '0.72rem' },
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              lineHeight: 1,
-              px: 1,
-              py: 0.65,
-              borderRadius: '6px',
-              flexShrink: 0,
-            }}>
-            {levelName}
-          </Box>
           <Typography
             variant="h6"
             component="div"
@@ -195,29 +165,28 @@ export const ThreadModal = ({ open, onClose, threadUuid, currentStoryUuid }: Pro
             borderBottom: '1px solid',
             borderColor: colors.grey[200],
           }}>
-          <Typography
-            sx={{
-              fontFamily: 'var(--font-serif), Georgia, serif',
-              fontSize: { xs: '1.15rem', md: '1.35rem' },
-              fontWeight: 600,
-              lineHeight: 1.35,
-              color: colors.text.primary,
-              mb: 1,
-            }}>
-            “{threadQuestion}”
-          </Typography>
-          <Typography sx={{ color: colors.text.secondary, fontSize: '0.85rem', mb: 1.25 }}>
-            {levelDescription}
-          </Typography>
+          {description && (
+            <Typography
+              sx={{
+                fontFamily: 'var(--font-serif), Georgia, serif',
+                fontSize: { xs: '1.05rem', md: '1.15rem' },
+                fontWeight: 500,
+                lineHeight: 1.5,
+                color: colors.text.primary,
+                mb: 1,
+              }}>
+              {description}
+            </Typography>
+          )}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, flexWrap: 'wrap' }}>
             <Box
               component="span"
               sx={{
                 fontSize: '0.78rem',
                 fontWeight: 700,
-                color: levelColor,
+                color: accent,
                 border: '1px solid',
-                borderColor: levelColor,
+                borderColor: accent,
                 borderRadius: 999,
                 px: 1.25,
                 py: 0.35,
@@ -418,20 +387,7 @@ export const ThreadModal = ({ open, onClose, threadUuid, currentStoryUuid }: Pro
                                   {formatTime(excerpt.start_time)}
                                 </Typography>
                               </Box>
-                              <Typography
-                                variant="body2"
-                                sx={{
-                                  color: colors.text.primary,
-                                  fontSize: { xs: '0.95rem', md: '0.86rem' },
-                                  lineHeight: 1.55,
-                                  display: '-webkit-box',
-                                  WebkitLineClamp: 4,
-                                  WebkitBoxOrient: 'vertical',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                }}>
-                                {buildExcerptSnippet(excerpt.transcription)}
-                              </Typography>
+                              <ExpandableExcerpt text={excerpt.transcription} />
                             </Box>
                           </ListItem>
                         ))}

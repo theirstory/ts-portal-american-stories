@@ -94,6 +94,12 @@ export type TopEntity = {
   recording_count: number;
 };
 
+export type EntitiesByType = {
+  /** Entity type, e.g. PERSON / PLACE / EVENT / INSTITUTION / CULTURAL_ITEM / DATE. */
+  type: string;
+  entities: TopEntity[];
+};
+
 /** Aggregate canonical entity mentions across all chunks and return the top
  * N by mention count. Uses the precise per-occurrence entity_mentions list,
  * so counts reflect actual mentions (not unique chunks). Also tallies the
@@ -136,6 +142,80 @@ export async function getTopEntities(limit = 15, sampleSize = 4000): Promise<Top
     .map(({ _testimonies, ...rest }) => ({ ...rest, recording_count: _testimonies.size }))
     .sort((a, b) => b.count - a.count)
     .slice(0, limit);
+}
+
+/** Every entity in the project, grouped by entity_type, with mention and
+ * recording counts. Single chunk-scan (same as getTopEntities) so cost is
+ * the same regardless of entity count. Used by the /throughlines page's
+ * Entities browse panel.
+ */
+export async function getEntitiesGroupedByType(sampleSize = 4000): Promise<EntitiesByType[]> {
+  const client = await initWeaviateClient();
+  const collection = client.collections.get<Chunks>(SchemaTypes.Chunks);
+  const response = await collection.query.fetchObjects({ limit: sampleSize });
+
+  type Acc = TopEntity & { _testimonies: Set<string> };
+  const counts = new Map<string, Acc>();
+  for (const obj of response.objects) {
+    const props = (obj.properties as Partial<Chunks>) ?? {};
+    const theirstoryId = (props.theirstory_id as string) ?? '';
+    const mentions = props.entity_mentions as EntityMention[] | undefined;
+    if (!Array.isArray(mentions)) continue;
+    for (const m of mentions) {
+      if (!m?.entity_uuid || !m.canonical_form) continue;
+      let existing = counts.get(m.entity_uuid);
+      if (!existing) {
+        existing = {
+          entity_uuid: m.entity_uuid,
+          canonical_form: m.canonical_form,
+          label: m.label,
+          count: 0,
+          recording_count: 0,
+          _testimonies: new Set<string>(),
+        };
+        counts.set(m.entity_uuid, existing);
+      }
+      existing.count += 1;
+      if (theirstoryId) existing._testimonies.add(theirstoryId);
+    }
+  }
+
+  // Group by entity type, then sort each group by recording_count desc so the
+  // most-cross-source entities float to the top of each section.
+  const byType = new Map<string, TopEntity[]>();
+  for (const acc of counts.values()) {
+    const flat: TopEntity = {
+      entity_uuid: acc.entity_uuid,
+      canonical_form: acc.canonical_form,
+      label: acc.label,
+      count: acc.count,
+      recording_count: acc._testimonies.size,
+    };
+    const type = flat.label || 'OTHER';
+    if (!byType.has(type)) byType.set(type, []);
+    byType.get(type)!.push(flat);
+  }
+
+  for (const list of byType.values()) {
+    list.sort((a, b) => {
+      if (b.recording_count !== a.recording_count) return b.recording_count - a.recording_count;
+      if (b.count !== a.count) return b.count - a.count;
+      return a.canonical_form.localeCompare(b.canonical_form);
+    });
+  }
+
+  // Stable presentation order — most "human" types first.
+  const ORDER = ['PERSON', 'PLACE', 'EVENT', 'INSTITUTION', 'CULTURAL_ITEM', 'DATE', 'ORGANIZATION'];
+  const out: EntitiesByType[] = [];
+  for (const type of ORDER) {
+    if (byType.has(type)) out.push({ type, entities: byType.get(type)! });
+  }
+  // Anything not in the canonical order list trails alphabetically.
+  for (const [type, entities] of byType) {
+    if (ORDER.includes(type)) continue;
+    out.push({ type, entities });
+  }
+  return out;
 }
 
 /** Top entities that appear in at least `minRecordings` distinct testimonies.

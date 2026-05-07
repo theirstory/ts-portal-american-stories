@@ -55,14 +55,12 @@ export const StoryChapterList = () => {
       <Box
         sx={{
           height: '100%',
+          width: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           p: 3,
-          bgcolor: colors.common.white,
-          borderRadius: 2,
-          border: '1px solid',
-          borderColor: colors.grey[200],
+          bgcolor: 'background.default',
         }}>
         <Typography sx={{ color: colors.text.secondary, fontSize: '0.85rem', textAlign: 'center' }}>
           No chapters available for this recording yet.
@@ -75,13 +73,11 @@ export const StoryChapterList = () => {
     <Box
       sx={{
         height: '100%',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        bgcolor: colors.common.white,
-        borderRadius: 2,
+        bgcolor: 'background.default',
         overflow: 'hidden',
-        border: '1px solid',
-        borderColor: colors.grey[200],
       }}>
       <Box
         sx={{

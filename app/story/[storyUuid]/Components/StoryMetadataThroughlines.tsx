@@ -5,7 +5,8 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { useEffect, useState } from 'react';
 import { useSemanticSearchStore } from '@/app/stores/useSemanticSearchStore';
 import { ThreadModal } from '@/components/ThreadModal';
-import { getQuestionLevelColor, getQuestionLevelDisplayName } from '@/config/organizationConfig';
+// Single brand accent — the FACTS / FEELINGS / IDENTITY split is internal.
+const ACCENT = '#F96044';
 import { getThreadsForTestimony, type ThreadSummary } from '@/lib/weaviate/threads';
 import { colors } from '@/lib/theme';
 
@@ -66,7 +67,6 @@ export const StoryMetadataThroughlines = () => {
         Cross-source questions this recording helps answer.
       </Typography>
       {threads.map((t) => {
-        const accent = getQuestionLevelColor(t.question_level);
         return (
           <Box
             key={t.uuid}
@@ -79,28 +79,18 @@ export const StoryMetadataThroughlines = () => {
               border: '1px solid',
               borderColor: colors.grey[200],
               borderLeft: '3px solid',
-              borderLeftColor: accent,
+              borderLeftColor: ACCENT,
               borderRadius: 2,
               px: 1.75,
               py: 1.25,
               transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
               '&:hover': {
-                borderColor: accent,
+                borderColor: ACCENT,
                 boxShadow: '0 6px 18px rgba(15, 23, 42, 0.06)',
               },
             }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.25 }}>
-              <AutoAwesomeIcon sx={{ fontSize: 14, color: accent }} />
-              <Typography
-                sx={{
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  color: accent,
-                  textTransform: 'uppercase',
-                }}>
-                {getQuestionLevelDisplayName(t.question_level)}
-              </Typography>
+              <AutoAwesomeIcon sx={{ fontSize: 14, color: ACCENT }} />
             </Box>
             <Typography
               sx={{
@@ -111,11 +101,13 @@ export const StoryMetadataThroughlines = () => {
                 lineHeight: 1.3,
                 mb: 0.5,
               }}>
-              {t.theme_label}
+              {t.display_label || t.theme_label}
             </Typography>
-            <Typography sx={{ color: colors.text.secondary, fontSize: '0.78rem', lineHeight: 1.45 }}>
-              {t.thread_question}
-            </Typography>
+            {t.display_description && (
+              <Typography sx={{ color: colors.text.secondary, fontSize: '0.78rem', lineHeight: 1.45 }}>
+                {t.display_description}
+              </Typography>
+            )}
             <Typography
               sx={{
                 color: colors.text.secondary,

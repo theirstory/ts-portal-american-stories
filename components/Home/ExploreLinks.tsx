@@ -3,8 +3,10 @@
 import { Box, Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-const EXPLORE_LINKS = [
-  { label: 'Getting Started' },
+type ExploreLink = { label: string; href?: string };
+
+const EXPLORE_LINKS: ExploreLink[] = [
+  { label: 'Getting Started', href: '/getting-started' },
   { label: 'Community Resources' },
   { label: 'Press' },
   { label: 'About' },
@@ -46,7 +48,7 @@ export const ExploreLinks = () => {
           <Box
             key={link.label}
             component="a"
-            href="#"
+            href={link.href ?? '#'}
             sx={{
               display: 'flex',
               alignItems: 'center',

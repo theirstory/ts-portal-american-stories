@@ -5,7 +5,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { StoryTranscriptToolbar } from './StoryTranscriptToolbar';
 import { useSemanticSearchStore } from '@/app/stores/useSemanticSearchStore';
 import { StoryTranscriptParagraph } from './StoryTranscriptParagraph';
-import { StoryChapterThreadBadge } from './StoryChapterThreadBadge';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranscriptPanelStore } from '@/app/stores/useTranscriptPanelStore';
 import usePlayerStore from '@/app/stores/usePlayerStore';
@@ -13,7 +12,6 @@ import { useSearchParams } from 'next/navigation';
 import { colors } from '@/lib/theme';
 import { useTranscriptNavigation } from '@/app/hooks/useTranscriptNavigation';
 import { scrollElementIntoContainer } from '@/app/utils/scrollElementIntoContainer';
-import { getThreadsByChapterForTestimony, type ThreadSummary } from '@/lib/weaviate/threads';
 
 interface StoryTranscriptPanelProps {
   isMobile?: boolean;
@@ -28,7 +26,7 @@ export const StoryTranscriptPanel = ({ isMobile = false }: StoryTranscriptPanelP
   /**
    * store
    */
-  const { transcript, storyHubPage } = useSemanticSearchStore();
+  const { transcript } = useSemanticSearchStore();
   const {
     expandedSections,
     toggleSection,
@@ -58,36 +56,6 @@ export const StoryTranscriptPanel = ({ isMobile = false }: StoryTranscriptPanelP
   const areAccordionsInitialized = Object.keys(expandedSections).length === sections.length;
   const startParam = searchParams.get('start');
   const endParam = searchParams.get('end');
-
-  // Cross-source threads grouped by chapter start_time. Loaded once per
-  // testimony and rendered next to the chapter title.
-  const [threadsByChapter, setThreadsByChapter] = useState<Map<number, ThreadSummary[]>>(new Map());
-  // chunks.theirstory_id == the Testimony's Weaviate UUID, which is exposed
-  // on storyHubPage. transcript.weaviate_uuid is the source-system id and
-  // does not match the chunk filter.
-  const theirstoryId = storyHubPage?.uuid;
-
-  useEffect(() => {
-    if (!theirstoryId || sections.length === 0) {
-      setThreadsByChapter(new Map());
-      return;
-    }
-    let cancelled = false;
-    getThreadsByChapterForTestimony(
-      theirstoryId,
-      sections.map((s) => ({ start: s.start, end: s.end })),
-    )
-      .then((map) => {
-        if (!cancelled) setThreadsByChapter(map);
-      })
-      .catch((err) => {
-        console.error('Failed to load threads by chapter:', err);
-        if (!cancelled) setThreadsByChapter(new Map());
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [theirstoryId, sections]);
 
   /**
    * Expand the accordion section that contains the target scroll time so the paragraph can mount and scroll.
@@ -208,10 +176,13 @@ export const StoryTranscriptPanel = ({ isMobile = false }: StoryTranscriptPanelP
     <Box
       id="transcript-panel-container"
       sx={{
+        // Desktop: chrome is provided by the shared reading-pane wrapper, so
+        // the panel keeps an internal background that matches.
         bgcolor: colors.background.default,
-        borderRadius: isMobile ? 0 : 2,
+        borderRadius: 0,
         p: isMobile ? 1.5 : 2,
         height: '100%',
+        width: '100%',
         minHeight: 0,
       }}
       display="flex"
@@ -228,108 +199,31 @@ export const StoryTranscriptPanel = ({ isMobile = false }: StoryTranscriptPanelP
           overflowY: 'auto',
           pr: isMobile ? 0 : 1,
         }}>
-        {(() => {
-          // "Start here" pull-quote — the chapter with the strongest
-          // cross-source resonance, surfaced as a magazine-style invite.
-          const ranked = sections
-            .map((s) => {
-              const ts = threadsByChapter.get(s.start) ?? [];
-              const score = ts.reduce((acc, t) => acc + (t.source_count ?? 0), 0);
-              return { section: s, threads: ts, score };
-            })
-            .filter((entry) => entry.score > 0 && entry.section.synopsis)
-            .sort((a, b) => b.score - a.score);
-          const top = ranked[0];
-          if (!top) return null;
-          const summary = top.section.synopsis.trim();
-          const snippet = summary.length > 260 ? `${summary.slice(0, 260).trimEnd()}…` : summary;
-          return (
-            <Box
-              onClick={() => seekAndScroll(top.section.start)}
-              sx={{
-                cursor: 'pointer',
-                p: { xs: 2, md: 2.5 },
-                mb: 2,
-                borderRadius: 2,
-                border: '1px solid',
-                borderColor: colors.grey[200],
-                bgcolor: colors.common.white,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 1,
-                transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
-                '&:hover': {
-                  borderColor: 'secondary.main',
-                  boxShadow: '0 8px 24px rgba(15, 23, 42, 0.06)',
-                },
-              }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
-                <Typography
-                  variant="overline"
-                  sx={{
-                    letterSpacing: '0.18em',
-                    color: 'secondary.main',
-                    fontWeight: 700,
-                    fontSize: '0.72rem',
-                  }}>
-                  Start here
-                </Typography>
-                <Typography
-                  sx={{
-                    color: colors.text.secondary,
-                    fontSize: '0.74rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.04em',
-                  }}>
-                  {top.section.title}
-                </Typography>
-              </Box>
-              <Typography
-                sx={{
-                  fontFamily: 'var(--font-serif), Georgia, serif',
-                  fontSize: { xs: '1.05rem', md: '1.1rem' },
-                  fontWeight: 500,
-                  color: colors.text.primary,
-                  lineHeight: 1.5,
-                }}>
-                “{snippet}”
-              </Typography>
-              <Typography
-                sx={{
-                  color: colors.text.secondary,
-                  fontSize: '0.78rem',
-                }}>
-                Connects to {top.threads.length} cross-source throughline
-                {top.threads.length === 1 ? '' : 's'} across other recordings.
-              </Typography>
-            </Box>
-          );
-        })()}
         {sections.map((section) => {
           const sectionParagraphs = section.paragraphs || [];
 
           const isExpanded = !!expandedSections[section.start];
 
           return (
-            <Accordion key={section.start} expanded={isExpanded} onChange={() => toggleSection(section.start)}>
+            <Accordion
+              key={section.start}
+              expanded={isExpanded}
+              onChange={() => toggleSection(section.start)}
+              disableGutters
+              elevation={0}
+              square
+              sx={{
+                bgcolor: 'transparent',
+                '&:before': { display: 'none' },
+              }}>
               <AccordionSummary
                 sx={{ backgroundColor: colors.primary.main, borderRadius: 1 }}
                 expandIcon={<ExpandMoreIcon sx={{ color: colors.common.white }} />}
                 data-section-start={section.start}>
                 <Box display="flex" flexDirection="column" gap={1} sx={{ width: '100%', color: colors.common.white }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'baseline',
-                      justifyContent: 'space-between',
-                      gap: 1.5,
-                      flexWrap: 'wrap',
-                    }}>
-                    <Typography variant="subtitle1" fontWeight="bold" color={colors.common.white}>
-                      {section.title}
-                    </Typography>
-                    <StoryChapterThreadBadge threads={threadsByChapter.get(section.start) ?? []} />
-                  </Box>
+                  <Typography variant="subtitle1" fontWeight="bold" color={colors.common.white}>
+                    {section.title}
+                  </Typography>
 
                   {section.synopsis && (
                     <Typography fontSize="12px" color={colors.common.white}>

@@ -162,6 +162,12 @@ Important:
   Reconciliation happens later — your job is recall.
 - For PERSON, note in context_role whether they are the narrator, the
   interviewer, or someone being described.
+- For PERSON, the entity_text MUST NOT include leading possessive pronouns
+  ("my", "his", "her", "their", "our"). The speaker may say "my grandma";
+  return entity_text "grandma". Capture the possessive form (if any) as a
+  variant during reconciliation, never as the canonical entity_text. Bare
+  kinship roles ("grandma", "father", "uncle") stay lowercase. Named people
+  ("Karen Matsuoka", "Wilhelm", "FDR") keep their case.
 - For DATE, capture explicit dates AND implicit temporal anchors ("when I
   was five", "after the war"). Resolve to an approximate ISO date in
   context_role when context allows (e.g. "approx 1942 (narrator was 5)").
@@ -210,6 +216,12 @@ Your job:
 1. Group mentions that refer to the SAME real-world entity into a single
    reconciled entity record. Pick the cleanest, most complete spelling as
    the canonical_form. Collect distinct surface forms in `variants`.
+
+   For PERSON entities, the canonical_form MUST NOT include a leading
+   possessive pronoun ("my", "his", "her", "their", "our"). Strip it.
+   "my grandma" → canonical_form: "grandma" (with "my grandma" stored as
+   a variant). Bare kinship roles stay lowercase ("grandma", "father",
+   "uncle"). Named people keep their case ("Karen Matsuoka", "Wilhelm").
 
 2. For each reconciled entity, attempt linked-data reconciliation against
    Wikidata when the entity is notable enough that a confident QID match is
@@ -300,9 +312,21 @@ FEELINGS, or IDENTITY) and were judged semantically similar. Your job:
    open, in second person where appropriate ("How did your family..." rather
    than "How did the narrator's family..."). Avoid jargon.
 
+   TONE — IMPORTANT. Frame questions in the voice of personal experience,
+   family, identity, and meaning-making. The archive surfaces struggle, but
+   the throughline language sits in how the speaker felt, navigated, held
+   onto, and grew through it. Do NOT frame the country, the government, or
+   institutions as the antagonist — even when the underlying experience
+   involves policy, exclusion, or social conditions. Carry struggle in the
+   speaker's voice, not as accusation. Bad: "What does it mean to be
+   American when the country denies your belonging?" Good: "When you've felt
+   excluded, what kept you tethered to your sense of who you are?"
+
 2. Write a short theme_label (1-3 words, title case) that fits on a word-cloud
    chip. Examples: "Becoming American", "Family Memory", "Belonging",
    "Loss & Adaptation". Don't repeat the question; distill the topic.
+   Theme labels follow the same tone rule — describe the inner experience,
+   not an institutional villain.
 
 3. Judge convergence based on how the source answers are likely to relate.
    You don't see the answers themselves, only the questions — infer from the
