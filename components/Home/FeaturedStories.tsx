@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import MuxPlayer from '@mux/mux-player-react';
 import { Box, IconButton, Typography, CircularProgress } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -12,10 +13,10 @@ import { isChatEnabled } from '@/config/organizationConfig';
 import { getAllStoriesFromCollection } from '@/lib/weaviate/search';
 import { SchemaTypes } from '@/types/weaviate';
 import { getMuxPlaybackId, getThumbnailTimeForTitle } from '@/app/utils/converters';
-import { getNerDisplayName } from '@/config/organizationConfig';
+import { findStoryHashtags, renderHashtag } from '@/config/featuredStoriesHashtags';
 
 const FEATURED_LIMIT = 12;
-const RETURN_PROPERTIES = ['interview_title', 'video_url', 'ner_labels', 'collection_name'] as const;
+const RETURN_PROPERTIES = ['interview_title', 'video_url', 'collection_name'] as const;
 
 // Pin specific videos to the front of the carousel by title-substring match (case insensitive).
 const FEATURED_PIN_ORDER = ['teaser', 'what is american stories', 'karen matsuoka', 'sarah adams'];
@@ -40,14 +41,21 @@ type FeaturedStory = {
   title: string;
   videoUrl: string;
   playbackId: string;
-  labels: string[];
+  hashtags: string[];
   collectionName?: string;
 };
 
 export const FeaturedStories = () => {
+  const router = useRouter();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [stories, setStories] = useState<FeaturedStory[] | null>(null);
   const [playedMap, setPlayedMap] = useState<Record<string, boolean>>({});
+
+  const onHashtagClick = (phrase: string) => {
+    const trimmed = phrase.trim();
+    if (!trimmed) return;
+    router.push(`/stories?q=${encodeURIComponent(trimmed)}&searchType=hybrid`);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -60,14 +68,13 @@ export const FeaturedStories = () => {
           const videoUrl = typeof props.video_url === 'string' ? props.video_url : '';
           const playbackId = getMuxPlaybackId(videoUrl);
           if (!playbackId) continue;
-          const rawLabels = props.ner_labels;
-          const labels: string[] = Array.isArray(rawLabels) ? (rawLabels as string[]).slice(0, 3) : [];
+          const title = typeof props.interview_title === 'string' ? props.interview_title : 'Untitled story';
           const story: FeaturedStory = {
             uuid: obj.uuid ?? '',
-            title: typeof props.interview_title === 'string' ? props.interview_title : 'Untitled story',
+            title,
             videoUrl,
             playbackId,
-            labels,
+            hashtags: findStoryHashtags(title),
           };
           if (typeof props.collection_name === 'string') story.collectionName = props.collection_name;
           mapped.push(story);
@@ -289,6 +296,9 @@ export const FeaturedStories = () => {
                   </>
                 )}
               </Box>
+              {/* Title links to the story page; hashtags sit outside the
+                  Link so each chip can route to its own search query
+                  without nested-anchor warnings. */}
               <Box
                 component={Link}
                 href={`/story/${story.uuid}`}
@@ -315,24 +325,41 @@ export const FeaturedStories = () => {
                   }}>
                   {story.title}
                 </Typography>
-                {story.labels.length > 0 && (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
-                    {story.labels.map((label) => (
-                      <Typography
-                        key={label}
-                        sx={{
-                          fontSize: '0.7rem',
-                          fontWeight: 700,
-                          letterSpacing: '0.03em',
-                          color: 'text.secondary',
-                          textTransform: 'lowercase',
-                        }}>
-                        #{getNerDisplayName(label).replace(/\s+/g, '')}
-                      </Typography>
-                    ))}
-                  </Box>
-                )}
               </Box>
+              {story.hashtags.length > 0 && (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, mt: 0.25 }}>
+                  {story.hashtags.map((phrase) => (
+                    <Box
+                      key={phrase}
+                      component="button"
+                      type="button"
+                      onClick={() => onHashtagClick(phrase)}
+                      title={`Search for "${phrase}"`}
+                      sx={{
+                        appearance: 'none',
+                        background: 'transparent',
+                        border: 'none',
+                        padding: 0,
+                        cursor: 'pointer',
+                        fontFamily: 'inherit',
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        letterSpacing: '0.02em',
+                        color: 'text.secondary',
+                        transition: 'color 0.15s ease',
+                        '&:hover': { color: 'secondary.main', textDecoration: 'underline' },
+                        '&:focus-visible': {
+                          outline: '2px solid',
+                          outlineColor: 'secondary.main',
+                          outlineOffset: 2,
+                          borderRadius: 2,
+                        },
+                      }}>
+                      {renderHashtag(phrase)}
+                    </Box>
+                  ))}
+                </Box>
+              )}
             </Box>
           ))}
         </Box>
