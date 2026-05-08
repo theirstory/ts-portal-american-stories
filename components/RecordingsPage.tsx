@@ -52,6 +52,12 @@ export const RecordingsPage = () => {
     setSelectedFolderIds([]);
     setSelectedCollectionIds(collectionId ? [collectionId] : []);
 
+    // Always load the testimony list so the SearchBox renders (it gates on
+    // stories.objects.length). When the URL carries a search query, also
+    // kick off the hybrid search; both populate independent slices of the
+    // store (stories vs result), so they don't conflict.
+    getAllStories(SchemaTypes.Testimonies, [...STORIES_RETURN_PROPERTIES], PAGINATION_ITEMS_PER_PAGE, 0);
+
     if (initialQuery) {
       const type =
         requestedSearchType === SearchType.Vector
@@ -65,7 +71,6 @@ export const RecordingsPage = () => {
       runHybridSearch(SchemaTypes.Chunks, PAGINATION_ITEMS_PER_PAGE, 0, []);
     } else {
       setSearchTerm('');
-      getAllStories(SchemaTypes.Testimonies, [...STORIES_RETURN_PROPERTIES], PAGINATION_ITEMS_PER_PAGE, 0);
     }
   }, [
     collectionId,

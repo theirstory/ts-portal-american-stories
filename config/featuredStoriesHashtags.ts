@@ -22,55 +22,30 @@ export type StoryHashtagConfig = {
   hashtags: string[];
 };
 
+/**
+ * Curation rule: keep each entry to exactly THREE universal themes (e.g.
+ * "belonging", "working women", "language") rather than community / place
+ * names. Universal themes are far more likely to surface results from
+ * multiple disparate recordings when the chip routes to a hybrid search,
+ * which is the goal — every click should reveal cross-source resonance,
+ * not a single recording's facts. Themes used across the archive include:
+ * family, belonging, identity, language, sacrifice, heritage, ancestors,
+ * generations, immigration, storytelling, struggle, working women,
+ * displacement, tradition, adaptation, service.
+ */
 export const STORY_HASHTAGS: StoryHashtagConfig[] = [
-  {
-    match: 'sarah adams',
-    hashtags: ['indigenous', 'Choctaw Nation', 'Oklahoma', 'sovereignty', 'boarding schools'],
-  },
-  {
-    match: 'karen matsuoka',
-    hashtags: ['Japanese American', 'internment', 'Tule Lake', 'Terminal Island', 'belonging'],
-  },
-  {
-    match: 'george takei',
-    hashtags: ['Japanese American', 'internment', 'LGBTQ', 'Hollywood', 'identity'],
-  },
-  {
-    match: 'sheryl sutton',
-    hashtags: ['Black American', 'New Orleans', 'Spelman', 'segregation', 'identity'],
-  },
-  {
-    match: 'akir gutierrez',
-    hashtags: ['Nicaragua', 'Latino', 'immigration', 'language', 'identity'],
-  },
-  {
-    match: 'alexandra dean',
-    hashtags: ['Jewish', 'Libya', 'immigration', 'storytelling', 'belonging'],
-  },
-  {
-    match: 'elizabeth hira',
-    hashtags: ['Guyana', 'voting rights', 'immigration', 'identity'],
-  },
-  {
-    match: 'gloria and joe',
-    hashtags: ['Italian', 'Sicilian', 'Tampa', 'immigration', 'family'],
-  },
-  {
-    match: 'heidi mathers',
-    hashtags: ['Scandinavian', 'Denmark', 'Minnesota', 'Nigeria', 'adoption'],
-  },
-  {
-    match: 'pleines',
-    hashtags: ['German', 'heritage', 'World War II', 'family'],
-  },
-  {
-    match: 'what is american stories',
-    hashtags: ['storytelling', 'archive', 'family'],
-  },
-  {
-    match: 'teaser',
-    hashtags: ['storytelling', 'archive', 'belonging'],
-  },
+  { match: 'sarah adams', hashtags: ['language', 'ancestors', 'struggle'] },
+  { match: 'karen matsuoka', hashtags: ['working women', 'family', 'sacrifice'] },
+  { match: 'george takei', hashtags: ['identity', 'belonging', 'sacrifice'] },
+  { match: 'sheryl sutton', hashtags: ['family', 'generations', 'struggle'] },
+  { match: 'akir gutierrez', hashtags: ['language', 'immigration', 'identity'] },
+  { match: 'alexandra dean', hashtags: ['storytelling', 'ancestors', 'displacement'] },
+  { match: 'elizabeth hira', hashtags: ['working women', 'immigration', 'generations'] },
+  { match: 'gloria and joe', hashtags: ['family', 'language', 'tradition'] },
+  { match: 'heidi mathers', hashtags: ['heritage', 'belonging', 'adaptation'] },
+  { match: 'pleines', hashtags: ['heritage', 'family', 'sacrifice'] },
+  { match: 'what is american stories', hashtags: ['storytelling', 'family', 'belonging'] },
+  { match: 'teaser', hashtags: ['belonging', 'storytelling', 'family'] },
 ];
 
 /** Find the curated hashtag list for a testimony by title hint. Returns

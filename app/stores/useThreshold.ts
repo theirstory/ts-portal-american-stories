@@ -10,10 +10,10 @@ type RangeState = {
 };
 
 export const useThreshold = create<RangeState>((set) => ({
-  minValue: 0.4,
+  minValue: 0.6,
   maxValue: 1,
   setMinValue: (value) => set({ minValue: value }),
   setMaxValue: (value) => set({ maxValue: value }),
   setRange: (min, max) => set({ minValue: min, maxValue: max }),
-  resetRange: () => set({ minValue: 0.4, maxValue: 1 }),
+  resetRange: () => set({ minValue: 0.6, maxValue: 1 }),
 }));

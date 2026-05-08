@@ -18,7 +18,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SearchType } from '@/types/searchType';
 import { SearchTypeSelector } from './SearchTypeSelector';
 import { StorySettings } from '@/app/story/[storyUuid]/Components/StorySettings';
@@ -73,6 +73,17 @@ export const SearchBox = ({
   } = useSemanticSearchStore();
   const { minValue, maxValue } = useThreshold();
   const { isTopBarCollapsed, setTopBarCollapsedAuto } = useLayoutState();
+
+  // When the store's searchTerm changes from outside this component (e.g. a
+  // home-page hashtag click navigates to /stories?q=family and RecordingsPage
+  // calls setSearchTerm), reflect that into the local input so the user sees
+  // what they searched for. Local edits still flow input → store via
+  // runSemanticSearch; this effect only one-way-syncs the store's value back
+  // into the input.
+  useEffect(() => {
+    setInputValue(searchTerm ?? '');
+  }, [searchTerm]);
+
   const hasMultipleCollections = collections.length > 1;
   const hasFolders = folders.length > 0;
   const mobilePrimaryFlex = hasMultipleCollections ? 5.5 : 7.5;
