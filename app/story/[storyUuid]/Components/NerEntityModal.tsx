@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Dialog,
   DialogContent,
@@ -182,6 +183,7 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
   entityUuid,
   currentStoryUuid,
 }) => {
+  const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [loading, setLoading] = useState(false);
@@ -364,11 +366,12 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
       onClose();
       return;
     }
-    // New-tab navigation: pass the mention's exact start/end so the
-    // transcript page's urlRangeHighlightFade lands on the entity word
-    // rather than spanning the whole chunk.
+    // Cross-recording navigation: route in the same tab so the user keeps
+    // their reading flow and the back button works. The destination
+    // transcript page reads start/end from the URL and runs the
+    // urlRangeHighlightFade animation to focus on the entity word.
     const url = `/story/${theirstoryId}?start=${range.start}&end=${range.end}&nerLabel=${entityLabel}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
+    router.push(url);
     onClose();
   };
 
