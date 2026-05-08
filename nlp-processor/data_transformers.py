@@ -309,5 +309,5 @@ def _extract_section_words(
         word_copy["word_idx"] = word_idx
         para_words.append(word_copy)
         word_idx += 1
-    
+
     return para_words

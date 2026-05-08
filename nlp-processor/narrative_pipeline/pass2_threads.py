@@ -147,26 +147,60 @@ def cluster_questions(
         np.fill_diagonal(sim, -1.0)
 
         unassigned: set[int] = set(range(len(indices)))
-        while unassigned:
-            seed_local = next(iter(unassigned))
+        # Seeds we've already tried that produced an undersized cluster. We
+        # remember them so the loop terminates, but their would-be members
+        # stay in `unassigned` so they can join a different (accepted) cluster
+        # whose seed has more high-sim neighbors. Without this, a chunk that
+        # is similar to a popular cluster but happens to be picked as a seed
+        # before that cluster forms gets pulled into a 1-2 member group, the
+        # group is dropped for failing min_sources, and the chunk is lost.
+        tried_seeds: set[int] = set()
+        while True:
+            available = unassigned - tried_seeds
+            if not available:
+                break
+            # Prefer seeds with the most above-threshold neighbors so the
+            # broadest cluster forms first. Falls back to insertion order on
+            # ties for determinism. Iterating the full `available` set is
+            # O(N²) per pass but N is bounded per level (a few hundred at
+            # most for this archive).
+            seed_local = max(
+                available,
+                key=lambda i: int((sim[i] >= similarity_threshold).sum()),
+            )
+            # Transitive single-link expansion: keep absorbing items that are
+            # similar to ANY current member, not just to the seed. A chunk
+            # with sim 0.84 to member B but only 0.7 to seed A still belongs
+            # in the same cluster — without this, perimeter chunks get
+            # stranded and dropped on the next pass.
             members_local = {seed_local}
-            # Single-pass greedy expand: anyone within threshold of the seed.
-            row = sim[seed_local]
-            for j in range(len(indices)):
-                if j in members_local or j not in unassigned:
-                    continue
-                if row[j] >= similarity_threshold:
-                    members_local.add(j)
+            frontier = {seed_local}
+            while frontier:
+                next_frontier: set[int] = set()
+                for m in frontier:
+                    row = sim[m]
+                    for j in range(len(indices)):
+                        if j in members_local or j not in unassigned:
+                            continue
+                        if row[j] >= similarity_threshold:
+                            members_local.add(j)
+                            next_frontier.add(j)
+                frontier = next_frontier
 
             cluster_items = [items[indices[j]] for j in members_local]
             cluster = QuestionCluster(level=level, members=cluster_items)
-            unassigned -= members_local
 
             if (
                 len(cluster.members) >= min_members
                 and cluster.source_count >= min_sources
             ):
                 clusters.append(cluster)
+                unassigned -= members_local
+            else:
+                # Reject the cluster but keep its members available so they
+                # can re-cluster around a different seed. Mark only the
+                # current seed as tried so we don't re-attempt it.
+                tried_seeds.add(seed_local)
 
     # Sort by source_count desc so downstream consumers (and the cap) prefer
     # the broadest threads.

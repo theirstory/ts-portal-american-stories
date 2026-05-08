@@ -987,9 +987,8 @@ def _load_question_items_for_collection(
     import httpx
 
     items: List[QuestionItem] = []
-    after: Optional[str] = None
     page = 0
-    page_size = 200
+    page_size = 500
     fields = [
         "_additional { id }",
         "theirstory_id",
@@ -999,12 +998,18 @@ def _load_question_items_for_collection(
         "question_feelings",
         "question_identity",
     ]
+    # Offset-based pagination. Weaviate's GraphQL `after` cursor advances over
+    # the unfiltered global object order, so when combined with a `where`
+    # filter it can stop early — past the first page of 200 it would return
+    # zero rows even with thousands of matching chunks remaining. Offset is
+    # safe up to QUERY_MAXIMUM_RESULTS (default 10k) which comfortably covers
+    # this archive.
+    offset = 0
     while True:
-        # Use GraphQL to paginate by `after` (cursor on object id).
-        after_clause = f', after: "{after}"' if after else ""
+        page += 1
         query = (
             "{ Get { Chunks("
-            f"limit: {page_size}{after_clause}, "
+            f"limit: {page_size}, offset: {offset}, "
             "where: { path: [\"collection_id\"], operator: Equal, valueText: \""
             + collection_id
             + "\" }) { "
@@ -1049,12 +1054,7 @@ def _load_question_items_for_collection(
                     )
         if len(chunks) < page_size:
             break
-        # GraphQL `after` requires the last object id to advance.
-        last_id = (chunks[-1].get("_additional") or {}).get("id")
-        if not last_id or last_id == after:
-            break
-        after = last_id
-        page += 1
+        offset += page_size
         if page > 200:
             logger.warning("[pass2] pagination guard hit at page %d", page)
             break

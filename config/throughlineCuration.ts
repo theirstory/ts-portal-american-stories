@@ -53,12 +53,12 @@ export const THROUGHLINE_CURATION: ThroughlineCuration[] = [
     label: 'Generational Influence',
     description:
       'How the dreams, sacrifices, and silences of earlier generations shape who their grandchildren become.',
-    matchAny: ['generational identity', 'generational influence'],
+    matchAny: ['generational identity', 'generational influence', 'parental legacy', 'inherited identity'],
   },
   {
     label: 'Ancestral Hopes',
     description: 'The hopes that crossed oceans — what the people who came first wanted for the people who came after.',
-    matchAny: ['ancestral hope'],
+    matchAny: ['ancestral hope', 'ancestral identity', 'ancestral connection'],
   },
   {
     label: 'Personal Identity',
@@ -71,7 +71,21 @@ export const THROUGHLINE_CURATION: ThroughlineCuration[] = [
       'personal identity',
       'identity and narrative',
       'identity and othering',
+      'defining self',
+      'shaping selfhood',
+      'shaping identity',
+      'defining selfhood',
     ],
+  },
+  {
+    label: 'Family Roots',
+    description: 'How family origins, ancestry, and the places people came from shape the person they become.',
+    matchAny: ['roots and identity', 'roots and belonging', 'ancestral roots', 'family roots', 'navigating heritage'],
+  },
+  {
+    label: 'Cultural Heritage',
+    description: 'The traditions, languages, and rituals carried across borders — what gets kept, what gets adapted.',
+    matchAny: ['cultural heritage', 'navigating multiple heritages', 'bridging identities', 'heritage and identity'],
   },
   {
     label: 'Navigating Language',
