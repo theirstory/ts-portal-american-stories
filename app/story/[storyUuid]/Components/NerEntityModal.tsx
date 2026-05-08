@@ -356,22 +356,31 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
     const theirstoryId = String(props?.theirstory_id ?? '');
     if (!theirstoryId) return;
     const range = mentionRangeForChunk(props);
+    // Lead in by 2 seconds so listeners hear the run-up to the entity word
+    // before it's spoken. The transcript-highlight range stays tight on
+    // the word itself (passed separately as nerStart/nerEnd in the URL),
+    // so the fade animation still focuses on just the entity.
+    const seekTime = range.precise ? Math.max(0, range.start - 2) : range.start;
     if (currentStoryUuid && theirstoryId === currentStoryUuid) {
-      // Same recording — seek inside the player instead of opening a new
-      // tab. Lead in by half a second so listeners hear the run-up to the
-      // word; the in-page transcript scroller doesn't run the URL-range
-      // highlight animation, so this branch only cares about audio start.
-      const seekTo = range.precise ? Math.max(0, range.start - 0.5) : range.start;
-      seekAndScroll(seekTo);
+      seekAndScroll(seekTime);
       onClose();
       return;
     }
     // Cross-recording navigation: route in the same tab so the user keeps
-    // their reading flow and the back button works. The destination
-    // transcript page reads start/end from the URL and runs the
-    // urlRangeHighlightFade animation to focus on the entity word.
-    const url = `/story/${theirstoryId}?start=${range.start}&end=${range.end}&nerLabel=${entityLabel}`;
-    router.push(url);
+    // their reading flow. `nerStart`/`nerEnd` carry the precise mention
+    // range for the urlRangeHighlightFade animation; `start` is the audio
+    // seek time (2s before the word). nerLabel is intentionally NOT
+    // passed — clicking a single mention shouldn't toggle the page-wide
+    // entity-type filter.
+    const params = new URLSearchParams();
+    params.set('start', String(seekTime));
+    if (range.precise) {
+      params.set('nerStart', String(range.start));
+      params.set('nerEnd', String(range.end));
+    } else {
+      params.set('end', String(range.end));
+    }
+    router.push(`/story/${theirstoryId}?${params.toString()}`);
     onClose();
   };
 

@@ -56,6 +56,12 @@ export const StoryTranscriptPanel = ({ isMobile = false }: StoryTranscriptPanelP
   const areAccordionsInitialized = Object.keys(expandedSections).length === sections.length;
   const startParam = searchParams.get('start');
   const endParam = searchParams.get('end');
+  // Entity-modal navigation passes nerStart/nerEnd as the highlight range
+  // alongside `start` for the audio seek time. This decouples the seek
+  // (which uses a 2s lead-in) from the highlight (which lands on just the
+  // entity word). When absent, highlight derives from start/end as before.
+  const nerStartParam = searchParams.get('nerStart');
+  const nerEndParam = searchParams.get('nerEnd');
 
   /**
    * Expand the accordion section that contains the target scroll time so the paragraph can mount and scroll.
@@ -150,6 +156,17 @@ export const StoryTranscriptPanel = ({ isMobile = false }: StoryTranscriptPanelP
 
     seekAndScroll(startTime);
 
+    // Highlight range: prefer the explicit nerStart/nerEnd pair (entity
+    // modal navigation) so the fade lands on just the entity word; fall
+    // back to start/end for legacy callers.
+    const nerStart = nerStartParam !== null ? Number(nerStartParam) : NaN;
+    const nerEnd = nerEndParam !== null ? Number(nerEndParam) : NaN;
+    if (Number.isFinite(nerStart) && Number.isFinite(nerEnd) && nerEnd > nerStart) {
+      setUrlHighlightRange({ start: nerStart, end: nerEnd });
+      const t = setTimeout(() => setUrlHighlightRange(null), 5000);
+      return () => clearTimeout(t);
+    }
+
     if (!endParam) {
       setUrlHighlightRange(null);
       return;
@@ -168,7 +185,7 @@ export const StoryTranscriptPanel = ({ isMobile = false }: StoryTranscriptPanelP
     }, 5000);
 
     return () => clearTimeout(timeoutId);
-  }, [areAccordionsInitialized, startParam, endParam, seekAndScroll]);
+  }, [areAccordionsInitialized, startParam, endParam, nerStartParam, nerEndParam, seekAndScroll]);
 
   if (!areAccordionsInitialized) return null;
 
