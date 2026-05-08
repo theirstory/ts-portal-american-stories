@@ -310,19 +310,64 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
 
   const { seekAndScroll } = useTranscriptNavigation();
 
+  /** Pick the precise mention range inside this chunk for the active entity.
+   *
+   * Each chunk is ~30s — 2 mins long, but every mention has word-level
+   * start_time / end_time (e.g. mother@378.13-378.41 inside a chunk that
+   * runs 347.89-405). Returning that exact range lets us:
+   *   - seek the player to the word, not the chunk start (was off by up
+   *     to 30 seconds);
+   *   - pass the same range to /story?start&end so the transcript page's
+   *     existing urlRangeHighlightFade animation lights up the entity
+   *     word on arrival, not the whole chunk.
+   *
+   * `precise=true` means we found a real mention. When `precise=false`,
+   * the entity_uuid wasn't supplied or the chunk lacks a matching
+   * mention; we fall back to the chunk's range so the link still works.
+   */
+  const mentionRangeForChunk = (props: ChunkProps): { start: number; end: number; precise: boolean } => {
+    const chunkStart = Number(props?.start_time ?? 0);
+    const chunkEnd = Number(props?.end_time ?? chunkStart);
+    if (!entityUuid) return { start: chunkStart, end: chunkEnd, precise: false };
+    const mentions = (props?.entity_mentions ?? []) as Array<{
+      entity_uuid?: string;
+      start_time?: number;
+      end_time?: number;
+    }>;
+    if (!Array.isArray(mentions) || mentions.length === 0) {
+      return { start: chunkStart, end: chunkEnd, precise: false };
+    }
+    const hits = mentions
+      .filter((m) => m?.entity_uuid === entityUuid && typeof m.start_time === 'number')
+      .map((m) => ({
+        start: Number(m.start_time),
+        end: Number(m.end_time ?? m.start_time),
+      }))
+      .filter((r) => Number.isFinite(r.start) && Number.isFinite(r.end))
+      .sort((a, b) => a.start - b.start);
+    if (hits.length === 0) return { start: chunkStart, end: chunkEnd, precise: false };
+    return { start: hits[0].start, end: hits[0].end, precise: true };
+  };
+
   const handleRecordingExcerptClick = (occurrence: WeaviateGenericObject<Chunks, any>) => {
     const props = occurrence.properties as ChunkProps;
-    const start = Number(props?.start_time ?? 0);
     const theirstoryId = String(props?.theirstory_id ?? '');
     if (!theirstoryId) return;
+    const range = mentionRangeForChunk(props);
     if (currentStoryUuid && theirstoryId === currentStoryUuid) {
-      // Same recording — seek inside the player instead of opening a new tab.
-      seekAndScroll(start);
+      // Same recording — seek inside the player instead of opening a new
+      // tab. Lead in by half a second so listeners hear the run-up to the
+      // word; the in-page transcript scroller doesn't run the URL-range
+      // highlight animation, so this branch only cares about audio start.
+      const seekTo = range.precise ? Math.max(0, range.start - 0.5) : range.start;
+      seekAndScroll(seekTo);
       onClose();
       return;
     }
-    const end = Number(props?.end_time ?? 0);
-    const url = `/story/${theirstoryId}?start=${start}&end=${end}&nerLabel=${entityLabel}`;
+    // New-tab navigation: pass the mention's exact start/end so the
+    // transcript page's urlRangeHighlightFade lands on the entity word
+    // rather than spanning the whole chunk.
+    const url = `/story/${theirstoryId}?start=${range.start}&end=${range.end}&nerLabel=${entityLabel}`;
     window.open(url, '_blank', 'noopener,noreferrer');
     onClose();
   };
@@ -727,7 +772,7 @@ export const NerEntityModal: React.FC<NerEntityModalProps> = ({
                                       variant="body2"
                                       color="text.secondary"
                                       sx={{ fontSize: { xs: '0.95rem', md: '0.84rem' }, fontWeight: 500 }}>
-                                      {formatTime(occurrence.properties.start_time)}
+                                      {formatTime(mentionRangeForChunk(occurrence.properties as ChunkProps).start)}
                                     </Typography>
                                   </Box>
 
