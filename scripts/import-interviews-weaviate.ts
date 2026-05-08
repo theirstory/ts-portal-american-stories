@@ -22,6 +22,10 @@ const NLP_URL = buildNlpUrl();
 const INTERVIEWS_DIR = process.env.INTERVIEWS_DIR ?? './json/interviews';
 const RESET_WEAVIATE_DATA = process.env.RESET_WEAVIATE_DATA === 'true';
 const SKIP_IMPORTED_INTERVIEWS = process.env.SKIP_IMPORTED_INTERVIEWS !== 'false';
+// Substring filter (case-insensitive) on the interview's filePath. When set,
+// only interviews whose path contains this substring are processed. Useful for
+// targeted re-indexing of a single story, e.g. INTERVIEW_FILE_FILTER=sarah-adams.
+const INTERVIEW_FILE_FILTER = (process.env.INTERVIEW_FILE_FILTER ?? '').trim().toLowerCase();
 const IGNORED_INTERVIEW_FILENAME = 'example-minimum-interview.json';
 const IGNORED_COLLECTION_FOLDERS = new Set(['example-collection']);
 const COLLECTION_META_JSON_FILES = new Set(['collection.json', 'collection.config.json']);
@@ -93,7 +97,9 @@ function uuidToBytes(uuid: string): Buffer {
 }
 
 function uuidV5(value: string, namespace: string): string {
-  const bytes = createHash('sha1').update(Buffer.concat([uuidToBytes(namespace), Buffer.from(value)])).digest();
+  const bytes = createHash('sha1')
+    .update(Buffer.concat([uuidToBytes(namespace), Buffer.from(value)]))
+    .digest();
   bytes[6] = (bytes[6] & 0x0f) | 0x50;
   bytes[8] = (bytes[8] & 0x3f) | 0x80;
   return formatUuidHex(bytes.subarray(0, 16).toString('hex'));
@@ -260,9 +266,7 @@ function parseCollectionMarkdown(markdownRaw: string): { name?: string; descript
   const headingMatch = markdown.match(/^#\s+(.+)$/m);
   const heading = headingMatch?.[1]?.trim();
 
-  const description = markdown
-    .replace(/^#\s+.+$/m, '')
-    .trim();
+  const description = markdown.replace(/^#\s+.+$/m, '').trim();
 
   return {
     name: heading || undefined,
@@ -356,7 +360,11 @@ async function discoverCollectionInterviewJobs(
     .sort((a: DirectoryEntryLike, b: DirectoryEntryLike) => a.name.localeCompare(b.name));
 
   for (const directory of childDirectories) {
-    const childJobs = await discoverCollectionInterviewJobs(collectionDir, collection, join(currentDir, directory.name));
+    const childJobs = await discoverCollectionInterviewJobs(
+      collectionDir,
+      collection,
+      join(currentDir, directory.name),
+    );
     jobs.push(...childJobs);
   }
 
@@ -441,7 +449,9 @@ function getTestimonyUuid(raw: any, job: InterviewImportJob): string {
   const payload = extractPayload(raw);
   const storyId = getNestedString(payload, ['story', '_id']) || getNestedString(payload, ['transcript', 'storyId']);
   if (!storyId) {
-    throw new Error(`[weaviate-import] Missing story id in ${job.filePath}. Expected payload.story._id or payload.transcript.storyId`);
+    throw new Error(
+      `[weaviate-import] Missing story id in ${job.filePath}. Expected payload.story._id or payload.transcript.storyId`,
+    );
   }
   return convertToUuid(`${job.collection.id.trim().toLowerCase() || 'default'}:${storyId}`);
 }
@@ -540,7 +550,9 @@ async function processInterviewFileThroughNlp(job: InterviewImportJob): Promise<
   try {
     const parsed = JSON.parse(text);
     const chunks = parsed?.counts?.chunks;
-    console.log(`[weaviate-import] NLP OK: ${job.filePath} collection=${job.collection.id} chunks=${chunks ?? 'unknown'}`);
+    console.log(
+      `[weaviate-import] NLP OK: ${job.filePath} collection=${job.collection.id} chunks=${chunks ?? 'unknown'}`,
+    );
   } catch {
     console.log(`[weaviate-import] NLP OK: ${job.filePath} collection=${job.collection.id}`);
   }
@@ -572,15 +584,33 @@ async function main(): Promise<void> {
   console.log(`[weaviate-import] INTERVIEWS_DIR=${INTERVIEWS_DIR}`);
   console.log(`[weaviate-import] RESET_WEAVIATE_DATA=${RESET_WEAVIATE_DATA}`);
   console.log(`[weaviate-import] SKIP_IMPORTED_INTERVIEWS=${SKIP_IMPORTED_INTERVIEWS}`);
+  if (INTERVIEW_FILE_FILTER) {
+    console.log(`[weaviate-import] INTERVIEW_FILE_FILTER=${INTERVIEW_FILE_FILTER}`);
+  }
 
   await waitForReady();
   if (RESET_WEAVIATE_DATA) {
     await clearAllData();
   } else {
-    console.log('[weaviate-import] Keeping existing Weaviate data. Set RESET_WEAVIATE_DATA=true to clear before import.');
+    console.log(
+      '[weaviate-import] Keeping existing Weaviate data. Set RESET_WEAVIATE_DATA=true to clear before import.',
+    );
   }
 
-  const jobs = await discoverInterviewJobs(INTERVIEWS_DIR);
+  let jobs = await discoverInterviewJobs(INTERVIEWS_DIR);
+
+  if (INTERVIEW_FILE_FILTER) {
+    const before = jobs.length;
+    jobs = jobs.filter((job) => job.filePath.toLowerCase().includes(INTERVIEW_FILE_FILTER));
+    console.log(
+      `[weaviate-import] Applied INTERVIEW_FILE_FILTER='${INTERVIEW_FILE_FILTER}': ${jobs.length}/${before} interview json(s) match.`,
+    );
+    if (jobs.length === 0) {
+      console.warn(
+        `[weaviate-import] No interview json files matched the filter. Check the substring against actual file paths under ${INTERVIEWS_DIR}.`,
+      );
+    }
+  }
 
   if (jobs.length === 0) {
     console.log('[weaviate-import] No interview json files found.');
@@ -632,7 +662,9 @@ async function main(): Promise<void> {
         collectionId: job.collection.id,
         error: formattedError,
       });
-      console.warn(`[weaviate-import] NLP FAILED, skipping: ${job.filePath} collection=${job.collection.id}. ${formattedError}`);
+      console.warn(
+        `[weaviate-import] NLP FAILED, skipping: ${job.filePath} collection=${job.collection.id}. ${formattedError}`,
+      );
     }
   }
 

@@ -64,9 +64,13 @@ def _create_single_section(transcript_data: Dict[str, Any]) -> List[Dict[str, An
         if raw_para_words:
             source_words = raw_para_words
         else:
+            # End is exclusive: a word whose start time falls exactly on the
+            # boundary between two paragraphs (common at speaker turn changes
+            # like "story." -> "Sa hochifo") must be assigned to the next
+            # paragraph only, not duplicated into both.
             source_words = [
                 word for word in words
-                if para_start <= float(word.get("start", 0) or 0) <= para_end
+                if para_start <= float(word.get("start", 0) or 0) < para_end
             ]
         
         para_words = []
@@ -285,8 +289,10 @@ def _extract_section_words(
     for word in all_words:
         word_start = word.get("start", 0)
         
-        # Check if word is within paragraph bounds
-        if not (para_start <= word_start <= para_end):
+        # End is exclusive: a word whose start time falls exactly on the
+        # boundary between two paragraphs (e.g. a speaker turn change) must be
+        # assigned to the next paragraph only, not duplicated into both.
+        if not (para_start <= word_start < para_end):
             continue
         
         # Check if word is within section bounds
