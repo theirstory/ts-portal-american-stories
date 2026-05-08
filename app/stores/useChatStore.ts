@@ -384,14 +384,22 @@ export const useChatStore = create<ChatStore>()(
               }
             }
           }
+          // Skip the recording-detail intermediate view: a citation click
+          // lands directly on the full transcript (the same place the old
+          // "Open Full Transcript" button took the user to). previousMode
+          // is set to 'recording' so the transcript view's back button
+          // returns to the sources list, and sidePanelDetailView is reset
+          // so back lands on the list rather than the detail card.
           set(
             {
               activeCitation: citation,
-              sidePanelMode: 'recording',
+              transcriptCitation: citation,
+              sidePanelMode: 'transcript',
+              previousMode: 'recording',
               activeCitationSiblings: siblings ?? [],
               citationOpenedViaChip: true,
               activePromptText: promptText,
-              sidePanelDetailView: true,
+              sidePanelDetailView: false,
               activeAssistantMessageId: assistantMsgId,
             },
             false,

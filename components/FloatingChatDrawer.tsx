@@ -1,14 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import {
-  Box,
-  Drawer,
-  IconButton,
-  Tooltip,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Drawer, IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { usePathname } from 'next/navigation';
 import { useChatStore } from '@/app/stores/useChatStore';
@@ -118,19 +111,25 @@ export const FloatingChatDrawer = () => {
     return () => window.removeEventListener('keydown', handler);
   }, [shouldShow]);
 
-  // Context: citation click → show recording view
+  // Context: citation click → skip the recording-detail intermediate and
+  // land directly on the full transcript view (the same place the old
+  // "Open Full Transcript" button took the user). Local activeCitation is
+  // still set so the recording view in the back-stack has the right
+  // context if the user pops back to it.
   const handleCitationClick = useCallback(
     (citation: Citation) => {
       setLocalActiveCitation(citation);
-      pushView('recording');
+      storeSetTranscriptCitation(citation);
+      pushView('transcript');
     },
-    [pushView],
+    [pushView, storeSetTranscriptCitation],
   );
 
-  // Context: open transcript
+  // Context: open transcript (kept for any caller that explicitly wants
+  // the transcript view — e.g. an "Open Transcript" affordance from a
+  // non-citation context).
   const handleOpenTranscript = useCallback(
     (citation: Citation) => {
-      // Set on store so SidePanelTranscriptView can read it
       storeSetTranscriptCitation(citation);
       pushView('transcript');
     },
@@ -253,7 +252,7 @@ export const FloatingChatDrawer = () => {
             border: 'none',
           },
         }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <FloatingChatDrawerHeader
             isDesktop={isDesktop}
             isMobile={isMobile}
@@ -268,7 +267,11 @@ export const FloatingChatDrawer = () => {
           />
 
           {currentView === 'recording' && activeCitation && (
-            <FloatingChatRecordingView citation={activeCitation} onBack={popView} onOpenTranscript={handleOpenTranscript} />
+            <FloatingChatRecordingView
+              citation={activeCitation}
+              onBack={popView}
+              onOpenTranscript={handleOpenTranscript}
+            />
           )}
 
           {currentView === 'transcript' && (

@@ -1,16 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
-import {
-  Box,
-  Button,
-  IconButton,
-  Tooltip,
-  Typography,
-  CircularProgress,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Button, IconButton, Tooltip, Typography, CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import MuxPlayer from '@mux/mux-player-react';
@@ -338,7 +329,7 @@ export const SidePanelTranscriptView = () => {
 
   if (!transcriptCitation) return null;
 
-  const backLabel = previousMode === 'search' ? 'Back to results' : 'Back to source';
+  const backLabel = previousMode === 'search' ? 'Back to results' : 'Back to sources';
   const hasResults = totalMatches > 0;
   const showMatchNavigation = !!searchTerm.trim() && hasResults;
   const placeholder =
