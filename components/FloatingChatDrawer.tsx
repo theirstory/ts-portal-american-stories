@@ -111,14 +111,18 @@ export const FloatingChatDrawer = () => {
     return () => window.removeEventListener('keydown', handler);
   }, [shouldShow]);
 
-  // Context: citation click → skip the recording-detail intermediate and
-  // land directly on the full transcript view (the same place the old
-  // "Open Full Transcript" button took the user). Local activeCitation is
-  // still set so the recording view in the back-stack has the right
-  // context if the user pops back to it.
+  // Context: citation click. Chapter-synopsis citations stop on the
+  // recording-detail card (the chapter summary itself is the useful
+  // payload — there's no transcript span to scroll to). Clip citations
+  // skip directly to the full transcript view, the same place the old
+  // "Open Full Transcript" button took the user.
   const handleCitationClick = useCallback(
     (citation: Citation) => {
       setLocalActiveCitation(citation);
+      if (citation.isChapterSynopsis) {
+        pushView('recording');
+        return;
+      }
       storeSetTranscriptCitation(citation);
       pushView('transcript');
     },

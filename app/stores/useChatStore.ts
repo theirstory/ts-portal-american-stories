@@ -384,22 +384,25 @@ export const useChatStore = create<ChatStore>()(
               }
             }
           }
-          // Skip the recording-detail intermediate view: a citation click
-          // lands directly on the full transcript (the same place the old
-          // "Open Full Transcript" button took the user to). previousMode
-          // is set to 'recording' so the transcript view's back button
-          // returns to the sources list, and sidePanelDetailView is reset
-          // so back lands on the list rather than the detail card.
+          // Citations from chapter synopses keep the recording-detail
+          // intermediate view because the chapter summary itself is the
+          // useful payload — there's no transcript span to scroll to.
+          // Clip citations skip straight to the full transcript view
+          // (the same place the old "Open Full Transcript" button took
+          // the user to). previousMode='recording' + sidePanelDetailView
+          // false means the transcript view's back button returns to the
+          // sources LIST so cross-citation discovery stays one click away.
+          const isChapter = Boolean(citation.isChapterSynopsis);
           set(
             {
               activeCitation: citation,
-              transcriptCitation: citation,
-              sidePanelMode: 'transcript',
+              transcriptCitation: isChapter ? null : citation,
+              sidePanelMode: isChapter ? 'recording' : 'transcript',
               previousMode: 'recording',
               activeCitationSiblings: siblings ?? [],
               citationOpenedViaChip: true,
               activePromptText: promptText,
-              sidePanelDetailView: false,
+              sidePanelDetailView: isChapter,
               activeAssistantMessageId: assistantMsgId,
             },
             false,
