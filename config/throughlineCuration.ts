@@ -32,28 +32,29 @@ export const THROUGHLINE_CURATION: ThroughlineCuration[] = [
     matchAny: ['identity formation'],
   },
   {
-    label: 'American Identity',
-    description:
-      "What 'being American' means in a person's own life, and how that meaning sits alongside the country they came from.",
-    matchAny: ['american identity', 'becoming american', 'defining american'],
-  },
-  {
     label: 'Belonging',
     description:
-      'Holding onto heritage, faith, and food while learning how to belong inside a new culture at the same time.',
-    matchAny: ['cultural belonging', 'cultural identity'],
+      'The moments narrators felt at home in America — and the moments they felt outside of it. Some answer the question, some inherit it.',
+    // 'belong' (root form) catches both "belong" and "belonging" in
+    // thread_questions and theme_labels, e.g. "where you feel you belong".
+    // Listed FIRST in the curation array so it wins over Personal Identity
+    // when a thread question is fundamentally about belonging even though
+    // its theme_label only says "Identity".
+    matchAny: [
+      'belong',
+      'feeling american',
+      'feel american',
+      'cultural identity',
+      'american identity',
+      'becoming american',
+      'defining american',
+    ],
   },
   {
     label: 'Family Pride',
     description:
       'What a family carries forward with pride — recipes, traditions, names, sacrifices — and how those choices travel.',
     matchAny: ['family pride'],
-  },
-  {
-    label: 'Generational Influence',
-    description:
-      'How the dreams, sacrifices, and silences of earlier generations shape who their grandchildren become.',
-    matchAny: ['generational identity', 'generational influence', 'parental legacy', 'inherited identity'],
   },
   {
     label: 'Ancestral Hopes',
@@ -92,12 +93,6 @@ export const THROUGHLINE_CURATION: ThroughlineCuration[] = [
     description:
       'What languages were spoken at home, what got translated, what got lost — and how that shaped family life.',
     matchAny: ['language atmosphere', 'navigating language'],
-  },
-  {
-    label: 'Sense of Belonging',
-    description:
-      'Where a person finds the feeling of being known — in family, in community, in landscape, in routines.',
-    matchAny: ['sense of belonging', 'belonging and community'],
   },
   {
     label: 'Immigrant Hopes & Hardships',

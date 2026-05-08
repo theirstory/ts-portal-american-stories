@@ -8,7 +8,6 @@ import { StoryVideo } from './StoryVideo';
 import { StoryTranscriptPanel } from './StoryTranscriptPanel';
 import { StoryMetadata } from './StoryMetadata';
 import { StoryMetadataEntity } from './StoryMetadataEntity';
-import { StoryMetadataThroughlines } from './StoryMetadataThroughlines';
 import { StoryProgressBar } from './StoryProgressBar';
 import { StoryChapterList } from './StoryChapterList';
 import { colors } from '@/lib/theme';
@@ -174,7 +173,6 @@ export const StoryContainer = ({ storyUuid }: { storyUuid: string }) => {
               <Tab label="Transcript" />
               <Tab label="Chapters" />
               <Tab label="Metadata" />
-              <Tab label="Throughlines" />
               <Tab label="Entities" />
             </Tabs>
           </Box>
@@ -208,15 +206,8 @@ export const StoryContainer = ({ storyUuid }: { storyUuid: string }) => {
               </Box>
             )}
 
-            {/* Throughlines Tab */}
-            {mobileTabValue === 3 && (
-              <Box sx={{ p: 2 }}>
-                <StoryMetadataThroughlines />
-              </Box>
-            )}
-
             {/* Entities Tab */}
-            {mobileTabValue === 4 && (
+            {mobileTabValue === 3 && (
               <Box sx={{ p: 2 }}>
                 <StoryMetadataEntity />
               </Box>

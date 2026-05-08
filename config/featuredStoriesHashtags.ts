@@ -35,7 +35,7 @@ export type StoryHashtagConfig = {
  */
 export const STORY_HASHTAGS: StoryHashtagConfig[] = [
   { match: 'sarah adams', hashtags: ['language', 'ancestors', 'struggle'] },
-  { match: 'karen matsuoka', hashtags: ['working women', 'family', 'sacrifice'] },
+  { match: 'karen matsuoka', hashtags: ['displacement', 'family', 'sacrifice'] },
   { match: 'george takei', hashtags: ['identity', 'belonging', 'sacrifice'] },
   { match: 'sheryl sutton', hashtags: ['family', 'generations', 'struggle'] },
   { match: 'akir gutierrez', hashtags: ['language', 'immigration', 'identity'] },
