@@ -1,7 +1,7 @@
 'use client';
 
 import 'leaflet/dist/leaflet.css';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Tooltip as LTooltip } from 'react-leaflet';
 import { Box, Typography } from '@mui/material';
 import { NerEntityModal } from '@/app/story/[storyUuid]/Components/NerEntityModal';
@@ -22,6 +22,20 @@ const computeRadius = (recordingCount: number, min: number, max: number): number
 
 export const MapView = ({ markers }: Props) => {
   const [active, setActive] = useState<PlaceMarker | null>(null);
+  // Detect coarse-pointer (touch) devices. On touch, the Leaflet tooltip
+  // intercepts the first tap to show, then the user has to tap exactly the
+  // small marker again to fire `click`; tapping the tooltip text itself
+  // does nothing. Skip the tooltip there and route tap directly to the
+  // modal instead. matchMedia avoids running before window is available.
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(hover: none) and (pointer: coarse)');
+    setIsTouch(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsTouch(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   const placeColor = useMemo(() => getNerColor('PLACE'), []);
 
@@ -118,23 +132,27 @@ export const MapView = ({ markers }: Props) => {
                   bubblingMouseEvents={false}
                   eventHandlers={{ click: () => setActive(m) }}
                 />
-                <LTooltip direction="top" offset={[0, -radius - 2]} opacity={1}>
-                  <Box sx={{ p: 0.25 }}>
-                    <Typography
-                      sx={{
-                        fontFamily: 'var(--font-serif), Georgia, serif',
-                        fontWeight: 700,
-                        fontSize: '0.92rem',
-                        color: colors.text.primary,
-                      }}>
-                      {m.canonical_form}
-                    </Typography>
-                    <Typography sx={{ fontSize: '0.78rem', color: colors.text.secondary }}>
-                      {m.recording_count} {m.recording_count === 1 ? 'recording' : 'recordings'} · {m.mention_count}{' '}
-                      mention{m.mention_count !== 1 ? 's' : ''}
-                    </Typography>
-                  </Box>
-                </LTooltip>
+                {/* Tooltip is desktop-only. On touch devices it eats the
+                    tap that should open the modal — see isTouch effect. */}
+                {!isTouch && (
+                  <LTooltip direction="top" offset={[0, -radius - 2]} opacity={1}>
+                    <Box sx={{ p: 0.25 }}>
+                      <Typography
+                        sx={{
+                          fontFamily: 'var(--font-serif), Georgia, serif',
+                          fontWeight: 700,
+                          fontSize: '0.92rem',
+                          color: colors.text.primary,
+                        }}>
+                        {m.canonical_form}
+                      </Typography>
+                      <Typography sx={{ fontSize: '0.78rem', color: colors.text.secondary }}>
+                        {m.recording_count} {m.recording_count === 1 ? 'recording' : 'recordings'} · {m.mention_count}{' '}
+                        mention{m.mention_count !== 1 ? 's' : ''}
+                      </Typography>
+                    </Box>
+                  </LTooltip>
+                )}
               </CircleMarker>
             );
           })}
