@@ -20,6 +20,7 @@
     "merge:entities": "dotenv -e .env.local -- tsx scripts/mergeCrossSourceEntities.ts",
     "delete:entities": "dotenv -e .env.local -- tsx scripts/deleteEntities.ts",
     "build:belonging-thread": "dotenv -e .env.local -- tsx scripts/buildBelongingThread.ts",
+    "build:personal-identity-thread": "dotenv -e .env.local -- tsx scripts/buildPersonalIdentityThread.ts",
     "cleanup:bad-qids": "dotenv -e .env.local -- tsx scripts/cleanupBadWikidataQids.ts",
     "normalize:person": "dotenv -e .env.local -- tsx scripts/normalizePersonEntities.ts",
     "enrich:place-wikidata": "dotenv -e .env.local -- tsx scripts/enrichPlaceWikidata.ts",

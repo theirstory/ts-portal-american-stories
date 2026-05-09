@@ -1207,10 +1207,15 @@ async def run_pass2(req: Pass2Request):
         uuid = _thread_uuid(collection_id, thread.cluster.level, thread.thread_question)
         vectors_by_uuid[uuid] = [float(x) for x in row]
 
+    # Threads are published by default for this demo. The home-cloud filter
+    # only surfaces published threads, and the curation list (curateAndDedupe
+    # in lib/weaviate/threads.ts) is already the editorial gate. An extra
+    # draft/published toggle just hides freshly-synthesized threads from the
+    # cloud after every Pass 2 run, which broke chips like Personal Identity.
     objects = build_thread_objects(
         threads,
         collection_id=collection_id,
-        published_default=cfg.is_published_by_default("threads"),
+        published_default=True,
         question_vectors=vectors_by_uuid,
     )
 
