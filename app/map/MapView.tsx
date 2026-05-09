@@ -90,6 +90,11 @@ export const MapView = ({ markers }: Props) => {
           />
           {markers.map((m) => {
             const radius = computeRadius(m.recording_count, minCount, maxCount);
+            // Make the touch hit-target a couple of pixels larger than the
+            // visible circle so taps on small markers (recording_count = 1)
+            // still register on touch devices. The visible circle keeps its
+            // computed size; only the invisible interactive radius grows.
+            const touchRadius = Math.max(radius, 14);
             return (
               <CircleMarker
                 key={m.entity_uuid}
@@ -101,8 +106,19 @@ export const MapView = ({ markers }: Props) => {
                   fillOpacity: 0.55,
                   weight: 2,
                 }}
+                bubblingMouseEvents={false}
                 eventHandlers={{ click: () => setActive(m) }}>
-                <LTooltip direction="top" offset={[0, -radius - 2]} opacity={1} sticky>
+                {/* Invisible larger circle behind the visible one to widen
+                    the tap target on mobile (small markers like
+                    recording_count = 1 are otherwise hard to hit). */}
+                <CircleMarker
+                  center={[m.lat, m.lon]}
+                  radius={touchRadius}
+                  pathOptions={{ opacity: 0, fillOpacity: 0, weight: 0 }}
+                  bubblingMouseEvents={false}
+                  eventHandlers={{ click: () => setActive(m) }}
+                />
+                <LTooltip direction="top" offset={[0, -radius - 2]} opacity={1}>
                   <Box sx={{ p: 0.25 }}>
                     <Typography
                       sx={{

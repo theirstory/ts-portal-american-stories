@@ -121,16 +121,25 @@ export const StoryChapterList = () => {
               component="button"
               onClick={() => seekAndScroll(chapter.start_time)}
               sx={{
+                // <button> defaults to display: inline-block, which on
+                // mobile introduces invisible inline whitespace between
+                // siblings (the newlines in JSX render as ~80-150px gaps
+                // because button + line-height stack). Force block stacking
+                // so chapters sit flush against each other.
+                display: 'block',
                 width: '100%',
                 textAlign: 'left',
                 background: isActive ? 'rgba(249, 96, 68, 0.06)' : 'transparent',
                 border: 'none',
                 borderLeft: '3px solid',
                 borderColor: isActive ? 'secondary.main' : 'transparent',
+                borderBottom: '1px solid',
+                borderBottomColor: colors.grey[200],
                 px: 2,
-                py: 1.25,
+                py: { xs: 1, md: 1.25 },
                 cursor: 'pointer',
                 transition: 'background 0.15s ease, border-color 0.15s ease',
+                '&:last-of-type': { borderBottomColor: 'transparent' },
                 '&:hover': {
                   background: isActive ? 'rgba(249, 96, 68, 0.10)' : 'rgba(0,0,0,0.03)',
                   borderColor: isActive ? 'secondary.main' : colors.grey[300],
