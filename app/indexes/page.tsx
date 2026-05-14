@@ -21,6 +21,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CircularProgress from '@mui/material/CircularProgress';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 import { colors } from '@/lib/theme';
 import type { IndexesApiResponse, IndexesStory, IndexChapter } from '@/app/api/indexes/route';
@@ -56,7 +58,23 @@ function filterStories(
 }
 
 export default function IndexesPage() {
-  const [viewMode, setViewMode] = useState<'list' | 'horizontal'>('horizontal');
+  const theme = useTheme();
+  // noSsr=true defers the match check until client mount so the initial
+  // render uses the real viewport width. Without it the hook returns false
+  // on SSR and the page would briefly mount in horizontal mode on mobile
+  // before flipping to list.
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'), { noSsr: true });
+  const [viewMode, setViewMode] = useState<'list' | 'horizontal'>(isMobile ? 'list' : 'horizontal');
+  // If the viewport crosses the breakpoint after mount (resize, rotation)
+  // and the user hasn't manually picked a mode, follow the new default.
+  // Manual selections via the toggle group set viewMode directly and stay
+  // sticky because we only flip here when crossing the breakpoint.
+  const lastIsMobile = useRef(isMobile);
+  useEffect(() => {
+    if (lastIsMobile.current === isMobile) return;
+    lastIsMobile.current = isMobile;
+    setViewMode(isMobile ? 'list' : 'horizontal');
+  }, [isMobile]);
   const [data, setData] = useState<IndexesApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -132,7 +150,10 @@ export default function IndexesPage() {
         ? data.stories.filter((story) => selectedCollectionIds.includes(story.collection_id))
         : data.stories;
 
-    const seen = new Map<string, { id: string; name: string; path: string; collectionId: string; collectionName: string }>();
+    const seen = new Map<
+      string,
+      { id: string; name: string; path: string; collectionId: string; collectionName: string }
+    >();
     for (const story of storiesForFolders) {
       if (!story.folder_id || seen.has(story.folder_id)) continue;
       seen.set(story.folder_id, {
@@ -231,9 +252,7 @@ export default function IndexesPage() {
     setSelectedFolderIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
     if (folder?.collectionId) {
-      setSelectedCollectionIds((prev) =>
-        prev.includes(folder.collectionId) ? prev : [...prev, folder.collectionId],
-      );
+      setSelectedCollectionIds((prev) => (prev.includes(folder.collectionId) ? prev : [...prev, folder.collectionId]));
     }
   };
 
@@ -854,7 +873,7 @@ export default function IndexesPage() {
                         flexShrink: 0,
                         visibility: canScrollDesktopFiltersLeft ? 'visible' : 'hidden',
                       }}>
-                        <ChevronLeftIcon fontSize="small" />
+                      <ChevronLeftIcon fontSize="small" />
                     </IconButton>
                     <Box
                       ref={desktopFiltersScrollRef}
@@ -947,7 +966,7 @@ export default function IndexesPage() {
                         flexShrink: 0,
                         visibility: canScrollDesktopFiltersRight ? 'visible' : 'hidden',
                       }}>
-                        <ChevronRightIcon fontSize="small" />
+                      <ChevronRightIcon fontSize="small" />
                     </IconButton>
                   </Box>
                 )}
